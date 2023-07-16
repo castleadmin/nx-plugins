@@ -1,0 +1,29 @@
+{
+  "executors": {
+    "build": {
+      "implementation": "./src/executors/build/executor",
+      "schema": "./src/executors/build/schema.json",
+      "description": "build executor"
+    },
+    "deploy": {
+      "implementation": "./src/executors/deploy/executor",
+      "schema": "./src/executors/deploy/schema.json",
+      "description": "deploy executor"
+    },
+    "local-invoke": {
+      "implementation": "./src/executors/local-invoke/executor",
+      "schema": "./src/executors/local-invoke/schema.json",
+      "description": "local-invoke executor"
+    },
+    "local-start-api": {
+      "implementation": "./src/executors/local-start-api/executor",
+      "schema": "./src/executors/local-start-api/schema.json",
+      "description": "local-start-api executor"
+    },
+    "local-start-lambda": {
+      "implementation": "./src/executors/local-start-lambda/executor",
+      "schema": "./src/executors/local-start-lambda/schema.json",
+      "description": "local-start-lambda executor"
+    }
+  }
+}
