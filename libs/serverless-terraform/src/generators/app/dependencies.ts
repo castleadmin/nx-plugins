@@ -1,0 +1,36 @@
+import {
+  addDependenciesToPackageJson,
+  GeneratorCallback,
+  Tree,
+} from '@nx/devkit';
+import { Versions } from './versions';
+
+export const addTsDependencies = (
+  tree: Tree,
+  versions: Versions
+): GeneratorCallback => {
+  return addDependenciesToPackageJson(
+    tree,
+    {
+      tslib: versions.tslib,
+    },
+    { '@types/node': versions['@types/node'] }
+  );
+};
+
+export const addProjectDependencies = (
+  tree: Tree,
+  versions: Versions
+): GeneratorCallback => {
+  return addDependenciesToPackageJson(
+    tree,
+    {},
+    {
+      rollup: versions.rollup,
+      '@rollup/plugin-node-resolve': versions['@rollup/plugin-node-resolve'],
+      '@rollup/plugin-commonjs': versions['@rollup/plugin-commonjs'],
+      '@rollup/plugin-json': versions['@rollup/plugin-json'],
+      'rollup-plugin-copy': versions['rollup-plugin-copy'],
+    }
+  );
+};

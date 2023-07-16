@@ -1,7 +1,7 @@
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree, readProjectConfiguration } from '@nx/devkit';
 
-import { appGenerator } from './generator';
+import { applicationGenerator } from './generator';
 import { AppGeneratorSchema } from './schema';
 
 describe('app generator', () => {
@@ -13,7 +13,7 @@ describe('app generator', () => {
   });
 
   it('should run successfully', async () => {
-    await appGenerator(tree, options);
+    await applicationGenerator(tree, options);
     const config = readProjectConfiguration(tree, 'test');
     expect(config).toBeDefined();
   });
