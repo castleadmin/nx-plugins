@@ -104,8 +104,7 @@ export const applicationGenerator = async (
     projectType: 'application',
     // TODO
     targets: {},
-    // TODO
-    tags: [],
+    tags: [`app:${options.name}`],
   });
 
   tasks.push(await addESLint(tree, options, projectRoot));
