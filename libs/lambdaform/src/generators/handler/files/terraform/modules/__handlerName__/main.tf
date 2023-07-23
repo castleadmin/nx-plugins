@@ -9,7 +9,7 @@ terraform {
 
 locals {
   zip_file = "dist/<%= appsDir %>/<%= project %>/<%= handlerName %>/<%= handlerName %>.zip"
-  workspace = {
+  workspaces = {
     <%= project %>-test = {
       function_name = "<%= project %>-test-<%= handlerName %>"
     }
@@ -51,8 +51,8 @@ data "aws_iam_policy_document" "<%= handlerName %>_iam_policy" {
 }
 
 resource "aws_iam_role" "<%= handlerName %>_iam_role" {
-  name               = local.workspace[terraform.workspace].function_name
-  description        = "Role for Lambda function ${local.workspace[terraform.workspace].function_name}"
+  name               = local.workspaces[terraform.workspace].function_name
+  description        = "Role for Lambda function ${local.workspaces[terraform.workspace].function_name}"
   assume_role_policy = data.aws_iam_policy_document.<%= handlerName %>_assume_role_policy.json
   <% if (xray) { %>
   managed_policies = ["arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"]
@@ -60,13 +60,13 @@ resource "aws_iam_role" "<%= handlerName %>_iam_role" {
 }
 
 resource "aws_iam_role_policy" "<%= handlerName %>_iam_role_policy" {
-  name   = local.workspace[terraform.workspace].function_name
+  name   = local.workspaces[terraform.workspace].function_name
   role   = aws_iam_role.<%= handlerName %>_iam_role
   policy = data.aws_iam_policy_document.<%= handlerName %>_iam_policy.json
 }
 
 resource "aws_cloudwatch_log_group" "<%= handlerName %>_log_group" {
-  name              = "/aws/lambda/${local.workspace[terraform.workspace].function_name}"
+  name              = "/aws/lambda/${local.workspaces[terraform.workspace].function_name}"
   retention_in_days = 90
 }
 <% if (s3Upload) { %>
@@ -82,7 +82,7 @@ resource "aws_s3_object" "<%= handlerName %>_s3_object" {
 }
 <% } %>
 resource "aws_lambda_function" "<%= handlerName %>" {
-  function_name = local.workspace[terraform.workspace].function_name
+  function_name = local.workspaces[terraform.workspace].function_name
   role          = aws_iam_role.<%= handlerName %>_iam_role
   <% if (s3Upload) { %>
   s3_bucket         = data.aws_s3_bucket.packages_bucket.id

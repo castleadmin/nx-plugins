@@ -8,7 +8,7 @@
 */
 
 locals {
-  workspace = {
+  workspaces = {
     <%= serviceName %>-test = {
       profile = "test"
       tags = {
@@ -34,11 +34,11 @@ locals {
 }
 
 provider "aws" {
-  profile                  = local.workspace[terraform.workspace].profile
+  profile                  = local.workspaces[terraform.workspace].profile
   shared_config_files      = ["~/.aws/config"]
   shared_credentials_files = ["~/.aws/credentials"]
 
   default_tags {
-    tags = local.workspace[terraform.workspace].tags
+    tags = local.workspaces[terraform.workspace].tags
   }
 }

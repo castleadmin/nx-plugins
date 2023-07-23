@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  workspace = {
+  workspaces = {
     <%= sharedResourcesName %>-test = {
       bucket_name = "test-packages"
     }
@@ -22,7 +22,7 @@ locals {
 }
 
 resource "aws_s3_bucket" "packages_bucket" {
-  bucket = local.workspace[terraform.workspace].bucket_name
+  bucket = local.workspaces[terraform.workspace].bucket_name
 }
 
 resource "aws_s3_bucket_acl" "packages_acl" {
@@ -53,7 +53,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "packages_lifecycle" {
   bucket     = aws_s3_bucket.packages_bucket.id
 
   rule {
-    id     = local.workspace[terraform.workspace].bucket_name
+    id     = local.workspaces[terraform.workspace].bucket_name
     status = "Enabled"
 
     noncurrent_version_expiration {
