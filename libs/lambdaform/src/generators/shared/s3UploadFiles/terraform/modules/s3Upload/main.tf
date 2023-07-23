@@ -9,14 +9,14 @@ terraform {
 
 locals {
   workspace = {
-    <%= applicationName %>-test = {
-      bucket_name = "<%= projectName %>-test-packages"
+    <%= sharedResourcesName %>-test = {
+      bucket_name = "test-packages"
     }
-    <%= applicationName %>-staging = {
-      bucket_name = "<%= projectName %>-staging-packages"
+    <%= sharedResourcesName %>-staging = {
+      bucket_name = "staging-packages"
     }
-    <%= applicationName %>-production = {
-      bucket_name = "<%= projectName %>-production-packages"
+    <%= sharedResourcesName %>-production = {
+      bucket_name = "production-packages"
     }
   }
 }
@@ -35,7 +35,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "packages_encrypti
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm     = "AES256"
+      sse_algorithm = "AES256"
     }
   }
 }
@@ -50,15 +50,15 @@ resource "aws_s3_bucket_versioning" "packages_versioning" {
 
 resource "aws_s3_bucket_lifecycle_configuration" "packages_lifecycle" {
   depends_on = [aws_s3_bucket_versioning.packages_versioning]
-  bucket = aws_s3_bucket.packages_bucket.id
+  bucket     = aws_s3_bucket.packages_bucket.id
 
   rule {
-    id = local.workspace[terraform.workspace].bucket_name
+    id     = local.workspace[terraform.workspace].bucket_name
     status = "Enabled"
 
     noncurrent_version_expiration {
-      newer_noncurrent_versions = 2 // 2 old versions will be retained per file.
-      noncurrent_days = 90 // The old versions will be retained for 90 days and deleted afterwards.
+      newer_noncurrent_versions = 2  // 2 old versions will be retained per file.
+      noncurrent_days           = 90 // The old versions will be retained for 90 days and deleted afterwards.
     }
   }
 }

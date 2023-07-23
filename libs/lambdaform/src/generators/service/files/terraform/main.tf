@@ -12,22 +12,22 @@ locals {
     <%= serviceName %>-test = {
       profile = "test"
       tags = {
-        app     = "<%= serviceName %>"
-        env     = "test"
+        app = "<%= serviceName %>"
+        env = "test"
       }
     }
     <%= serviceName %>-staging = {
       profile = "staging"
       tags = {
-        app     = "<%= serviceName %>"
-        env     = "staging"
+        app = "<%= serviceName %>"
+        env = "staging"
       }
     }
     <%= serviceName %>-production = {
       profile = "production"
       tags = {
-        app     = "<%= serviceName %>"
-        env     = "production"
+        app = "<%= serviceName %>"
+        env = "production"
       }
     }
   }
