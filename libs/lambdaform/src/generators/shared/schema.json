@@ -1,18 +1,28 @@
 {
   "$schema": "http://json-schema.org/schema",
   "$id": "Shared",
-  "title": "",
+  "title": "Lambdaform Shared Resources Generator",
   "type": "object",
   "properties": {
-    "name": {
+    "sharedResourcesName": {
       "type": "string",
-      "description": "",
+      "description": "Define shared resources name.",
       "$default": {
         "$source": "argv",
         "index": 0
       },
-      "x-prompt": "What name would you like to use?"
+      "x-prompt": "What shared resources name would you like to use?"
+    },
+    "s3Upload": {
+      "type": "boolean",
+      "description": "Enable S3 deployment package upload.",
+      "x-prompt": "Would you like to upload the deployment package to S3? (Direct upload is limited to 50MB per package ZIP file)"
+    },
+    "skipFormat": {
+      "description": "Skip formatting files.",
+      "type": "boolean",
+      "default": false
     }
   },
-  "required": ["name"]
+  "required": ["sharedResourcesName", "s3Upload"]
 }

@@ -104,7 +104,8 @@ export const serviceGenerator = async (
     projectType: 'application',
     // TODO
     targets: {},
-    tags: [`app:${options.serviceName}`],
+    // TODO
+    tags: [`app:${options.serviceName}`, 'lambdaform:service'],
   });
 
   tasks.push(await addESLint(tree, options, projectRoot));

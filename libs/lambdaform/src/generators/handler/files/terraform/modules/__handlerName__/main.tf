@@ -69,7 +69,6 @@ resource "aws_cloudwatch_log_group" "<%= handlerName %>_log_group" {
   name              = "/aws/lambda/${local.workspace[terraform.workspace].function_name}"
   retention_in_days = 90
 }
-
 <% if (s3Upload) { %>
 data "aws_s3_bucket" "packages_bucket" {
   bucket = var.bucket_name
@@ -82,11 +81,9 @@ resource "aws_s3_object" "<%= handlerName %>_s3_object" {
   source_hash = filebase64sha512(local.zip_file)
 }
 <% } %>
-
 resource "aws_lambda_function" "<%= handlerName %>" {
   function_name = local.workspace[terraform.workspace].function_name
   role          = aws_iam_role.<%= handlerName %>_iam_role
-
   <% if (s3Upload) { %>
   s3_bucket         = data.aws_s3_bucket.packages_bucket.id
   s3_key            = aws_s3_object.<%= handlerName %>_s3_object.id
@@ -104,7 +101,6 @@ resource "aws_lambda_function" "<%= handlerName %>" {
   // Restriction: The maximum timeout for Lambdas invoked from API Gateway or AppSync is 29 seconds
   timeout = 29
   <% if (xray) { %>
-
   tracing_config {
     mode = "Active"
   }

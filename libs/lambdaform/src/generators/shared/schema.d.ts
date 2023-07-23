@@ -1,3 +1,5 @@
 export interface SharedGeneratorSchema {
-  name: string;
+  sharedResourcesName: string;
+  s3Upload: boolean;
+  skipFormat?: boolean;
 }

@@ -15,9 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "lambdaform": [
-        "libs/lambdaform/src/index.ts"
-      ]
+      "lambdaform": ["libs/lambdaform/src/index.ts"]
     },
     "strict": true,
     "allowUnreachableCode": false,

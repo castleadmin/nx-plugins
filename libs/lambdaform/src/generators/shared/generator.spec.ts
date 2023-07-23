@@ -6,7 +6,7 @@ import { SharedGeneratorSchema } from './schema';
 
 describe('shared generator', () => {
   let tree: Tree;
-  const options: SharedGeneratorSchema = { name: 'test' };
+  const options: SharedGeneratorSchema = { sharedResourcesName: 'test', s3Upload: false };
 
   beforeEach(() => {
     tree = createTreeWithEmptyWorkspace();

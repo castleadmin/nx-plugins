@@ -6,7 +6,7 @@ import { HandlerGeneratorSchema } from './schema';
 
 describe('handler generator', () => {
   let tree: Tree;
-  const options: HandlerGeneratorSchema = { name: 'test' };
+  const options: HandlerGeneratorSchema = { handlerName: 'test', project: 'test2', s3Upload: false, xray: false };
 
   beforeEach(() => {
     tree = createTreeWithEmptyWorkspace();
