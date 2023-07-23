@@ -9,24 +9,24 @@
 
 locals {
   workspace = {
-    <%= applicationName %>-test = {
+    <%= serviceName %>-test = {
       profile = "test"
       tags = {
-        app     = "<%= applicationName %>"
+        app     = "<%= serviceName %>"
         env     = "test"
       }
     }
-    <%= applicationName %>-staging = {
+    <%= serviceName %>-staging = {
       profile = "staging"
       tags = {
-        app     = "<%= applicationName %>"
+        app     = "<%= serviceName %>"
         env     = "staging"
       }
     }
-    <%= applicationName %>-production = {
+    <%= serviceName %>-production = {
       profile = "production"
       tags = {
-        app     = "<%= applicationName %>"
+        app     = "<%= serviceName %>"
         env     = "production"
       }
     }

@@ -11,7 +11,7 @@ import {
   runTasksInSerial,
   Tree,
 } from '@nx/devkit';
-import { AppGeneratorSchema } from './schema';
+import { ServiceGeneratorSchema } from './schema';
 import {
   getRelativePathToRootTsConfig,
   initGenerator as jsInitGenerator,
@@ -23,7 +23,7 @@ import { Linter, lintProjectGenerator } from '@nx/linter';
 
 const addInitTasks = async (
   tree: Tree,
-  options: AppGeneratorSchema,
+  options: ServiceGeneratorSchema,
   versions: Versions
 ): Promise<GeneratorCallback> => {
   const initTasks: GeneratorCallback[] = [];
@@ -47,12 +47,12 @@ const addInitTasks = async (
 
 const addESLint = async (
   tree: Tree,
-  options: AppGeneratorSchema,
+  options: ServiceGeneratorSchema,
   projectRoot: string
 ): Promise<GeneratorCallback> => {
   return await lintProjectGenerator(tree, {
     linter: Linter.EsLint,
-    project: options.applicationName,
+    project: options.serviceName,
     tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.app.json')],
     eslintFilePatterns: [`${projectRoot}/**/*.ts`],
     unitTestRunner: 'jest',
@@ -64,11 +64,11 @@ const addESLint = async (
 
 const addJest = async (
   tree: Tree,
-  options: AppGeneratorSchema
+  options: ServiceGeneratorSchema
 ): Promise<GeneratorCallback> => {
   return await jestProjectGenerator(tree, {
     ...options,
-    project: options.applicationName,
+    project: options.serviceName,
     setupFile: 'none',
     skipSerializers: true,
     supportTsx: false,
@@ -78,13 +78,13 @@ const addJest = async (
   });
 };
 
-export const appGenerator = async (
+export const serviceGenerator = async (
   tree: Tree,
-  options: AppGeneratorSchema
+  options: ServiceGeneratorSchema
 ): Promise<GeneratorCallback> => {
   const appsDir = getWorkspaceLayout(tree).appsDir;
   const versions = await getVersions(tree);
-  const projectName = names(options.applicationName).fileName;
+  const projectName = names(options.serviceName).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
 
   const tasks: GeneratorCallback[] = [];
@@ -98,13 +98,13 @@ export const appGenerator = async (
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
   });
 
-  addProjectConfiguration(tree, options.applicationName, {
+  addProjectConfiguration(tree, options.serviceName, {
     root: projectRoot,
     sourceRoot: joinPathFragments(projectRoot, 'src'),
     projectType: 'application',
     // TODO
     targets: {},
-    tags: [`app:${options.applicationName}`],
+    tags: [`app:${options.serviceName}`],
   });
 
   tasks.push(await addESLint(tree, options, projectRoot));
@@ -117,5 +117,5 @@ export const appGenerator = async (
   return runTasksInSerial(...tasks);
 };
 
-export default appGenerator;
-export const appSchematic = convertNxGenerator(appGenerator);
+export default serviceGenerator;
+export const serviceSchematic = convertNxGenerator(serviceGenerator);

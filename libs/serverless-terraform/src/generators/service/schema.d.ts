@@ -1,4 +1,4 @@
-export interface AppGeneratorSchema {
-  applicationName: string;
+export interface ServiceGeneratorSchema {
+  serviceName: string;
   skipFormat?: boolean;
 }
