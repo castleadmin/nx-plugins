@@ -5,6 +5,11 @@
       "schema": "./src/generators/handler/schema.json",
       "description": "handler generator"
     },
+    "s3-upload": {
+      "factory": "./src/generators/s3-upload/generator",
+      "schema": "./src/generators/s3-upload/schema.json",
+      "description": "s3-upload generator"
+    },
     "service": {
       "factory": "./src/generators/service/generator",
       "schema": "./src/generators/service/schema.json",
@@ -14,11 +19,6 @@
       "factory": "./src/generators/shared/generator",
       "schema": "./src/generators/shared/schema.json",
       "description": "shared generator"
-    },
-    "workflow": {
-      "factory": "./src/generators/workflow/generator",
-      "schema": "./src/generators/workflow/schema.json",
-      "description": "workflow generator"
     }
   }
 }

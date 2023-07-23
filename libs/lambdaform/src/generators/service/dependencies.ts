@@ -3,7 +3,7 @@ import {
   GeneratorCallback,
   Tree,
 } from '@nx/devkit';
-import { Versions } from './versions';
+import {Versions} from "../../utils/versions";
 
 export const addTsDependencies = (
   tree: Tree,

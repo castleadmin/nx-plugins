@@ -13,16 +13,12 @@
       },
       "x-prompt": "What shared resources name would you like to use?"
     },
-    "s3Upload": {
-      "type": "boolean",
-      "description": "Enable S3 deployment package upload.",
-      "x-prompt": "Would you like to upload the deployment package to S3? (Direct upload is limited to 50MB per package ZIP file)"
-    },
     "skipFormat": {
       "description": "Skip formatting files.",
       "type": "boolean",
       "default": false
     }
   },
-  "required": ["sharedResourcesName", "s3Upload"]
+  "required": ["sharedResourcesName"],
+  "additionalProperties": false
 }

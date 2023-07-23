@@ -15,7 +15,7 @@
     },
     "project": {
       "type": "string",
-      "description": "Project where the handler should be added",
+      "description": "Define the project to which the handler will be added",
       "x-prompt": "To which project would you like to add the handler?",
       "x-dropdown": "projects"
     },

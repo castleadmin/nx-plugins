@@ -17,9 +17,9 @@ import {
   initGenerator as jsInitGenerator,
 } from '@nx/js';
 import { jestInitGenerator, jestProjectGenerator } from '@nx/jest';
-import { getVersions, Versions } from './versions';
 import { addProjectDependencies, addTsDependencies } from './dependencies';
 import { Linter, lintProjectGenerator } from '@nx/linter';
+import {getVersions, Versions} from "../../utils/versions";
 
 const addInitTasks = async (
   tree: Tree,

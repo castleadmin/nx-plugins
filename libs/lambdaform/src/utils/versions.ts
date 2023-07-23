@@ -1,4 +1,4 @@
-import { Tree } from '@nx/devkit';
+import {Tree} from "@nx/devkit";
 
 export interface Versions {
   tslib: string;
@@ -9,6 +9,7 @@ export interface Versions {
   '@rollup/plugin-node-resolve': string;
   '@rollup/plugin-commonjs': string;
   '@rollup/plugin-typescript': string;
+  awsTerraformProvider: string;
 }
 
 export const getVersions = async (tree: Tree): Promise<Versions> => {
@@ -36,6 +37,8 @@ export const getVersions = async (tree: Tree): Promise<Versions> => {
   const rollupPluginCommonJs = '^25.0.3';
   const rollupPluginTypeScript= '^11.1.2';
 
+  const awsTerraformProvider = '5.8.0';
+
   return {
     tslib,
     '@types/node': typesNode,
@@ -44,6 +47,7 @@ export const getVersions = async (tree: Tree): Promise<Versions> => {
     '@rollup/plugin-json': rollupPluginJson,
     '@rollup/plugin-node-resolve': rollupPluginNodeResolve,
     '@rollup/plugin-commonjs': rollupPluginCommonJs,
-    '@rollup/plugin-typescript': rollupPluginTypeScript
+    '@rollup/plugin-typescript': rollupPluginTypeScript,
+    awsTerraformProvider
   };
 };

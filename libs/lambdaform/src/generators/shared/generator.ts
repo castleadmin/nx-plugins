@@ -9,37 +9,20 @@ import {
   Tree,
 } from '@nx/devkit';
 import { SharedGeneratorSchema } from './schema';
-import { getVersions } from './versions';
-import {appendFragment} from "../../utils/appendFragment";
+import {getVersions} from "../../utils/versions";
 
 export const sharedGenerator = async (
   tree: Tree,
   options: SharedGeneratorSchema
 ): Promise<void> => {
   const appsDir = getWorkspaceLayout(tree).appsDir;
-  const versions = await getVersions();
+  const versions = await getVersions(tree);
   const projectName = names(options.sharedResourcesName).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
 
-  generateFiles(tree, joinPathFragments(__dirname, 'baseFiles'), projectRoot, {
+  generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
     ...options, ...versions
   });
-
-  if (options.s3Upload) {
-    generateFiles(tree, joinPathFragments(__dirname, 's3UploadFiles'), projectRoot, {
-      ...options, ...versions
-    });
-
-    await appendFragment(tree, options, versions, {
-      fragmentPath: joinPathFragments(__dirname, 'appendFragments', 'terraform', 'main.s3Upload.tf'),
-      appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf')
-    });
-
-    await appendFragment(tree, options, versions, {
-      fragmentPath: joinPathFragments(__dirname, 'appendFragments', 'terraform', 'outputs.s3Upload.tf'),
-      appendFilePath: joinPathFragments(projectRoot, 'terraform', 'outputs.tf')
-    });
-  }
 
   addProjectConfiguration(tree, options.sharedResourcesName, {
     root: projectRoot,
