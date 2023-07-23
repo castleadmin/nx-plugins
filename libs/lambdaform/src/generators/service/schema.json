@@ -6,7 +6,7 @@
   "properties": {
     "serviceName": {
       "type": "string",
-      "description": "Define service name.",
+      "description": "Define the service name.",
       "$default": {
         "$source": "argv",
         "index": 0

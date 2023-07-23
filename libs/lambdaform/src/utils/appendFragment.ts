@@ -1,7 +1,7 @@
 import {Tree} from "@nx/devkit";
-import {Versions} from "../generators/handler/versions";
 import {render} from "ejs";
 import {readFile} from "node:fs/promises";
+import {Versions} from "./versions";
 
 export const appendFragment = async <T> (tree: Tree, options: T, versions: Versions, paths: {
   fragmentPath: string;

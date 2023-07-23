@@ -6,7 +6,7 @@
   "properties": {
     "handlerName": {
       "type": "string",
-      "description": "Define Lambda handler name.",
+      "description": "Define the Lambda handler name.",
       "$default": {
         "$source": "argv",
         "index": 0

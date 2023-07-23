@@ -6,7 +6,7 @@
   "properties": {
     "bucketName": {
       "type": "string",
-      "description": "Define S3 bucket name.",
+      "description": "Define the S3 bucket name.",
       "$default": {
         "$source": "argv",
         "index": 0
