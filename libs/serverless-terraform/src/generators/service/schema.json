@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "App",
+  "title": "Serverless Terraform Application Generator",
+  "type": "object",
+  "properties": {
+    "applicationName": {
+      "type": "string",
+      "description": "Application Name",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What application name would you like to use?"
+    },
+    "skipFormat": {
+      "description": "Skip formatting files.",
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["applicationName"],
+  "additionalProperties": false
+}

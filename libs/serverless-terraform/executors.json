@@ -1,5 +1,10 @@
 {
   "executors": {
+    "apply": {
+      "implementation": "./src/executors/apply/executor",
+      "schema": "./src/executors/apply/schema.json",
+      "description": "apply executor"
+    },
     "build": {
       "implementation": "./src/executors/build/executor",
       "schema": "./src/executors/build/schema.json",
@@ -10,20 +15,30 @@
       "schema": "./src/executors/deploy/schema.json",
       "description": "deploy executor"
     },
-    "local-invoke": {
-      "implementation": "./src/executors/local-invoke/executor",
-      "schema": "./src/executors/local-invoke/schema.json",
-      "description": "local-invoke executor"
+    "event": {
+      "implementation": "./src/executors/event/executor",
+      "schema": "./src/executors/event/schema.json",
+      "description": "event executor"
     },
-    "local-start-api": {
-      "implementation": "./src/executors/local-start-api/executor",
-      "schema": "./src/executors/local-start-api/schema.json",
-      "description": "local-start-api executor"
+    "init": {
+      "implementation": "./src/executors/init/executor",
+      "schema": "./src/executors/init/schema.json",
+      "description": "init executor"
     },
-    "local-start-lambda": {
-      "implementation": "./src/executors/local-start-lambda/executor",
-      "schema": "./src/executors/local-start-lambda/schema.json",
-      "description": "local-start-lambda executor"
+    "invoke": {
+      "implementation": "./src/executors/invoke/executor",
+      "schema": "./src/executors/invoke/schema.json",
+      "description": "invoke executor"
+    },
+    "plan": {
+      "implementation": "./src/executors/plan/executor",
+      "schema": "./src/executors/plan/schema.json",
+      "description": "plan executor"
+    },
+    "serve": {
+      "implementation": "./src/executors/serve/executor",
+      "schema": "./src/executors/serve/schema.json",
+      "description": "serve executor"
     }
   }
 }

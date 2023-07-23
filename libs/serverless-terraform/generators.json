@@ -1,14 +1,24 @@
 {
   "generators": {
-    "app": {
-      "factory": "./src/generators/app/generator",
-      "schema": "./src/generators/app/schema.json",
-      "description": "app generator"
+    "handler": {
+      "factory": "./src/generators/handler/generator",
+      "schema": "./src/generators/handler/schema.json",
+      "description": "handler generator"
     },
-    "event": {
-      "factory": "./src/generators/event/generator",
-      "schema": "./src/generators/event/schema.json",
-      "description": "event generator"
+    "service": {
+      "factory": "./src/generators/service/generator",
+      "schema": "./src/generators/service/schema.json",
+      "description": "service generator"
+    },
+    "shared": {
+      "factory": "./src/generators/shared/generator",
+      "schema": "./src/generators/shared/schema.json",
+      "description": "shared generator"
+    },
+    "workflow": {
+      "factory": "./src/generators/workflow/generator",
+      "schema": "./src/generators/workflow/schema.json",
+      "description": "workflow generator"
     }
   }
 }

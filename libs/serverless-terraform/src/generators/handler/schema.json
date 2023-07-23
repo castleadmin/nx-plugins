@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "Handler",
+  "title": "Serverless Terraform Handler Generator",
+  "type": "object",
+  "properties": {
+    "handlerName": {
+      "type": "string",
+      "description": "Define Lambda handler name.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What handler name would you like to use?"
+    },
+    "project": {
+      "type": "string",
+      "description": "Project where the handler should be added",
+      "x-prompt": "To which project would you like to add the handler?",
+      "x-dropdown": "projects"
+    },
+    "s3Upload": {
+      "type": "boolean",
+      "description": "Enable S3 deployment package upload.",
+      "x-prompt": {
+        "message": "Would you like to upload the deployment package to S3? (Direct upload is limited to 50MB per package ZIP file)",
+        "type": "list",
+        "items": [
+          {
+            "value": true,
+            "label": "Yes"
+          },
+          {
+            "value": false,
+            "label": "No"
+          }
+        ]
+      }
+    },
+    "xray": {
+      "type": "boolean",
+      "description": "Enable AWS X-Ray distributed tracing.",
+      "x-prompt": {
+        "message": "Would you like to use AWS X-Ray (Distributed Tracing)?",
+        "type": "list",
+        "items": [
+          {
+            "value": true,
+            "label": "Yes"
+          },
+          {
+            "value": false,
+            "label": "No"
+          }
+        ]
+      }
+    },
+    "skipFormat": {
+      "description": "Skip formatting files.",
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["handlerName", "project"],
+  "additionalProperties": false
+}
