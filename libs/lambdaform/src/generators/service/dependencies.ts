@@ -27,10 +27,11 @@ export const addProjectDependencies = (
     {},
     {
       rollup: versions.rollup,
+      'rollup-plugin-copy': versions['rollup-plugin-copy'],
+      '@rollup/plugin-json': versions['@rollup/plugin-json'],
       '@rollup/plugin-node-resolve': versions['@rollup/plugin-node-resolve'],
       '@rollup/plugin-commonjs': versions['@rollup/plugin-commonjs'],
-      '@rollup/plugin-json': versions['@rollup/plugin-json'],
-      'rollup-plugin-copy': versions['rollup-plugin-copy'],
+      '@rollup/plugin-typescript': versions['@rollup/plugin-typescript'],
     }
   );
 };

@@ -4,10 +4,11 @@ export interface Versions {
   tslib: string;
   '@types/node': string;
   rollup: string;
+  'rollup-plugin-copy': string;
+  '@rollup/plugin-json': string;
   '@rollup/plugin-node-resolve': string;
   '@rollup/plugin-commonjs': string;
-  '@rollup/plugin-json': string;
-  'rollup-plugin-copy': string;
+  '@rollup/plugin-typescript': string;
 }
 
 export const getVersions = async (tree: Tree): Promise<Versions> => {
@@ -29,18 +30,20 @@ export const getVersions = async (tree: Tree): Promise<Versions> => {
   }
 
   const rollup = '^3.26.2';
+  const rollupPluginCopy = '^3.4.0';
+  const rollupPluginJson = '^6.0.0';
   const rollupPluginNodeResolve = '^15.1.0';
   const rollupPluginCommonJs = '^25.0.3';
-  const rollupPluginJson = '^6.0.0';
-  const rollupPluginCopy = '^3.4.0';
+  const rollupPluginTypeScript= '^11.1.2';
 
   return {
     tslib,
     '@types/node': typesNode,
     rollup,
+    'rollup-plugin-copy': rollupPluginCopy,
+    '@rollup/plugin-json': rollupPluginJson,
     '@rollup/plugin-node-resolve': rollupPluginNodeResolve,
     '@rollup/plugin-commonjs': rollupPluginCommonJs,
-    '@rollup/plugin-json': rollupPluginJson,
-    'rollup-plugin-copy': rollupPluginCopy,
+    '@rollup/plugin-typescript': rollupPluginTypeScript
   };
 };
