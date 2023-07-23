@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@castleadmin/serverless-terraform": [
-        "libs/serverless-terraform/src/index.ts"
+      "lambdaform": [
+        "libs/lambdaform/src/index.ts"
       ]
     },
     "strict": true,
