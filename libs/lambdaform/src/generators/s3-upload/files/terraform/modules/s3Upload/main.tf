@@ -9,13 +9,16 @@ terraform {
 
 locals {
   workspaces = {
-    <%= project %>-test = {
+    <%= project %>_test = {
+      env         = "test"
       bucket_name = "<%= bucketName %>-test"
     }
-    <%= project %>-staging = {
+    <%= project %>_staging = {
+      env         = "staging"
       bucket_name = "<%= bucketName %>-staging"
     }
-    <%= project %>-production = {
+    <%= project %>_production = {
+      env         = "production"
       bucket_name = "<%= bucketName %>-production"
     }
   }
@@ -61,4 +64,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "<%= bucketName %>_lifecycle" {
       noncurrent_days           = 90 // The old versions will be retained for 90 days and deleted afterwards.
     }
   }
+}
+
+resource "aws_ssm_parameter" "<%= bucketName %>_ssm_parameter" {
+  name           = "/${local.workspaces[terraform.workspace].env}/s3/bucket/name/upload"
+  description    = "S3 bucket that is used to store the Lambda deployment packages."
+  type           = "String"
+  insecure_value = aws_s3_bucket.<%= bucketName %>_bucket.bucket
 }

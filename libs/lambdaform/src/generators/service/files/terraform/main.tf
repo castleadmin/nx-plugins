@@ -9,21 +9,21 @@
 
 locals {
   workspaces = {
-    <%= serviceName %>-test = {
+    <%= serviceName %>_test = {
       profile = "test"
       tags = {
         app = "<%= serviceName %>"
         env = "test"
       }
     }
-    <%= serviceName %>-staging = {
+    <%= serviceName %>_staging = {
       profile = "staging"
       tags = {
         app = "<%= serviceName %>"
         env = "staging"
       }
     }
-    <%= serviceName %>-production = {
+    <%= serviceName %>_production = {
       profile = "production"
       tags = {
         app = "<%= serviceName %>"

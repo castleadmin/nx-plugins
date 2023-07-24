@@ -10,13 +10,16 @@ terraform {
 locals {
   zip_file = "dist/<%= appsDir %>/<%= project %>/<%= handlerName %>/<%= handlerName %>.zip"
   workspaces = {
-    <%= project %>-test = {
+    <%= project %>_test = {
+      env           = "test"
       function_name = "<%= project %>-test-<%= handlerName %>"
     }
-    <%= project %>-staging = {
+    <%= project %>_staging = {
+      env           = "staging"
       function_name = "<%= project %>-staging-<%= handlerName %>"
     }
-    <%= project %>-production = {
+    <%= project %>_production = {
+      env           = "production"
       function_name = "<%= project %>-production-<%= handlerName %>"
     }
   }
@@ -70,13 +73,17 @@ resource "aws_cloudwatch_log_group" "<%= handlerName %>_log_group" {
   retention_in_days = 90
 }
 <% if (s3Upload) { %>
-data "aws_s3_bucket" "packages_bucket" {
-  bucket = var.bucket_name
+data "aws_ssm_parameter" "<%= handlerName %>_bucket_ssm_parameter" {
+  name = "/${local.workspaces[terraform.workspace].env}/s3/bucket/name/upload"
+}
+
+data "aws_s3_bucket" "<%= handlerName %>_bucket" {
+  bucket = data.aws_ssm_parameter.<%= handlerName %>_bucket_ssm_parameter.insecure_value
 }
 
 resource "aws_s3_object" "<%= handlerName %>_s3_object" {
   key         = "<%= handlerName %>"
-  bucket      = data.aws_s3_bucket.packages_bucket.id
+  bucket      = data.aws_s3_bucket.<%= handlerName %>_bucket.id
   source      = local.zip_file
   source_hash = filebase64sha512(local.zip_file)
 }
@@ -85,7 +92,7 @@ resource "aws_lambda_function" "<%= handlerName %>" {
   function_name = local.workspaces[terraform.workspace].function_name
   role          = aws_iam_role.<%= handlerName %>_iam_role
   <% if (s3Upload) { %>
-  s3_bucket         = data.aws_s3_bucket.packages_bucket.id
+  s3_bucket         = data.aws_s3_bucket.<%= handlerName %>_bucket.id
   s3_key            = aws_s3_object.<%= handlerName %>_s3_object.id
   s3_object_version = aws_s3_object.<%= handlerName %>_s3_object.version_id
   <% } else { %>
