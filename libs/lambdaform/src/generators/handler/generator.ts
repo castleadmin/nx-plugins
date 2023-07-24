@@ -17,11 +17,16 @@ export async function handlerGenerator(
   const projectName = names(options.project).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
 
+  const terraformOptions = {
+    handlerNameTf: names(options.handlerName).constantName.toLowerCase(),
+    projectTf: names(options.project).constantName.toLowerCase()
+  }
+
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
-    ...options, ...versions, appsDir
+    ...options, ...terraformOptions, ...versions, appsDir
   });
 
-  await appendFragment(tree, options, versions, {
+  await appendFragment(tree, options, terraformOptions, versions, {
     fragmentPath: joinPathFragments(__dirname, 'appendFragments', 'terraform', 'main.tf'),
     appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf')
   });

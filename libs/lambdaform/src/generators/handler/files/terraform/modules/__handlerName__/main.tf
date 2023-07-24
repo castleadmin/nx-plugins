@@ -10,22 +10,22 @@ terraform {
 locals {
   zip_file = "dist/<%= appsDir %>/<%= project %>/<%= handlerName %>/<%= handlerName %>.zip"
   workspaces = {
-    <%= project %>_test = {
+    <%= projectTf %>_test = {
       env           = "test"
       function_name = "<%= project %>-test-<%= handlerName %>"
     }
-    <%= project %>_staging = {
+    <%= projectTf %>_staging = {
       env           = "staging"
       function_name = "<%= project %>-staging-<%= handlerName %>"
     }
-    <%= project %>_production = {
+    <%= projectTf %>_production = {
       env           = "production"
       function_name = "<%= project %>-production-<%= handlerName %>"
     }
   }
 }
 
-data "aws_iam_policy_document" "<%= handlerName %>_assume_role_policy" {
+data "aws_iam_policy_document" "<%= handlerNameTf %>_assume_role_policy" {
   statement {
     principals {
       type        = "Service"
@@ -36,65 +36,65 @@ data "aws_iam_policy_document" "<%= handlerName %>_assume_role_policy" {
   }
 }
 
-data "aws_iam_policy_document" "<%= handlerName %>_iam_policy" {
+data "aws_iam_policy_document" "<%= handlerNameTf %>_iam_policy" {
   statement {
     actions = [
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
 
-    resources = ["${aws_cloudwatch_log_group.<%= handlerName %>_log_group.arn}:log-stream:*"]
+    resources = ["${aws_cloudwatch_log_group.<%= handlerNameTf %>_log_group.arn}:log-stream:*"]
 
     condition {
       test     = "ArnEquals"
       variable = "lambda:SourceFunctionArn"
-      values   = [aws_lambda_function.<%= handlerName %>.arn]
+      values   = [aws_lambda_function.<%= handlerNameTf %>.arn]
     }
   }
 }
 
-resource "aws_iam_role" "<%= handlerName %>_iam_role" {
+resource "aws_iam_role" "<%= handlerNameTf %>_iam_role" {
   name               = local.workspaces[terraform.workspace].function_name
   description        = "Role for Lambda function ${local.workspaces[terraform.workspace].function_name}"
-  assume_role_policy = data.aws_iam_policy_document.<%= handlerName %>_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.<%= handlerNameTf %>_assume_role_policy.json
   <% if (xray) { %>
   managed_policies = ["arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"]
   <% } %>
 }
 
-resource "aws_iam_role_policy" "<%= handlerName %>_iam_role_policy" {
+resource "aws_iam_role_policy" "<%= handlerNameTf %>_iam_role_policy" {
   name   = local.workspaces[terraform.workspace].function_name
-  role   = aws_iam_role.<%= handlerName %>_iam_role
-  policy = data.aws_iam_policy_document.<%= handlerName %>_iam_policy.json
+  role   = aws_iam_role.<%= handlerNameTf %>_iam_role
+  policy = data.aws_iam_policy_document.<%= handlerNameTf %>_iam_policy.json
 }
 
-resource "aws_cloudwatch_log_group" "<%= handlerName %>_log_group" {
+resource "aws_cloudwatch_log_group" "<%= handlerNameTf %>_log_group" {
   name              = "/aws/lambda/${local.workspaces[terraform.workspace].function_name}"
   retention_in_days = 90
 }
 <% if (s3Upload) { %>
-data "aws_ssm_parameter" "<%= handlerName %>_bucket_ssm_parameter" {
+data "aws_ssm_parameter" "<%= handlerNameTf %>_bucket_ssm_parameter" {
   name = "/${local.workspaces[terraform.workspace].env}/s3/bucket/name/upload"
 }
 
-data "aws_s3_bucket" "<%= handlerName %>_bucket" {
-  bucket = data.aws_ssm_parameter.<%= handlerName %>_bucket_ssm_parameter.insecure_value
+data "aws_s3_bucket" "<%= handlerNameTf %>_bucket" {
+  bucket = data.aws_ssm_parameter.<%= handlerNameTf %>_bucket_ssm_parameter.insecure_value
 }
 
-resource "aws_s3_object" "<%= handlerName %>_s3_object" {
+resource "aws_s3_object" "<%= handlerNameTf %>_s3_object" {
   key         = "<%= handlerName %>"
-  bucket      = data.aws_s3_bucket.<%= handlerName %>_bucket.id
+  bucket      = data.aws_s3_bucket.<%= handlerNameTf %>_bucket.id
   source      = local.zip_file
   source_hash = filebase64sha512(local.zip_file)
 }
 <% } %>
-resource "aws_lambda_function" "<%= handlerName %>" {
+resource "aws_lambda_function" "<%= handlerNameTf %>" {
   function_name = local.workspaces[terraform.workspace].function_name
-  role          = aws_iam_role.<%= handlerName %>_iam_role
+  role          = aws_iam_role.<%= handlerNameTf %>_iam_role
   <% if (s3Upload) { %>
-  s3_bucket         = data.aws_s3_bucket.<%= handlerName %>_bucket.id
-  s3_key            = aws_s3_object.<%= handlerName %>_s3_object.id
-  s3_object_version = aws_s3_object.<%= handlerName %>_s3_object.version_id
+  s3_bucket         = data.aws_s3_bucket.<%= handlerNameTf %>_bucket.id
+  s3_key            = aws_s3_object.<%= handlerNameTf %>_s3_object.id
+  s3_object_version = aws_s3_object.<%= handlerNameTf %>_s3_object.version_id
   <% } else { %>
   filename         = local.zip_file
   source_code_hash = filebase64sha512(local.zip_file)

@@ -17,16 +17,21 @@ export async function s3UploadGenerator(
   const projectName = names(options.project).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
 
+  const terraformOptions = {
+    bucketNameTf: names(options.bucketName).constantName.toLowerCase(),
+    projectTf: names(options.project).constantName.toLowerCase()
+  }
+
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
-    ...options, ...versions
+    ...options, ...terraformOptions, ...versions
   });
 
-  await appendFragment(tree, options, versions, {
+  await appendFragment(tree, options, terraformOptions, versions, {
     fragmentPath: joinPathFragments(__dirname, 'appendFragments', 'terraform', 'main.tf'),
     appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf')
   });
 
-  await appendFragment(tree, options, versions, {
+  await appendFragment(tree, options, terraformOptions, versions, {
     fragmentPath: joinPathFragments(__dirname, 'appendFragments', 'terraform', 'outputs.tf'),
     appendFilePath: joinPathFragments(projectRoot, 'terraform', 'outputs.tf')
   });

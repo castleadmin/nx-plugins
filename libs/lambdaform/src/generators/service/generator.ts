@@ -92,8 +92,13 @@ export const serviceGenerator = async (
   tasks.push(await addInitTasks(tree, options, versions));
   tasks.push(await addProjectDependencies(tree, versions));
 
+  const terraformOptions = {
+    serviceNameTf: names(options.serviceName).constantName.toLowerCase()
+  }
+
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
     ...options,
+    ...terraformOptions,
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
   });

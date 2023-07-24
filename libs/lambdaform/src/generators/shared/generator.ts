@@ -9,19 +9,21 @@ import {
   Tree,
 } from '@nx/devkit';
 import { SharedGeneratorSchema } from './schema';
-import {getVersions} from "../../utils/versions";
 
 export const sharedGenerator = async (
   tree: Tree,
   options: SharedGeneratorSchema
 ): Promise<void> => {
   const appsDir = getWorkspaceLayout(tree).appsDir;
-  const versions = await getVersions(tree);
   const projectName = names(options.sharedResourcesName).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
 
+  const terraformOptions = {
+    sharedResourcesNameTf: names(options.sharedResourcesName).constantName.toLowerCase()
+  }
+
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
-    ...options, ...versions
+    ...options, ...terraformOptions
   });
 
   addProjectConfiguration(tree, options.sharedResourcesName, {

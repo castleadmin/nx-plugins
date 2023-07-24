@@ -1,3 +1,3 @@
-module "<%= handlerName %>" {
+module "<%= handlerNameTf %>" {
   source = "./modules/<%= handlerName %>"
 }

@@ -9,21 +9,21 @@
 
 locals {
   workspaces = {
-    <%= sharedResourcesName %>_test = {
+    <%= sharedResourcesNameTf %>_test = {
       profile = "test"
       tags = {
         app = "<%= sharedResourcesName %>"
         env = "test"
       }
     }
-    <%= sharedResourcesName %>_staging = {
+    <%= sharedResourcesNameTf %>_staging = {
       profile = "staging"
       tags = {
         app = "<%= sharedResourcesName %>"
         env = "staging"
       }
     }
-    <%= sharedResourcesName %>_production = {
+    <%= sharedResourcesNameTf %>_production = {
       profile = "production"
       tags = {
         app = "<%= sharedResourcesName %>"
