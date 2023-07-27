@@ -3,7 +3,7 @@ import {
   GeneratorCallback,
   Tree,
 } from '@nx/devkit';
-import {Versions} from "../../utils/versions";
+import { Versions } from '../../utils/versions';
 
 export const addTsDependencies = (
   tree: Tree,
@@ -14,7 +14,10 @@ export const addTsDependencies = (
     {
       tslib: versions.tslib,
     },
-    { '@types/node': versions['@types/node'] }
+    {
+      '@types/aws-lambda': versions['@types/aws-lambda'],
+      '@types/node': versions['@types/node'],
+    }
   );
 };
 

@@ -1,14 +1,18 @@
-import {Tree} from "@nx/devkit";
+import { Tree } from '@nx/devkit';
 
 export interface Versions {
+  // TypeScript
   tslib: string;
+  '@types/aws-lambda': string;
   '@types/node': string;
+  // Build
   rollup: string;
   'rollup-plugin-copy': string;
   '@rollup/plugin-json': string;
   '@rollup/plugin-node-resolve': string;
   '@rollup/plugin-commonjs': string;
   '@rollup/plugin-typescript': string;
+  // Terraform
   awsTerraformProvider: string;
 }
 
@@ -25,6 +29,8 @@ export const getVersions = async (tree: Tree): Promise<Versions> => {
     throw new Error("tslib version isn't defined");
   }
 
+  const typesAwsLambda = '^8.10.119';
+
   const typesNode = packageJson.devDependencies['@types/node'];
   if (!typesNode) {
     throw new Error("@types/node version isn't defined");
@@ -35,12 +41,13 @@ export const getVersions = async (tree: Tree): Promise<Versions> => {
   const rollupPluginJson = '^6.0.0';
   const rollupPluginNodeResolve = '^15.1.0';
   const rollupPluginCommonJs = '^25.0.3';
-  const rollupPluginTypeScript= '^11.1.2';
+  const rollupPluginTypeScript = '^11.1.2';
 
   const awsTerraformProvider = '5.8.0';
 
   return {
     tslib,
+    '@types/aws-lambda': typesAwsLambda,
     '@types/node': typesNode,
     rollup,
     'rollup-plugin-copy': rollupPluginCopy,
@@ -48,6 +55,6 @@ export const getVersions = async (tree: Tree): Promise<Versions> => {
     '@rollup/plugin-node-resolve': rollupPluginNodeResolve,
     '@rollup/plugin-commonjs': rollupPluginCommonJs,
     '@rollup/plugin-typescript': rollupPluginTypeScript,
-    awsTerraformProvider
+    awsTerraformProvider,
   };
 };

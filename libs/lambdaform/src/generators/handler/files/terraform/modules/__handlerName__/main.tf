@@ -99,7 +99,7 @@ resource "aws_lambda_function" "<%= handlerNameTf %>" {
   filename         = local.zip_file
   source_code_hash = filebase64sha512(local.zip_file)
   <% } %>
-  handler = "<%= handlerName %>.js"
+  handler = "index.handler"
 
   runtime       = "nodejs18.x"
   architectures = ["arm64"] // arm64 (cost-efficient) or x86_64
