@@ -1,7 +1,6 @@
-export interface ApplyExecutorSchema {
+export interface DestroyExecutorSchema {
   workspace?: string;
   interactive: boolean;
   args?: string;
-  planOutput: string;
   terraformDirectory: string;
 }

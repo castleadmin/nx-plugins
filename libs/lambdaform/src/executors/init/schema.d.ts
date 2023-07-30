@@ -1,1 +1,7 @@
-export interface InitExecutorSchema {} // eslint-disable-line
+export interface InitExecutorSchema {
+  workspace?: string;
+  interactive: boolean;
+  upgrade: boolean;
+  args?: string;
+  terraformDirectory: string;
+}

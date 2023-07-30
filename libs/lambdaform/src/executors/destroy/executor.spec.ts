@@ -1,14 +1,13 @@
-import { PlanExecutorSchema } from './schema';
+import { DestroyExecutorSchema } from './schema';
 import executor from './executor';
 
-const options: PlanExecutorSchema = {
-  workspace: 'plan-test',
+const options: DestroyExecutorSchema = {
+  workspace: 'destroy-test',
   interactive: false,
-  planOutput: 'tfplan',
   terraformDirectory: 'terraform',
 };
 
-describe('Plan Executor', () => {
+describe('Destroy Executor', () => {
   it('can run', async () => {
     const context = {
       root: '',

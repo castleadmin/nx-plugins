@@ -1,6 +1,5 @@
 import {
   addProjectConfiguration,
-  convertNxGenerator,
   formatFiles,
   generateFiles,
   getWorkspaceLayout,
@@ -19,11 +18,14 @@ export const sharedGenerator = async (
   const projectRoot = joinPathFragments(appsDir, projectName);
 
   const terraformOptions = {
-    sharedResourcesNameTf: names(options.sharedResourcesName).constantName.toLowerCase()
-  }
+    sharedResourcesNameTf: names(
+      options.sharedResourcesName
+    ).constantName.toLowerCase(),
+  };
 
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
-    ...options, ...terraformOptions
+    ...options,
+    ...terraformOptions,
   });
 
   addProjectConfiguration(tree, options.sharedResourcesName, {
@@ -42,4 +44,3 @@ export const sharedGenerator = async (
 };
 
 export default sharedGenerator;
-export const sharedSchematic = convertNxGenerator(sharedGenerator);

@@ -1,14 +1,11 @@
-import { PlanExecutorSchema } from './schema';
+import { FormatExecutorSchema } from './schema';
 import executor from './executor';
 
-const options: PlanExecutorSchema = {
-  workspace: 'plan-test',
-  interactive: false,
-  planOutput: 'tfplan',
+const options: FormatExecutorSchema = {
   terraformDirectory: 'terraform',
 };
 
-describe('Plan Executor', () => {
+describe('Format Executor', () => {
   it('can run', async () => {
     const context = {
       root: '',

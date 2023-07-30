@@ -1,12 +1,14 @@
 import {
-  convertNxGenerator,
   formatFiles,
-  generateFiles, getWorkspaceLayout, joinPathFragments, names,
+  generateFiles,
+  getWorkspaceLayout,
+  joinPathFragments,
+  names,
   Tree,
 } from '@nx/devkit';
 import { HandlerGeneratorSchema } from './schema';
-import {appendFragment} from "../../utils/appendFragment";
-import {getVersions} from "../../utils/versions";
+import { appendFragment } from '../../utils/appendFragment';
+import { getVersions } from '../../utils/versions';
 
 export async function handlerGenerator(
   tree: Tree,
@@ -19,16 +21,24 @@ export async function handlerGenerator(
 
   const terraformOptions = {
     handlerNameTf: names(options.handlerName).constantName.toLowerCase(),
-    projectTf: names(options.project).constantName.toLowerCase()
-  }
+    projectTf: names(options.project).constantName.toLowerCase(),
+  };
 
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
-    ...options, ...terraformOptions, ...versions, appsDir
+    ...options,
+    ...terraformOptions,
+    ...versions,
+    appsDir,
   });
 
   await appendFragment(tree, options, terraformOptions, versions, {
-    fragmentPath: joinPathFragments(__dirname, 'appendFragments', 'terraform', 'main.tf'),
-    appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf')
+    fragmentPath: joinPathFragments(
+      __dirname,
+      'appendFragments',
+      'terraform',
+      'main.tf'
+    ),
+    appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf'),
   });
 
   if (!options.skipFormat) {
@@ -37,4 +47,3 @@ export async function handlerGenerator(
 }
 
 export default handlerGenerator;
-export const handlerSchematic = convertNxGenerator(handlerGenerator);

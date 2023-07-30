@@ -1,6 +1,5 @@
 import {
   addProjectConfiguration,
-  convertNxGenerator,
   formatFiles,
   generateFiles,
   GeneratorCallback,
@@ -19,7 +18,7 @@ import {
 import { jestInitGenerator, jestProjectGenerator } from '@nx/jest';
 import { addProjectDependencies, addTsDependencies } from './dependencies';
 import { Linter, lintProjectGenerator } from '@nx/linter';
-import {getVersions, Versions} from "../../utils/versions";
+import { getVersions, Versions } from '../../utils/versions';
 
 const addInitTasks = async (
   tree: Tree,
@@ -93,8 +92,8 @@ export const serviceGenerator = async (
   tasks.push(await addProjectDependencies(tree, versions));
 
   const terraformOptions = {
-    serviceNameTf: names(options.serviceName).constantName.toLowerCase()
-  }
+    serviceNameTf: names(options.serviceName).constantName.toLowerCase(),
+  };
 
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
     ...options,
@@ -124,4 +123,3 @@ export const serviceGenerator = async (
 };
 
 export default serviceGenerator;
-export const serviceSchematic = convertNxGenerator(serviceGenerator);

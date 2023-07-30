@@ -1,9 +1,10 @@
 {
   "$schema": "http://json-schema.org/schema",
   "version": 2,
-  "title": "Invoke executor",
+  "title": "Lambdaform Invoke executor",
   "description": "",
   "type": "object",
   "properties": {},
-  "required": []
+  "required": [],
+  "additionalProperties": false
 }

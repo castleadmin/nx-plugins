@@ -1,12 +1,14 @@
 import {
-  convertNxGenerator,
   formatFiles,
-  generateFiles, getWorkspaceLayout, joinPathFragments, names,
+  generateFiles,
+  getWorkspaceLayout,
+  joinPathFragments,
+  names,
   Tree,
 } from '@nx/devkit';
 import { S3UploadGeneratorSchema } from './schema';
-import {appendFragment} from "../../utils/appendFragment";
-import {getVersions} from "../../utils/versions";
+import { appendFragment } from '../../utils/appendFragment';
+import { getVersions } from '../../utils/versions';
 
 export async function s3UploadGenerator(
   tree: Tree,
@@ -19,21 +21,33 @@ export async function s3UploadGenerator(
 
   const terraformOptions = {
     bucketNameTf: names(options.bucketName).constantName.toLowerCase(),
-    projectTf: names(options.project).constantName.toLowerCase()
-  }
+    projectTf: names(options.project).constantName.toLowerCase(),
+  };
 
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
-    ...options, ...terraformOptions, ...versions
+    ...options,
+    ...terraformOptions,
+    ...versions,
   });
 
   await appendFragment(tree, options, terraformOptions, versions, {
-    fragmentPath: joinPathFragments(__dirname, 'appendFragments', 'terraform', 'main.tf'),
-    appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf')
+    fragmentPath: joinPathFragments(
+      __dirname,
+      'appendFragments',
+      'terraform',
+      'main.tf'
+    ),
+    appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf'),
   });
 
   await appendFragment(tree, options, terraformOptions, versions, {
-    fragmentPath: joinPathFragments(__dirname, 'appendFragments', 'terraform', 'outputs.tf'),
-    appendFilePath: joinPathFragments(projectRoot, 'terraform', 'outputs.tf')
+    fragmentPath: joinPathFragments(
+      __dirname,
+      'appendFragments',
+      'terraform',
+      'outputs.tf'
+    ),
+    appendFilePath: joinPathFragments(projectRoot, 'terraform', 'outputs.tf'),
   });
 
   if (!options.skipFormat) {
@@ -42,4 +56,3 @@ export async function s3UploadGenerator(
 }
 
 export default s3UploadGenerator;
-export const s3UploadSchematic = convertNxGenerator(s3UploadGenerator);

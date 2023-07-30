@@ -1,9 +1,34 @@
 {
   "$schema": "http://json-schema.org/schema",
   "version": 2,
-  "title": "Plan executor",
-  "description": "",
+  "title": "Lambdaform Plan executor",
+  "description": "Wrapper around the 'terraform plan' command.",
   "type": "object",
-  "properties": {},
-  "required": []
+  "properties": {
+    "workspace": {
+      "type": "string",
+      "description": "The Terraform workspace you would like to use. (Only required if you use workspaces.)"
+    },
+    "interactive": {
+      "type": "boolean",
+      "description": "Should the Terraform CLI be allowed to prompt you? (Should be deactivated in the CI/CD pipeline.)",
+      "default": false
+    },
+    "args": {
+      "type": "string",
+      "description": "Used to provide additional arguments to the Terraform CLI. (https://developer.hashicorp.com/terraform/cli/commands/plan)"
+    },
+    "planOutput": {
+      "type": "string",
+      "description": "The name of the output file that is created by the 'terraform plan' command.",
+      "default": "tfplan"
+    },
+    "terraformDirectory": {
+      "type": "string",
+      "description": "The name of the project directory where the *.tf files are stored.",
+      "default": "terraform"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
 }

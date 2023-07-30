@@ -1,26 +1,25 @@
-import { PlanExecutorSchema } from './schema';
+import { DestroyExecutorSchema } from './schema';
 import { ExecutorContext, joinPathFragments } from '@nx/devkit';
 import { getProjectRoot } from '../../utils/getProjectRoot';
 import { promisify } from 'node:util';
 import { exec } from 'node:child_process';
 
 export const runExecutor = async (
-  options: PlanExecutorSchema,
+  options: DestroyExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
   const project = getProjectRoot(context);
 
-  const { workspace, interactive, args, planOutput, terraformDirectory } =
-    options;
+  const { workspace, interactive, args, terraformDirectory } = options;
 
   const selectWorkspaceCommand = `terraform workspace select ${workspace}`;
-  const planCommand = `terraform plan -input=${interactive} -out=${planOutput} ${
+  const destroyCommand = `terraform destroy -input=${interactive} ${
     args ?? ''
   }`;
-  const combinedCommand = `${selectWorkspaceCommand} && ${planCommand}`;
+  const combinedCommand = `${selectWorkspaceCommand} && ${destroyCommand}`;
 
   const { stdout, stderr } = await promisify(exec)(
-    workspace ? combinedCommand : planCommand,
+    workspace ? combinedCommand : destroyCommand,
     { cwd: joinPathFragments(context.root, project, terraformDirectory) }
   );
   console.log(stdout);

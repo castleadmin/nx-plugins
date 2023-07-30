@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/schema",
   "version": 2,
-  "title": "Lambdaform Apply executor",
-  "description": "Wrapper around the 'terraform apply' command.",
+  "title": "Lambdaform Destroy executor",
+  "description": "Wrapper around the 'terraform destroy' command.",
   "type": "object",
   "properties": {
     "workspace": {
@@ -12,16 +12,11 @@
     "interactive": {
       "type": "boolean",
       "description": "Should the Terraform CLI be allowed to prompt you? (Should be deactivated in the CI/CD pipeline.)",
-      "default": false
+      "default": true
     },
     "args": {
       "type": "string",
-      "description": "Used to provide additional arguments to the Terraform CLI. (https://developer.hashicorp.com/terraform/cli/commands/apply)"
-    },
-    "planOutput": {
-      "type": "string",
-      "description": "The name of the output file that is created by the 'terraform plan' command.",
-      "default": "tfplan"
+      "description": "Used to provide additional arguments to the Terraform CLI. (https://developer.hashicorp.com/terraform/cli/commands/destroy)"
     },
     "terraformDirectory": {
       "type": "string",

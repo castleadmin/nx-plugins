@@ -1,9 +1,34 @@
 {
   "$schema": "http://json-schema.org/schema",
   "version": 2,
-  "title": "Init executor",
-  "description": "",
+  "title": "Lambdaform Init executor",
+  "description": "Wrapper around the 'terraform init' command.",
   "type": "object",
-  "properties": {},
-  "required": []
+  "properties": {
+    "workspace": {
+      "type": "string",
+      "description": "The Terraform workspace you would like to use. (Only required if you use workspaces.)"
+    },
+    "interactive": {
+      "type": "boolean",
+      "description": "Should the Terraform CLI be allowed to prompt you? (Should be deactivated in the CI/CD pipeline.)",
+      "default": false
+    },
+    "upgrade": {
+      "type": "boolean",
+      "description": "Should the external provider versions be updated in the dependency lock file. Needs to be activated only once after a provider version update. (https://developer.hashicorp.com/terraform/language/files/dependency-lock)",
+      "default": false
+    },
+    "args": {
+      "type": "string",
+      "description": "Used to provide additional arguments to the Terraform CLI. (https://developer.hashicorp.com/terraform/cli/commands/init)"
+    },
+    "terraformDirectory": {
+      "type": "string",
+      "description": "The name of the project directory where the *.tf files are stored.",
+      "default": "terraform"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
 }

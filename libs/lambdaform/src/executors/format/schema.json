@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 2,
+  "title": "Lambdaform Format executor",
+  "description": "Wrapper around the 'nx format' and 'terraform fmt' commands.",
+  "type": "object",
+  "properties": {
+    "args": {
+      "type": "string",
+      "description": "Used to provide additional arguments to the Terraform CLI. (https://developer.hashicorp.com/terraform/cli/commands/fmt)"
+    },
+    "terraformDirectory": {
+      "type": "string",
+      "description": "The name of the project directory where the *.tf files are stored.",
+      "default": "terraform"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
