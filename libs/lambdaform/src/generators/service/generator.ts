@@ -19,6 +19,8 @@ import { jestInitGenerator, jestProjectGenerator } from '@nx/jest';
 import { addProjectDependencies, addTsDependencies } from './dependencies';
 import { Linter, lintProjectGenerator } from '@nx/linter';
 import { getVersions, Versions } from '../../utils/versions';
+import { createProjectConfiguration } from './create-project-configuration';
+import { toTerraformName } from '../../utils/to-terraform-name';
 
 const addInitTasks = async (
   tree: Tree,
@@ -92,7 +94,7 @@ export const serviceGenerator = async (
   tasks.push(await addProjectDependencies(tree, versions));
 
   const terraformOptions = {
-    serviceNameTf: names(options.serviceName).constantName.toLowerCase(),
+    serviceNameTf: toTerraformName(options.serviceName),
   };
 
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
@@ -102,15 +104,11 @@ export const serviceGenerator = async (
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
   });
 
-  addProjectConfiguration(tree, options.serviceName, {
-    root: projectRoot,
-    sourceRoot: joinPathFragments(projectRoot, 'src'),
-    projectType: 'application',
-    // TODO
-    targets: {},
-    // TODO
-    tags: [`app:${options.serviceName}`, 'lambdaform:service'],
-  });
+  addProjectConfiguration(
+    tree,
+    options.serviceName,
+    createProjectConfiguration(projectRoot, options)
+  );
 
   tasks.push(await addESLint(tree, options, projectRoot));
   tasks.push(await addJest(tree, options));

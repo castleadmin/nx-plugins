@@ -7,8 +7,9 @@ import {
   Tree,
 } from '@nx/devkit';
 import { S3UploadGeneratorSchema } from './schema';
-import { appendFragment } from '../../utils/appendFragment';
+import { appendFragment } from '../../utils/append-fragment';
 import { getVersions } from '../../utils/versions';
+import { toTerraformName } from '../../utils/to-terraform-name';
 
 export async function s3UploadGenerator(
   tree: Tree,
@@ -20,8 +21,8 @@ export async function s3UploadGenerator(
   const projectRoot = joinPathFragments(appsDir, projectName);
 
   const terraformOptions = {
-    bucketNameTf: names(options.bucketName).constantName.toLowerCase(),
-    projectTf: names(options.project).constantName.toLowerCase(),
+    bucketNameTf: toTerraformName(options.bucketName),
+    projectTf: toTerraformName(options.project),
   };
 
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
@@ -33,7 +34,7 @@ export async function s3UploadGenerator(
   await appendFragment(tree, options, terraformOptions, versions, {
     fragmentPath: joinPathFragments(
       __dirname,
-      'appendFragments',
+      'append-fragments',
       'terraform',
       'main.tf'
     ),
@@ -43,7 +44,7 @@ export async function s3UploadGenerator(
   await appendFragment(tree, options, terraformOptions, versions, {
     fragmentPath: joinPathFragments(
       __dirname,
-      'appendFragments',
+      'append-fragments',
       'terraform',
       'outputs.tf'
     ),

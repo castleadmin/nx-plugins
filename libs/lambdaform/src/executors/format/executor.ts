@@ -1,14 +1,11 @@
 import { FormatExecutorSchema } from './schema';
 import { ExecutorContext, joinPathFragments } from '@nx/devkit';
-import { getProjectRoot } from '../../utils/getProjectRoot';
-import { executeCommand } from '../../utils/executeCommand';
+import { executeCommand } from '../../utils/execute-command';
 
 export const runExecutor = async (
   options: FormatExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
-  const project = getProjectRoot(context);
-
   const projectName = context.projectName;
   if (!projectName) {
     throw new Error(`Project name isn't defined`);
@@ -24,7 +21,7 @@ export const runExecutor = async (
   });
 
   const { stderr: fmtStderr } = await executeCommand(fmtCommand, {
-    cwd: joinPathFragments(context.root, project, terraformDirectory),
+    cwd: joinPathFragments(context.root, terraformDirectory),
   });
 
   const success = !nxStderr && !fmtStderr;

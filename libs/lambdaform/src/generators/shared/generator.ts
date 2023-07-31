@@ -8,6 +8,7 @@ import {
   Tree,
 } from '@nx/devkit';
 import { SharedGeneratorSchema } from './schema';
+import { toTerraformName } from '../../utils/to-terraform-name';
 
 export const sharedGenerator = async (
   tree: Tree,
@@ -18,9 +19,7 @@ export const sharedGenerator = async (
   const projectRoot = joinPathFragments(appsDir, projectName);
 
   const terraformOptions = {
-    sharedResourcesNameTf: names(
-      options.sharedResourcesName
-    ).constantName.toLowerCase(),
+    sharedResourcesNameTf: toTerraformName(options.sharedResourcesName),
   };
 
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {

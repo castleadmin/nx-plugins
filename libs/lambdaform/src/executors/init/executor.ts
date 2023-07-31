@@ -1,14 +1,11 @@
 import { InitExecutorSchema } from './schema';
 import { ExecutorContext, joinPathFragments } from '@nx/devkit';
-import { getProjectRoot } from '../../utils/getProjectRoot';
-import { executeCommand } from '../../utils/executeCommand';
+import { executeCommand } from '../../utils/execute-command';
 
 export const runExecutor = async (
   options: InitExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
-  const project = getProjectRoot(context);
-
   const { workspace, interactive, upgrade, args, terraformDirectory } = options;
 
   const selectWorkspaceCommand = `terraform workspace select ${workspace}`;
@@ -20,7 +17,7 @@ export const runExecutor = async (
   const { stderr } = await executeCommand(
     workspace ? combinedCommand : initCommand,
     {
-      cwd: joinPathFragments(context.root, project, terraformDirectory),
+      cwd: joinPathFragments(context.root, terraformDirectory),
     }
   );
 

@@ -7,8 +7,9 @@ import {
   Tree,
 } from '@nx/devkit';
 import { HandlerGeneratorSchema } from './schema';
-import { appendFragment } from '../../utils/appendFragment';
+import { appendFragment } from '../../utils/append-fragment';
 import { getVersions } from '../../utils/versions';
+import { toTerraformName } from '../../utils/to-terraform-name';
 
 export async function handlerGenerator(
   tree: Tree,
@@ -20,8 +21,8 @@ export async function handlerGenerator(
   const projectRoot = joinPathFragments(appsDir, projectName);
 
   const terraformOptions = {
-    handlerNameTf: names(options.handlerName).constantName.toLowerCase(),
-    projectTf: names(options.project).constantName.toLowerCase(),
+    handlerNameTf: toTerraformName(options.handlerName),
+    projectTf: toTerraformName(options.project),
   };
 
   generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
@@ -34,7 +35,7 @@ export async function handlerGenerator(
   await appendFragment(tree, options, terraformOptions, versions, {
     fragmentPath: joinPathFragments(
       __dirname,
-      'appendFragments',
+      'append-fragments',
       'terraform',
       'main.tf'
     ),
