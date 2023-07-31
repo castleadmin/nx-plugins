@@ -23,7 +23,15 @@ export const createProjectConfiguration = (
           outputPath: `dist/${projectRoot}`,
         },
       },
-      'init-terraform': {
+      'format-project': {
+        executor: 'lambdaform:format',
+        outputs: [],
+        defaultConfiguration: 'test',
+        options: {
+          terraformDirectory: `${projectRoot}/terraform`,
+        },
+      },
+      'init-project': {
         executor: 'lambdaform:init',
         outputs: [],
         defaultConfiguration: 'test',
