@@ -35,6 +35,8 @@ export const addProjectDependencies = (
       '@rollup/plugin-node-resolve': versions['@rollup/plugin-node-resolve'],
       '@rollup/plugin-commonjs': versions['@rollup/plugin-commonjs'],
       '@rollup/plugin-typescript': versions['@rollup/plugin-typescript'],
+      '@types/adm-zip': versions['@types/adm-zip'],
+      'adm-zip': versions['adm-zip'],
     }
   );
 };

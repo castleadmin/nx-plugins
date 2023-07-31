@@ -12,6 +12,8 @@ export interface Versions {
   '@rollup/plugin-node-resolve': string;
   '@rollup/plugin-commonjs': string;
   '@rollup/plugin-typescript': string;
+  '@types/adm-zip': string;
+  'adm-zip': string;
   // Terraform
   awsTerraformProvider: string;
 }
@@ -42,6 +44,8 @@ export const getVersions = async (tree: Tree): Promise<Versions> => {
   const rollupPluginNodeResolve = '^15.1.0';
   const rollupPluginCommonJs = '^25.0.3';
   const rollupPluginTypeScript = '^11.1.2';
+  const typesAdmZip = '^0.5.0';
+  const admZip = '^0.5.10';
 
   const awsTerraformProvider = '5.8.0';
 
@@ -55,6 +59,8 @@ export const getVersions = async (tree: Tree): Promise<Versions> => {
     '@rollup/plugin-node-resolve': rollupPluginNodeResolve,
     '@rollup/plugin-commonjs': rollupPluginCommonJs,
     '@rollup/plugin-typescript': rollupPluginTypeScript,
+    '@types/adm-zip': typesAdmZip,
+    'adm-zip': admZip,
     awsTerraformProvider,
   };
 };

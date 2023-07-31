@@ -1,8 +1,7 @@
 import { FormatExecutorSchema } from './schema';
 import { ExecutorContext, joinPathFragments } from '@nx/devkit';
 import { getProjectRoot } from '../../utils/getProjectRoot';
-import { promisify } from 'node:util';
-import { exec } from 'node:child_process';
+import { executeCommand } from '../../utils/executeCommand';
 
 export const runExecutor = async (
   options: FormatExecutorSchema,
@@ -20,17 +19,13 @@ export const runExecutor = async (
   const nxFormatCommand = `nx format --projects=${projectName}`;
   const fmtCommand = `terraform fmt -recursive ${args ?? ''}`;
 
-  const { stdout: nxStdout, stderr: nxStderr } = await promisify(exec)(nxFormatCommand, {
+  const { stderr: nxStderr } = await executeCommand(nxFormatCommand, {
     cwd: joinPathFragments(context.root),
   });
-  console.log(nxStdout);
-  console.error(nxStderr);
 
-  const { stdout: fmtStdout, stderr: fmtStderr } = await promisify(exec)(fmtCommand, {
+  const { stderr: fmtStderr } = await executeCommand(fmtCommand, {
     cwd: joinPathFragments(context.root, project, terraformDirectory),
   });
-  console.log(fmtStdout);
-  console.error(fmtStderr);
 
   const success = !nxStderr && !fmtStderr;
 

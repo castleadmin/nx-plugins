@@ -1,9 +1,7 @@
-import type { ExecutorContext } from '@nx/devkit';
+import { ExecutorContext, joinPathFragments } from '@nx/devkit';
 import { ApplyExecutorSchema } from './schema';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-import { joinPathFragments } from '@nx/devkit';
 import { getProjectRoot } from '../../utils/getProjectRoot';
+import { executeCommand } from '../../utils/executeCommand';
 
 export const runExecutor = async (
   options: ApplyExecutorSchema,
@@ -20,12 +18,10 @@ export const runExecutor = async (
   } ${planOutput}`;
   const combinedCommand = `${selectWorkspaceCommand} && ${applyCommand}`;
 
-  const { stdout, stderr } = await promisify(exec)(
+  const { stderr } = await executeCommand(
     workspace ? combinedCommand : applyCommand,
     { cwd: joinPathFragments(context.root, project, terraformDirectory) }
   );
-  console.log(stdout);
-  console.error(stderr);
 
   const success = !stderr;
 

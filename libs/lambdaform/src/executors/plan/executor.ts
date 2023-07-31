@@ -1,8 +1,7 @@
 import { PlanExecutorSchema } from './schema';
 import { ExecutorContext, joinPathFragments } from '@nx/devkit';
 import { getProjectRoot } from '../../utils/getProjectRoot';
-import { promisify } from 'node:util';
-import { exec } from 'node:child_process';
+import { executeCommand } from '../../utils/executeCommand';
 
 export const runExecutor = async (
   options: PlanExecutorSchema,
@@ -19,12 +18,10 @@ export const runExecutor = async (
   }`;
   const combinedCommand = `${selectWorkspaceCommand} && ${planCommand}`;
 
-  const { stdout, stderr } = await promisify(exec)(
+  const { stderr } = await executeCommand(
     workspace ? combinedCommand : planCommand,
     { cwd: joinPathFragments(context.root, project, terraformDirectory) }
   );
-  console.log(stdout);
-  console.error(stderr);
 
   const success = !stderr;
 

@@ -10,17 +10,12 @@
     "importHelpers": true,
     "target": "es2020",
     "module": "esnext",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "lambdaform": [
-        "libs/lambdaform/src/index.ts"
-      ]
+      "lambdaform": ["libs/lambdaform/src/index.ts"]
     },
     "strict": true,
     "allowUnreachableCode": false,
@@ -34,8 +29,5 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

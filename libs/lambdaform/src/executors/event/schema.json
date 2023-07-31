@@ -4,7 +4,19 @@
   "title": "Lambdaform Event executor",
   "description": "",
   "type": "object",
-  "properties": {},
+  "properties": {
+    "__unparsed__": {
+      "hidden": true,
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "$default": {
+        "$source": "unparsed"
+      },
+      "x-priority": "internal"
+    }
+  },
   "required": [],
   "additionalProperties": false
 }

@@ -1,0 +1,6 @@
+version = 0.1
+[default]
+[default.global.parameters]
+hook_name = "terraform"
+beta_features = true
+

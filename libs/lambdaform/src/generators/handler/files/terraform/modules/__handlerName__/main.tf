@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  zip_file = "dist/<%= appsDir %>/<%= project %>/<%= handlerName %>/<%= handlerName %>.zip"
+  zip_file = "../../../dist/<%= appsDir %>/<%= project %>/<%= handlerName %>.zip"
   workspaces = {
     <%= projectTf %>_test = {
       env           = "test"
@@ -58,13 +58,13 @@ resource "aws_iam_role" "<%= handlerNameTf %>_iam_role" {
   description        = "Role for Lambda function ${local.workspaces[terraform.workspace].function_name}"
   assume_role_policy = data.aws_iam_policy_document.<%= handlerNameTf %>_assume_role_policy.json
   <% if (xray) { %>
-  managed_policies = ["arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"]
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"]
   <% } %>
 }
 
 resource "aws_iam_role_policy" "<%= handlerNameTf %>_iam_role_policy" {
   name   = local.workspaces[terraform.workspace].function_name
-  role   = aws_iam_role.<%= handlerNameTf %>_iam_role
+  role   = aws_iam_role.<%= handlerNameTf %>_iam_role.id
   policy = data.aws_iam_policy_document.<%= handlerNameTf %>_iam_policy.json
 }
 
@@ -90,7 +90,7 @@ resource "aws_s3_object" "<%= handlerNameTf %>_s3_object" {
 <% } %>
 resource "aws_lambda_function" "<%= handlerNameTf %>" {
   function_name = local.workspaces[terraform.workspace].function_name
-  role          = aws_iam_role.<%= handlerNameTf %>_iam_role
+  role          = aws_iam_role.<%= handlerNameTf %>_iam_role.arn
   <% if (s3Upload) { %>
   s3_bucket         = data.aws_s3_bucket.<%= handlerNameTf %>_bucket.id
   s3_key            = aws_s3_object.<%= handlerNameTf %>_s3_object.id
