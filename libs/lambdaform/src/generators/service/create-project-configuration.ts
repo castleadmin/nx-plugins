@@ -23,6 +23,30 @@ export const createProjectConfiguration = (
           outputPath: `dist/${projectRoot}`,
         },
       },
+      event: {
+        executor: 'lambdaform:event',
+        outputs: [],
+        options: {
+          samConfiguration: `${projectRoot}/samconfig.toml`,
+        },
+      },
+      invoke: {
+        executor: 'lambdaform:invoke',
+        outputs: [],
+        options: {
+          terraformDirectory: `${projectRoot}/terraform`,
+          samConfiguration: `${projectRoot}/samconfig.toml`,
+        },
+      },
+      serve: {
+        executor: 'lambdaform:serve',
+        outputs: [],
+        options: {
+          terraformDirectory: `${projectRoot}/terraform`,
+          samConfiguration: `${projectRoot}/samconfig.toml`,
+          api: false,
+        },
+      },
       'format-project': {
         executor: 'lambdaform:format',
         outputs: [],
@@ -93,11 +117,6 @@ export const createProjectConfiguration = (
             workspace: `${serviceNameTf}_production`,
           },
         },
-      },
-      event: {
-        executor: 'lambdaform:event',
-        outputs: [],
-        options: {},
       },
     },
     tags: [`app:${options.serviceName}`, 'lambdaform:service'],
