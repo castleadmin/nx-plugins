@@ -33,7 +33,7 @@ export const createInputOptions = ({
   external,
   treeshake,
   plugins: [
-    // TODO fix
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (copy as any)({
       targets: copyTargets,
     }),
@@ -77,8 +77,6 @@ export const build = async (
   try {
     bundle = await rollup(inputOptions);
     return await bundle.write(outputOptions);
-  } catch (error) {
-    throw error;
   } finally {
     if (bundle) {
       await bundle.close();
