@@ -26,6 +26,27 @@
             "items": {
               "$ref": "#/definitions/assetPattern"
             }
+          },
+          "externalDependencies": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["none", "all"]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Dependencies to keep external to the bundle. (`none` (default), `all`, or an array of module names)",
+            "default": "none"
+          },
+          "excludeAwsSdk": {
+            "type": "boolean",
+            "description": "Should the AWS SDK be excluded? The SDK is part of the Lambda runtime. Set this option to false, if a different SDK version is needed. (https://docs.aws.amazon.com/lambda/latest/dg/lambda-nodejs.html)",
+            "default": true
           }
         },
         "required": ["name", "path"],

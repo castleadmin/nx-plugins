@@ -1,12 +1,14 @@
 import {
+  ExternalOption,
   OutputOptions,
-  rollup,
   RollupBuild,
   RollupOptions,
+  RollupOutput,
   TreeshakingOptions,
   TreeshakingPreset,
+  rollup,
 } from 'rollup';
-import copy from 'rollup-plugin-copy';
+import * as copy from 'rollup-plugin-copy';
 import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
 import nodeResolve from '@rollup/plugin-node-resolve';
@@ -15,20 +17,24 @@ import commonjs from '@rollup/plugin-commonjs';
 export const createInputOptions = ({
   handlerPath,
   outputPath,
+  external,
   tsconfig,
   treeshake,
   copyTargets,
 }: {
   handlerPath: string;
   outputPath: string;
+  external: ExternalOption;
   tsconfig: string;
   treeshake: boolean | TreeshakingPreset | TreeshakingOptions;
   copyTargets: { src: string; dest: string }[];
 }): RollupOptions => ({
   input: handlerPath,
+  external,
   treeshake,
   plugins: [
-    copy({
+    // TODO fix
+    (copy as any)({
       targets: copyTargets,
     }),
     json(),
@@ -65,12 +71,12 @@ export const createOutputOptions = ({
 export const build = async (
   inputOptions: RollupOptions,
   outputOptions: OutputOptions
-): Promise<void> => {
+): Promise<RollupOutput> => {
   let bundle: RollupBuild | undefined = undefined;
 
   try {
     bundle = await rollup(inputOptions);
-    await bundle.write(outputOptions);
+    return await bundle.write(outputOptions);
   } catch (error) {
     throw error;
   } finally {

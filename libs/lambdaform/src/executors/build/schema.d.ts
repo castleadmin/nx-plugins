@@ -4,6 +4,8 @@ export interface Handler {
   name: string;
   path: string;
   assets?: (AssetGlobPattern | string)[];
+  externalDependencies: 'all' | 'none' | string[];
+  excludeAwsSdk: boolean;
 }
 
 export interface AssetGlobPattern {
@@ -21,9 +23,7 @@ export interface BuildExecutorSchema {
   treeshake: TreeshakingPreset;
   // TODO
   rollupConfig?: string;
-  externalDependencies: string[];
-
   deleteOutputPath: boolean;
-
+  // TODO
   watch: boolean;
 }
