@@ -4,6 +4,90 @@
   "title": "Lambdaform Build executor",
   "description": "",
   "type": "object",
-  "properties": {},
-  "required": []
+  "properties": {
+    "handlers": {
+      "type": "array",
+      "description": "Used to define the handler build properties. Each Lambda function is represented by a handler.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the handler."
+          },
+          "path": {
+            "type": "string",
+            "description": "The path to the file that contains the handler function."
+          },
+          "assets": {
+            "type": "array",
+            "description": "List of static assets.",
+            "default": [],
+            "items": {
+              "$ref": "#/definitions/assetPattern"
+            }
+          }
+        },
+        "required": ["name", "path"],
+        "additionalProperties": false
+      }
+    },
+    "tsConfig": {
+      "type": "string",
+      "description": "File path of the TypeScript configuration."
+    },
+    "outputPath": {
+      "type": "string",
+      "description": "The output path of the generated files."
+    },
+    "outputFileName": {
+      "type": "string",
+      "description": "Name of the handler output file.",
+      "default": "index.mjs"
+    },
+    "zipFilterRegExp": {
+      "type": "string",
+      "description": "Regular expression that is used to filter out contents of the handler ZIP file. Remove the option if you don't want to have any filtering."
+    },
+    "treeshake": {
+      "enum": ["smallest", "recommended", "safest"],
+      "description": "Define the Rollup tree shaking option. Use the 'rollupConfig' option, if more control over the tree shaking process is needed. (https://rollupjs.org/configuration-options/#treeshake)",
+      "default": "smallest"
+    },
+    "deleteOutputPath": {
+      "type": "boolean",
+      "description": "Delete the output path before building.",
+      "default": true
+    }
+  },
+  "required": ["handlers", "tsConfig", "outputPath"],
+  "additionalProperties": false,
+  "definitions": {
+    "assetPattern": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "glob": {
+              "type": "string",
+              "description": "The pattern to match."
+            },
+            "input": {
+              "type": "string",
+              "description": "The input directory path in which to apply `glob`. Defaults to the workspace root."
+            },
+            "output": {
+              "type": "string",
+              "description": "Relative path within the output folder."
+            }
+          },
+          "required": ["glob", "input", "output"],
+          "additionalProperties": false
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+  }
 }

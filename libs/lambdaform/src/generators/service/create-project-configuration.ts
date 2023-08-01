@@ -21,6 +21,7 @@ export const createProjectConfiguration = (
           handlers: [],
           tsConfig: `${projectRoot}/tsconfig.app.json`,
           outputPath: `dist/${projectRoot}`,
+          zipFilterRegex: '\\.m?js\\.map$',
         },
       },
       event: {
