@@ -2,6 +2,7 @@ import { EventExecutorSchema } from './schema';
 import executor from './executor';
 
 const options: EventExecutorSchema = {
+  samConfiguration: '',
   __unparsed__: [],
 };
 

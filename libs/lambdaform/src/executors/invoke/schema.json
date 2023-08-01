@@ -5,6 +5,10 @@
   "description": "Wrapper around the 'sam local invoke' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)",
   "type": "object",
   "properties": {
+    "samConfiguration": {
+      "type": "string",
+      "description": "Path to the SAM configuration file."
+    },
     "terraformDirectory": {
       "type": "string",
       "description": "The name of the project directory where the *.tf files are stored."
@@ -22,6 +26,6 @@
       "x-priority": "internal"
     }
   },
-  "required": ["terraformDirectory"],
+  "required": ["samConfiguration", "terraformDirectory"],
   "additionalProperties": false
 }

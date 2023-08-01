@@ -5,6 +5,10 @@
   "description": "Wrapper around the 'sam local start-lambda' command. If 'api' is set to true 'sam local start-api' is used instead. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html and https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)",
   "type": "object",
   "properties": {
+    "samConfiguration": {
+      "type": "string",
+      "description": "Path to the SAM configuration file."
+    },
     "terraformDirectory": {
       "type": "string",
       "description": "The name of the project directory where the *.tf files are stored."
@@ -27,6 +31,6 @@
       "x-priority": "internal"
     }
   },
-  "required": ["terraformDirectory"],
+  "required": ["samConfiguration", "terraformDirectory"],
   "additionalProperties": false
 }

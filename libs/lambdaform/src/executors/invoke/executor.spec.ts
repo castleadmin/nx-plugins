@@ -2,6 +2,7 @@ import { InvokeExecutorSchema } from './schema';
 import executor from './executor';
 
 const options: InvokeExecutorSchema = {
+  samConfiguration: '',
   terraformDirectory: '',
   __unparsed__: [],
 };

@@ -2,6 +2,7 @@ import { ServeExecutorSchema } from './schema';
 import executor from './executor';
 
 const options: ServeExecutorSchema = {
+  samConfiguration: '',
   terraformDirectory: '',
   api: false,
   __unparsed__: [],
