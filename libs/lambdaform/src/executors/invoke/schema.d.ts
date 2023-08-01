@@ -1,1 +1,4 @@
-export interface InvokeExecutorSchema {} // eslint-disable-line
+export interface InvokeExecutorSchema {
+  terraformDirectory: string;
+  __unparsed__: string[];
+}

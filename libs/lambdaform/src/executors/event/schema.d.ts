@@ -1,1 +1,3 @@
-export interface EventExecutorSchema {} // eslint-disable-line
+export interface EventExecutorSchema {
+  __unparsed__: string[];
+}

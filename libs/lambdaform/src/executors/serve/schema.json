@@ -2,9 +2,31 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "Lambdaform Serve executor",
-  "description": "",
+  "description": "Wrapper around the 'sam local start-lambda' command. If 'api' is set to true 'sam local start-api' is used instead. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html and https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)",
   "type": "object",
-  "properties": {},
-  "required": [],
+  "properties": {
+    "terraformDirectory": {
+      "type": "string",
+      "description": "The name of the project directory where the *.tf files are stored."
+    },
+    "api": {
+      "type": "boolean",
+      "description": "Used to test Lambda functions that are invoked by an AWS API Gateway endpoint. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)",
+      "default": false
+    },
+    "__unparsed__": {
+      "description": "The command line input is stored in this internal property. The input is appended to 'sam local start-lambda' or 'sam local start-api', which are executed in the terraform directory.",
+      "hidden": true,
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "$default": {
+        "$source": "unparsed"
+      },
+      "x-priority": "internal"
+    }
+  },
+  "required": ["terraformDirectory"],
   "additionalProperties": false
 }

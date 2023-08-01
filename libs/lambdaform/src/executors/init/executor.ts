@@ -1,6 +1,7 @@
 import { InitExecutorSchema } from './schema';
-import { ExecutorContext, joinPathFragments } from '@nx/devkit';
+import { ExecutorContext } from '@nx/devkit';
 import { executeCommand } from '../../utils/execute-command';
+import { join } from 'node:path';
 
 export const runExecutor = async (
   options: InitExecutorSchema,
@@ -17,7 +18,7 @@ export const runExecutor = async (
   const { stderr } = await executeCommand(
     workspace ? combinedCommand : initCommand,
     {
-      cwd: joinPathFragments(context.root, terraformDirectory),
+      cwd: join(context.root, terraformDirectory),
     }
   );
 

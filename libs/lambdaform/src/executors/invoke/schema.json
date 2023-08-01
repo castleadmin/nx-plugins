@@ -2,9 +2,26 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "Lambdaform Invoke executor",
-  "description": "",
+  "description": "Wrapper around the 'sam local invoke' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)",
   "type": "object",
-  "properties": {},
-  "required": [],
+  "properties": {
+    "terraformDirectory": {
+      "type": "string",
+      "description": "The name of the project directory where the *.tf files are stored."
+    },
+    "__unparsed__": {
+      "description": "The command line input is stored in this internal property. The input is appended to 'sam local invoke', which is executed in the terraform directory.",
+      "hidden": true,
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "$default": {
+        "$source": "unparsed"
+      },
+      "x-priority": "internal"
+    }
+  },
+  "required": ["terraformDirectory"],
   "additionalProperties": false
 }

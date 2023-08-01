@@ -1,11 +1,20 @@
 import { ServeExecutorSchema } from './schema';
 import executor from './executor';
 
-const options: ServeExecutorSchema = {};
+const options: ServeExecutorSchema = {
+  terraformDirectory: '',
+  api: false,
+  __unparsed__: [],
+};
 
 describe('Serve Executor', () => {
   it('can run', async () => {
-    const output = await executor(options);
+    const context = {
+      root: '',
+      cwd: '',
+      isVerbose: false,
+    };
+    const output = await executor(options, context);
     expect(output.success).toBe(true);
   });
 });

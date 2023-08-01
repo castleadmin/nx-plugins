@@ -26,7 +26,6 @@ export const createProjectConfiguration = (
       'format-project': {
         executor: 'lambdaform:format',
         outputs: [],
-        defaultConfiguration: 'test',
         options: {
           terraformDirectory: `${projectRoot}/terraform`,
         },
@@ -93,6 +92,11 @@ export const createProjectConfiguration = (
             workspace: `${serviceNameTf}_production`,
           },
         },
+      },
+      event: {
+        executor: 'lambdaform:event',
+        outputs: [],
+        options: {},
       },
     },
     tags: [`app:${options.serviceName}`, 'lambdaform:service'],

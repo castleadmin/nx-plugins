@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "Lambdaform Destroy executor",
-  "description": "Wrapper around the 'terraform destroy' command.",
+  "description": "Wrapper around the 'terraform destroy' command. (https://developer.hashicorp.com/terraform/cli/commands/destroy)",
   "type": "object",
   "properties": {
     "workspace": {

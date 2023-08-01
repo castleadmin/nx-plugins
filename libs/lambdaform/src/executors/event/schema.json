@@ -2,10 +2,11 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "Lambdaform Event executor",
-  "description": "",
+  "description": "Wrapper around the 'sam local generate-event' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)",
   "type": "object",
   "properties": {
     "__unparsed__": {
+      "description": "The command line input is stored in this internal property. The input is appended to 'sam local generate-event', which is executed in the project directory.",
       "hidden": true,
       "type": "array",
       "items": {

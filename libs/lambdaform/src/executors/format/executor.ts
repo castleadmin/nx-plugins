@@ -1,6 +1,7 @@
 import { FormatExecutorSchema } from './schema';
-import { ExecutorContext, joinPathFragments } from '@nx/devkit';
+import { ExecutorContext } from '@nx/devkit';
 import { executeCommand } from '../../utils/execute-command';
+import { join } from 'node:path';
 
 export const runExecutor = async (
   options: FormatExecutorSchema,
@@ -17,11 +18,11 @@ export const runExecutor = async (
   const fmtCommand = `terraform fmt -recursive ${args ?? ''}`;
 
   const { stderr: nxStderr } = await executeCommand(nxFormatCommand, {
-    cwd: joinPathFragments(context.root),
+    cwd: context.root,
   });
 
   const { stderr: fmtStderr } = await executeCommand(fmtCommand, {
-    cwd: joinPathFragments(context.root, terraformDirectory),
+    cwd: join(context.root, terraformDirectory),
   });
 
   const success = !nxStderr && !fmtStderr;

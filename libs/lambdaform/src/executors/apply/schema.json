@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "Lambdaform Apply executor",
-  "description": "Wrapper around the 'terraform apply' command.",
+  "description": "Wrapper around the 'terraform apply' command. (https://developer.hashicorp.com/terraform/cli/commands/apply)",
   "type": "object",
   "properties": {
     "workspace": {

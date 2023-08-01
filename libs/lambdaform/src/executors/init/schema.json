@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "Lambdaform Init executor",
-  "description": "Wrapper around the 'terraform init' command.",
+  "description": "Wrapper around the 'terraform init' command. (https://developer.hashicorp.com/terraform/cli/commands/init)",
   "type": "object",
   "properties": {
     "workspace": {
