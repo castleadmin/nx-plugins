@@ -35,6 +35,7 @@ export const createProjectConfiguration = (
         outputs: [],
         defaultConfiguration: 'test',
         options: {
+          createWorkspace: true,
           interactive: false,
           upgrade: false,
           terraformDirectory: `${projectRoot}/terraform`,

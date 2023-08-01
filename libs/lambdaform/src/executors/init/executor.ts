@@ -7,9 +7,16 @@ export const runExecutor = async (
   options: InitExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
-  const { workspace, interactive, upgrade, args, terraformDirectory } = options;
+  const {
+    workspace,
+    createWorkspace,
+    interactive,
+    upgrade,
+    args,
+    terraformDirectory,
+  } = options;
 
-  const selectWorkspaceCommand = `terraform workspace select ${workspace}`;
+  const selectWorkspaceCommand = `terraform workspace select -or-create=${createWorkspace} ${workspace}`;
   const initCommand = `terraform init -input=${interactive} ${
     upgrade ? '-upgrade' : ''
   } ${args ?? ''}`;

@@ -9,6 +9,11 @@
       "type": "string",
       "description": "The Terraform workspace you would like to use. (Only required if you use workspaces.)"
     },
+    "createWorkspace": {
+      "type": "boolean",
+      "description": "Create the Terraform workspace, if it doesn't exist. (https://developer.hashicorp.com/terraform/cli/commands/workspace/select)",
+      "default": true
+    },
     "interactive": {
       "type": "boolean",
       "description": "Should the Terraform CLI be allowed to prompt you? (Should be deactivated in the CI/CD pipeline.)",
