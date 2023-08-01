@@ -7,7 +7,7 @@ export const runExecutor = async (
   options: InvokeExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
-  const { samConfiguration, terraformDirectory, __unparsed__ } = options;
+  const { samConfiguration, terraformDirectory, args, __unparsed__ } = options;
   const commandWorkingDirectory = join(context.root, terraformDirectory);
 
   const samConfigurationRelative = relative(
@@ -15,9 +15,9 @@ export const runExecutor = async (
     join(context.root, samConfiguration)
   );
 
-  const invokeCommand = `sam local invoke --config-file ${samConfigurationRelative} ${__unparsed__.join(
-    ' '
-  )}`;
+  const invokeCommand = `sam local invoke --config-file ${samConfigurationRelative} ${
+    args ?? ''
+  } ${__unparsed__.join(' ')}`;
 
   const { stderr } = await executeCommand(invokeCommand, {
     cwd: commandWorkingDirectory,

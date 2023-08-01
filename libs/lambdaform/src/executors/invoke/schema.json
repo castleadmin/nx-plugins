@@ -13,6 +13,10 @@
       "type": "string",
       "description": "The name of the project directory where the *.tf files are stored."
     },
+    "args": {
+      "type": "string",
+      "description": "Used to provide additional arguments to the SAM CLI. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)"
+    },
     "__unparsed__": {
       "description": "The command line input is stored in this internal property. The input is appended to 'sam local invoke', which is executed in the terraform directory.",
       "hidden": true,

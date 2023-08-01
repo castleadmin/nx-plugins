@@ -10,7 +10,7 @@ export const runExecutor = async (
 ): Promise<{ success: boolean }> => {
   const projectRoot = getProjectRoot(context);
 
-  const { samConfiguration, __unparsed__ } = options;
+  const { samConfiguration, args, __unparsed__ } = options;
   const commandWorkingDirectory = join(context.root, projectRoot);
 
   const samConfigurationRelative = relative(
@@ -18,9 +18,9 @@ export const runExecutor = async (
     join(context.root, samConfiguration)
   );
 
-  const generateEventCommand = `sam local generate-event --config-file ${samConfigurationRelative} ${__unparsed__.join(
-    ' '
-  )}`;
+  const generateEventCommand = `sam local generate-event --config-file ${samConfigurationRelative} ${
+    args ?? ''
+  } ${__unparsed__.join(' ')}`;
 
   const { stderr } = await executeCommand(generateEventCommand, {
     cwd: commandWorkingDirectory,
