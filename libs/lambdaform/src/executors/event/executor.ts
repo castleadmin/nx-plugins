@@ -2,34 +2,45 @@ import { EventExecutorSchema } from './schema';
 import { executeCommand } from '../../utils/execute-command';
 import { ExecutorContext } from '@nx/devkit';
 import { getProjectRoot } from '../../utils/get-project-root';
-import { join, relative } from 'node:path';
+import { dirname, resolve, join } from 'node:path';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { filterUnparsed } from '../../utils/filter-unparsed';
+
+export const createEventFile = async (
+  fileResolved: string,
+  data: string
+): Promise<void> => {
+  await mkdir(dirname(fileResolved), { recursive: true });
+  await writeFile(fileResolved, data, {
+    encoding: 'utf8',
+  });
+};
 
 export const runExecutor = async (
   options: EventExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
+  const contextRootResolved = resolve(context.root);
   const projectRoot = getProjectRoot(context);
 
-  const { samConfiguration, args, __unparsed__ } = options;
-  const commandWorkingDirectory = join(context.root, projectRoot);
+  const { create, args, __unparsed__ } = options;
+  const filteredUnparsed = filterUnparsed(__unparsed__, ['create', 'args']);
+  const workingDirectoryResolved = join(contextRootResolved, projectRoot);
 
-  const samConfigurationRelative = relative(
-    commandWorkingDirectory,
-    join(context.root, samConfiguration)
-  );
-
-  const generateEventCommand = `sam local generate-event --config-file ${samConfigurationRelative} ${
+  const generateEventCommand = `sam local generate-event ${
     args ?? ''
-  } ${__unparsed__.join(' ')}`;
+  } ${filteredUnparsed.join(' ')}`;
 
-  const { stderr } = await executeCommand(generateEventCommand, {
-    cwd: commandWorkingDirectory,
+  const { stdout } = await executeCommand(generateEventCommand, {
+    cwd: workingDirectoryResolved,
   });
 
-  const success = !stderr;
+  if (create) {
+    await createEventFile(join(workingDirectoryResolved, create), stdout);
+  }
 
   return {
-    success,
+    success: true,
   };
 };
 

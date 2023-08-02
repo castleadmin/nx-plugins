@@ -19,7 +19,7 @@ export interface BuildExecutorSchema {
   tsConfig: string;
   outputPath: string;
   outputFileName: string;
-  zipFilterRegExp?: string;
+  excludeZipRegExp?: string;
   treeshake: TreeshakingPreset;
   // TODO
   rollupConfig?: string;

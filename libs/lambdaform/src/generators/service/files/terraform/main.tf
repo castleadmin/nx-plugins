@@ -37,6 +37,7 @@ provider "aws" {
   profile                  = local.workspaces[terraform.workspace].profile
   shared_config_files      = ["~/.aws/config"]
   shared_credentials_files = ["~/.aws/credentials"]
+  region                   = "eu-central-1"
 
   default_tags {
     tags = local.workspaces[terraform.workspace].tags

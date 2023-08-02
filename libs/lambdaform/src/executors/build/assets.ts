@@ -1,36 +1,44 @@
 import { AssetGlobPattern } from './schema';
-import { basename, dirname, join, relative, resolve } from 'node:path';
+import { basename, dirname, join, relative } from 'node:path';
 import { stat } from 'node:fs/promises';
 
 export const normalizedAssetsToCopyTargets = (
   assets: AssetGlobPattern[],
-  outputPath: string
+  outputPathHandlerResolved: string
 ): {
   src: string;
   dest: string;
 }[] => {
   return assets.map((asset) => ({
-    // replace backslashes with slashes
+    // replace backslashes with slashes (https://github.com/sindresorhus/globby/issues/179)
     src: join(asset.input, asset.glob).replace(/\\/g, '/'),
-    dest: join(outputPath, asset.output).replace(/\\/g, '/'),
+    dest: join(outputPathHandlerResolved, asset.output).replace(/\\/g, '/'),
   }));
 };
 
 export const normalizeAssets = async (
   assets: (AssetGlobPattern | string)[],
-  contextRoot: string,
-  projectSourceRoot: string
+  contextRootResolved: string,
+  projectSourceRootResolved: string
 ): Promise<AssetGlobPattern[]> => {
   const normalizedAssets: AssetGlobPattern[] = [];
 
   for (const asset of assets) {
     if (typeof asset === 'string') {
       normalizedAssets.push(
-        await normalizeStringAsset(asset, contextRoot, projectSourceRoot)
+        await normalizeStringAsset(
+          asset,
+          contextRootResolved,
+          projectSourceRootResolved
+        )
       );
     } else {
       normalizedAssets.push(
-        normalizeGlobAsset(asset, contextRoot, projectSourceRoot)
+        normalizeGlobAsset(
+          asset,
+          contextRootResolved,
+          projectSourceRootResolved
+        )
       );
     }
   }
@@ -40,11 +48,10 @@ export const normalizeAssets = async (
 
 export const normalizeStringAsset = async (
   asset: string,
-  contextRoot: string,
-  projectSourceRoot: string
+  contextRootResolved: string,
+  projectSourceRootResolved: string
 ): Promise<AssetGlobPattern> => {
-  const assetResolved = resolve(contextRoot, asset);
-  const projectSourceRootResolved = resolve(contextRoot, projectSourceRoot);
+  const assetResolved = join(contextRootResolved, asset);
 
   if (!assetResolved.startsWith(projectSourceRootResolved)) {
     throw new Error(
@@ -55,23 +62,24 @@ export const normalizeStringAsset = async (
   const isAssetDirectory = (await stat(assetResolved)).isDirectory();
 
   const glob = isAssetDirectory ? '**/*' : basename(assetResolved);
-  const input = isAssetDirectory ? assetResolved : dirname(assetResolved);
-  const output = relative(projectSourceRootResolved, input);
+  const inputResolved = isAssetDirectory
+    ? assetResolved
+    : dirname(assetResolved);
+  const outputRelative = relative(projectSourceRootResolved, inputResolved);
 
   return {
     glob,
-    input,
-    output,
+    input: inputResolved,
+    output: outputRelative,
   };
 };
 
 export const normalizeGlobAsset = (
   asset: AssetGlobPattern,
-  contextRoot: string,
-  projectSourceRoot: string
+  contextRootResolved: string,
+  projectSourceRootResolved: string
 ): AssetGlobPattern => {
-  const inputResolved = resolve(contextRoot, asset.input);
-  const projectSourceRootResolved = resolve(contextRoot, projectSourceRoot);
+  const inputResolved = join(contextRootResolved, asset.input);
 
   if (!inputResolved.startsWith(projectSourceRootResolved)) {
     throw new Error(

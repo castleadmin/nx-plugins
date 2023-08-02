@@ -19,6 +19,7 @@ export interface Versions {
 }
 
 export const getVersions = async (tree: Tree): Promise<Versions> => {
+  // TODO use fixed versions
   const packageJsonString = tree.read('package.json', 'utf-8');
   if (!packageJsonString) {
     throw new Error("package.json couldn't be read");

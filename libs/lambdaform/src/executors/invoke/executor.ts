@@ -1,32 +1,40 @@
 import { InvokeExecutorSchema } from './schema';
 import { executeCommand } from '../../utils/execute-command';
-import { relative, join } from 'node:path';
+import { join, relative, resolve } from 'node:path';
 import { ExecutorContext } from '@nx/devkit';
+import { filterUnparsed } from '../../utils/filter-unparsed';
 
 export const runExecutor = async (
   options: InvokeExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
+  const contextRootResolved = resolve(context.root);
   const { samConfiguration, terraformDirectory, args, __unparsed__ } = options;
-  const commandWorkingDirectory = join(context.root, terraformDirectory);
+  const filteredUnparsed = filterUnparsed(__unparsed__, [
+    'samConfiguration',
+    'terraformDirectory',
+    'args',
+  ]);
+  const workingDirectoryResolved = join(
+    contextRootResolved,
+    terraformDirectory
+  );
 
   const samConfigurationRelative = relative(
-    commandWorkingDirectory,
-    join(context.root, samConfiguration)
+    workingDirectoryResolved,
+    join(contextRootResolved, samConfiguration)
   );
 
   const invokeCommand = `sam local invoke --config-file ${samConfigurationRelative} ${
     args ?? ''
-  } ${__unparsed__.join(' ')}`;
+  } ${filteredUnparsed.join(' ')}`;
 
-  const { stderr } = await executeCommand(invokeCommand, {
-    cwd: commandWorkingDirectory,
+  await executeCommand(invokeCommand, {
+    cwd: workingDirectoryResolved,
   });
 
-  const success = !stderr;
-
   return {
-    success,
+    success: true,
   };
 };
 

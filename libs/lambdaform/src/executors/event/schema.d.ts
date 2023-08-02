@@ -1,5 +1,5 @@
 export interface EventExecutorSchema {
-  samConfiguration: string;
+  create?: string;
   args?: string;
   __unparsed__: string[];
 }

@@ -66,9 +66,9 @@
       "description": "Name of the handler output file.",
       "default": "index.mjs"
     },
-    "zipFilterRegExp": {
+    "excludeZipRegExp": {
       "type": "string",
-      "description": "Regular expression that is used to filter out contents of the handler ZIP file. Remove the option if you don't want to have any filtering."
+      "description": "Regular expression that defines which contents should be excluded from the handler ZIP file. Remove the option if you don't want to use filtering."
     },
     "treeshake": {
       "enum": ["smallest", "recommended", "safest"],

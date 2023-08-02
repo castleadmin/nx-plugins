@@ -15,21 +15,21 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 
 export const createInputOptions = ({
-  handlerPath,
-  outputPath,
+  handlerSrcPathResolved,
+  outputPathHandlerResolved,
   external,
-  tsconfig,
+  tsconfigResolved,
   treeshake,
   copyTargets,
 }: {
-  handlerPath: string;
-  outputPath: string;
+  handlerSrcPathResolved: string;
+  outputPathHandlerResolved: string;
   external: ExternalOption;
-  tsconfig: string;
+  tsconfigResolved: string;
   treeshake: boolean | TreeshakingPreset | TreeshakingOptions;
   copyTargets: { src: string; dest: string }[];
 }): RollupOptions => ({
-  input: handlerPath,
+  input: handlerSrcPathResolved,
   external,
   treeshake,
   plugins: [
@@ -39,9 +39,9 @@ export const createInputOptions = ({
     }),
     json(),
     typescript({
-      tsconfig,
+      tsconfig: tsconfigResolved,
       compilerOptions: {
-        outDir: outputPath,
+        outDir: outputPathHandlerResolved,
       },
     }),
     nodeResolve({
@@ -53,15 +53,15 @@ export const createInputOptions = ({
 
 export const createOutputOptions = ({
   handlerName,
-  outputPath,
+  outputPathHandlerResolved,
   outputFileName,
 }: {
   handlerName: string;
-  outputPath: string;
+  outputPathHandlerResolved: string;
   outputFileName: string;
 }): OutputOptions => ({
   format: 'esm',
-  dir: outputPath,
+  dir: outputPathHandlerResolved,
   name: handlerName,
   entryFileNames: outputFileName,
   chunkFileNames: 'lib/[name].mjs',

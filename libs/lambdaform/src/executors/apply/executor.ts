@@ -1,12 +1,13 @@
 import { ExecutorContext } from '@nx/devkit';
 import { ApplyExecutorSchema } from './schema';
 import { executeCommand } from '../../utils/execute-command';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 
 export const runExecutor = async (
   options: ApplyExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
+  const contextRootResolved = resolve(context.root);
   const { workspace, interactive, args, planOutput, terraformDirectory } =
     options;
 
@@ -18,7 +19,7 @@ export const runExecutor = async (
 
   const { stderr } = await executeCommand(
     workspace ? combinedCommand : applyCommand,
-    { cwd: join(context.root, terraformDirectory) }
+    { cwd: join(contextRootResolved, terraformDirectory) }
   );
 
   const success = !stderr;

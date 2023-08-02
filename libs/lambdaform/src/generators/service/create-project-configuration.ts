@@ -22,16 +22,14 @@ export const createProjectConfiguration = (
           tsConfig: `${projectRoot}/tsconfig.app.json`,
           outputPath: `dist/${projectRoot}`,
           outputFileName: 'index.mjs',
-          zipFilterRegExp: '\\.m?js\\.map$',
+          excludeZipRegExp: '\\.m?js\\.map$',
           treeshake: 'smallest',
         },
       },
       event: {
         executor: 'lambdaform:event',
         outputs: [],
-        options: {
-          samConfiguration: `${projectRoot}/samconfig.toml`,
-        },
+        options: {},
       },
       invoke: {
         executor: 'lambdaform:invoke',

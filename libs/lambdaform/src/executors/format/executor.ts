@@ -1,12 +1,13 @@
 import { FormatExecutorSchema } from './schema';
 import { ExecutorContext } from '@nx/devkit';
 import { executeCommand } from '../../utils/execute-command';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 
 export const runExecutor = async (
   options: FormatExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
+  const contextRootResolved = resolve(context.root);
   const projectName = context.projectName;
   if (!projectName) {
     throw new Error(`Project name isn't defined`);
@@ -18,11 +19,11 @@ export const runExecutor = async (
   const fmtCommand = `terraform fmt -recursive ${args ?? ''}`;
 
   const { stderr: nxStderr } = await executeCommand(nxFormatCommand, {
-    cwd: context.root,
+    cwd: contextRootResolved,
   });
 
   const { stderr: fmtStderr } = await executeCommand(fmtCommand, {
-    cwd: join(context.root, terraformDirectory),
+    cwd: join(contextRootResolved, terraformDirectory),
   });
 
   const success = !nxStderr && !fmtStderr;

@@ -1,23 +1,27 @@
 import * as AdmZip from 'adm-zip';
 
 export const zip = async ({
-  outputPath,
-  zipFile,
-  zipFilterRegExp,
+  outputPathHandlerResolved,
+  zipFileResolved,
+  excludeZipRegExp,
 }: {
-  outputPath: string;
-  zipFile: string;
-  zipFilterRegExp: string | undefined;
+  outputPathHandlerResolved: string;
+  zipFileResolved: string;
+  excludeZipRegExp: string | undefined;
 }): Promise<void> => {
   const zip = new AdmZip();
+  const exclude = excludeZipRegExp ? new RegExp(excludeZipRegExp) : undefined;
 
   const addLocalFolderProps: Parameters<typeof zip.addLocalFolderPromise>[1] =
-    zipFilterRegExp
+    exclude
       ? {
-          filter: new RegExp(zipFilterRegExp),
+          filter: (filename) => !exclude.test(filename),
         }
       : {};
 
-  await zip.addLocalFolderPromise(outputPath, addLocalFolderProps);
-  await zip.writeZipPromise(zipFile);
+  await zip.addLocalFolderPromise(
+    outputPathHandlerResolved,
+    addLocalFolderProps
+  );
+  await zip.writeZipPromise(zipFileResolved);
 };

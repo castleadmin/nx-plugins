@@ -30,6 +30,5 @@
       "x-priority": "internal"
     }
   },
-  "required": ["samConfiguration", "terraformDirectory"],
-  "additionalProperties": false
+  "required": ["samConfiguration", "terraformDirectory"]
 }

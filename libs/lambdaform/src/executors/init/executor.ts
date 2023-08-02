@@ -1,12 +1,13 @@
 import { InitExecutorSchema } from './schema';
 import { ExecutorContext } from '@nx/devkit';
 import { executeCommand } from '../../utils/execute-command';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 
 export const runExecutor = async (
   options: InitExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
+  const contextRootResolved = resolve(context.root);
   const {
     workspace,
     createWorkspace,
@@ -25,7 +26,7 @@ export const runExecutor = async (
   const { stderr } = await executeCommand(
     workspace ? combinedCommand : initCommand,
     {
-      cwd: join(context.root, terraformDirectory),
+      cwd: join(contextRootResolved, terraformDirectory),
     }
   );
 
