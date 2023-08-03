@@ -26,6 +26,11 @@ export const runExecutor = async (
     contextRootResolved,
     projectSourceRoot
   );
+  const projectGraph = context.projectGraph;
+  if (!projectGraph) {
+    throw new Error("The project graph isn't defined");
+  }
+
   const {
     handlers,
     tsConfig,
@@ -85,6 +90,7 @@ export const runExecutor = async (
         rollupOutput,
         contextRootResolved,
         outputPathHandlerResolved,
+        projectGraph,
       });
       await zip({
         outputPathHandlerResolved,

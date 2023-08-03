@@ -65,6 +65,7 @@ export const createOutputOptions = ({
   name: handlerName,
   entryFileNames: outputFileName,
   chunkFileNames: 'lib/[name].mjs',
+  // TODO add option
   sourcemap: 'hidden',
 });
 
