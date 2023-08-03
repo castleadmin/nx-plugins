@@ -81,7 +81,11 @@ export const runExecutor = async (
       });
 
       const rollupOutput = await build(inputOptions, outputOptions);
-      await copyNodeModules(rollupOutput);
+      await copyNodeModules({
+        rollupOutput,
+        contextRootResolved,
+        outputPathHandlerResolved,
+      });
       await zip({
         outputPathHandlerResolved,
         zipFileResolved,

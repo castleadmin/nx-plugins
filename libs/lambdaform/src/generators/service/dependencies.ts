@@ -37,6 +37,8 @@ export const addProjectDependencies = (
       '@rollup/plugin-typescript': versions['@rollup/plugin-typescript'],
       '@types/adm-zip': versions['@types/adm-zip'],
       'adm-zip': versions['adm-zip'],
+      '@types/fs-extra': versions['@types/fs-extra'],
+      'fs-extra': versions['fs-extra'],
     }
   );
 };
