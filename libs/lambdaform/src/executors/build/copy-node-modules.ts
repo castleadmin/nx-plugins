@@ -14,28 +14,36 @@ export const copyNodeModules = async ({
   contextRootResolved,
   outputPathHandlerResolved,
   projectGraph,
+  verbose,
 }: {
   rollupOutput: RollupOutput;
   contextRootResolved: string;
   outputPathHandlerResolved: string;
   projectGraph: ProjectGraph;
+  verbose: boolean;
 }): Promise<void> => {
+  // TODO remove
+  //console.log(JSON.stringify(rollupOutput, null, 2));
+
   const uniqueImports = getUniqueImports(rollupOutput);
+
+  if (verbose) {
+    console.log('The following import declarations exists:');
+    console.log(JSON.stringify(uniqueImports, null, 2));
+  }
+
   const filteredUniqueImports = filterOutRelativeImports(uniqueImports);
+
+  if (verbose) {
+    console.log('The following external import declarations exists:');
+    console.log(JSON.stringify(filteredUniqueImports, null, 2));
+  }
+
   const nodeModuleNames = getNodeModuleNames(filteredUniqueImports);
   const { dependencies, nestedDependencies } = getAllDependencies(
     nodeModuleNames,
     projectGraph
   );
-
-  await copyDependencies({
-    dependencies,
-    contextRootResolved,
-    outputPathHandlerResolved,
-  });
-
-  // TODO provide verbose option
-  const verbose = true;
 
   if (verbose) {
     console.log(
@@ -47,6 +55,12 @@ export const copyNodeModules = async ({
     );
     console.log(JSON.stringify(nestedDependencies, null, 2));
   }
+
+  await copyDependencies({
+    dependencies,
+    contextRootResolved,
+    outputPathHandlerResolved,
+  });
 };
 
 const getUniqueImports = (rollupOutput: RollupOutput): string[] => {
@@ -60,6 +74,7 @@ const getUniqueImports = (rollupOutput: RollupOutput): string[] => {
   return Array.from(new Set([...imports, ...dynamicImports]));
 };
 
+// TODO useless use rollup output module id
 const filterOutRelativeImports = (uniqueImports: string[]): string[] => {
   return uniqueImports.filter(
     (uniqueImport) =>
@@ -67,6 +82,7 @@ const filterOutRelativeImports = (uniqueImports: string[]): string[] => {
   );
 };
 
+// TODO remove absolute handling
 const getNodeModuleNames = (uniqueImports: string[]): string[] => {
   const nodeModules = 'node_modules';
 
@@ -201,7 +217,7 @@ const copyDependencies = async ({
       if (await pathExists(sourceResolved)) {
         await copy(sourceResolved, destinationResolved, {});
       } else {
-        console.warn(`Ignoring import '${dependency}'`);
+        console.warn(`Ignoring node module '${dependency}'`);
       }
     })
   );

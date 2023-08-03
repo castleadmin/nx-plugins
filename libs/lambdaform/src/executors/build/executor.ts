@@ -1,6 +1,6 @@
 import { BuildExecutorSchema } from './schema';
 import { ExecutorContext } from '@nx/devkit';
-import { build, createInputOptions, createOutputOptions } from './build';
+import { build, createRollupOptions } from './build';
 import { join, resolve } from 'node:path';
 import { rm } from 'node:fs/promises';
 import { zip } from './zip';
@@ -8,6 +8,7 @@ import { normalizeAssets, normalizedAssetsToCopyTargets } from './assets';
 import { getProjectSourceRoot } from '../../utils/get-project-source-root';
 import { externalDependenciesToRollupOption } from './external-dependencies';
 import { copyNodeModules } from './copy-node-modules';
+import { createPackageJson } from './create-package-json';
 
 const deleteOutput = async (outputPathResolved: string): Promise<void> =>
   rm(outputPathResolved, {
@@ -15,6 +16,8 @@ const deleteOutput = async (outputPathResolved: string): Promise<void> =>
     recursive: true,
     maxRetries: 3,
   });
+
+// TODO add terser plugin
 
 export const runExecutor = async (
   options: BuildExecutorSchema,
@@ -36,9 +39,14 @@ export const runExecutor = async (
     tsConfig,
     outputPath,
     outputFileName,
+    outputChunkNames,
     excludeZipRegExp,
+    format,
+    packageJsonType,
+    sourcemap,
     treeshake,
     deleteOutputPath,
+    verbose,
   } = options;
 
   if (deleteOutputPath) {
@@ -70,27 +78,33 @@ export const runExecutor = async (
         outputPathHandlerResolved
       );
 
-      const inputOptions = createInputOptions({
+      const rollupOptions = createRollupOptions({
+        handlerName: handler.name,
         handlerSrcPathResolved: join(contextRootResolved, handler.path),
+        outputFileName,
+        outputChunkNames,
         outputPathHandlerResolved,
         external,
         tsconfigResolved: join(contextRootResolved, tsConfig),
+        format,
+        sourcemap,
         treeshake,
         copyTargets,
       });
 
-      const outputOptions = createOutputOptions({
+      const rollupOutput = await build(rollupOptions);
+      await createPackageJson({
         handlerName: handler.name,
-        outputPathHandlerResolved,
         outputFileName,
+        packageJsonType,
+        outputPathHandlerResolved,
       });
-
-      const rollupOutput = await build(inputOptions, outputOptions);
       await copyNodeModules({
         rollupOutput,
         contextRootResolved,
         outputPathHandlerResolved,
         projectGraph,
+        verbose,
       });
       await zip({
         outputPathHandlerResolved,

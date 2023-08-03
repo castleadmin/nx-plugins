@@ -13,19 +13,30 @@ import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import { isAbsolute } from 'node:path';
 
-export const createInputOptions = ({
+export const createRollupOptions = ({
+  handlerName,
   handlerSrcPathResolved,
+  outputFileName,
+  outputChunkNames,
   outputPathHandlerResolved,
   external,
   tsconfigResolved,
+  format,
+  sourcemap,
   treeshake,
   copyTargets,
 }: {
+  handlerName: string;
   handlerSrcPathResolved: string;
+  outputFileName: string;
+  outputChunkNames: string;
   outputPathHandlerResolved: string;
   external: ExternalOption;
   tsconfigResolved: string;
+  format: 'commonjs' | 'module';
+  sourcemap: boolean | 'inline' | 'hidden';
   treeshake: boolean | TreeshakingPreset | TreeshakingOptions;
   copyTargets: { src: string; dest: string }[];
 }): RollupOptions => ({
@@ -49,35 +60,38 @@ export const createInputOptions = ({
     }),
     commonjs(),
   ],
+  output: {
+    format,
+    dir: outputPathHandlerResolved,
+    name: handlerName,
+    entryFileNames: outputFileName,
+    chunkFileNames: outputChunkNames,
+    sourcemap,
+    paths: paths,
+  },
 });
 
-export const createOutputOptions = ({
-  handlerName,
-  outputPathHandlerResolved,
-  outputFileName,
-}: {
-  handlerName: string;
-  outputPathHandlerResolved: string;
-  outputFileName: string;
-}): OutputOptions => ({
-  format: 'esm',
-  dir: outputPathHandlerResolved,
-  name: handlerName,
-  entryFileNames: outputFileName,
-  chunkFileNames: 'lib/[name].mjs',
-  // TODO add option
-  sourcemap: 'hidden',
-});
+const paths = (id: string): string => {
+  if (isAbsolute(id)) {
+    const nodeModules = 'node_modules';
+    const index = id.indexOf(nodeModules);
+
+    if (index !== -1) {
+      return id.substring(index + nodeModules.length + 1);
+    }
+  }
+
+  return id;
+};
 
 export const build = async (
-  inputOptions: RollupOptions,
-  outputOptions: OutputOptions
+  rollupOptions: RollupOptions
 ): Promise<RollupOutput> => {
   let bundle: RollupBuild | undefined = undefined;
 
   try {
-    bundle = await rollup(inputOptions);
-    return await bundle.write(outputOptions);
+    bundle = await rollup(rollupOptions);
+    return await bundle.write(rollupOptions.output as OutputOptions);
   } finally {
     if (bundle) {
       await bundle.close();

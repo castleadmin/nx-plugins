@@ -19,11 +19,16 @@ export interface BuildExecutorSchema {
   tsConfig: string;
   outputPath: string;
   outputFileName: string;
+  outputChunkNames: string;
   excludeZipRegExp?: string;
-  treeshake: TreeshakingPreset;
+  format: 'commonjs' | 'module';
+  packageJsonType: 'commonjs' | 'module';
+  sourcemap: boolean | 'inline' | 'hidden';
+  treeshake: boolean | TreeshakingPreset;
   // TODO
   rollupConfig?: string;
   deleteOutputPath: boolean;
   // TODO
+  verbose: boolean;
   watch: boolean;
 }

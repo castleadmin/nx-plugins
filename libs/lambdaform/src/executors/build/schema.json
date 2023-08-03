@@ -66,19 +66,58 @@
       "description": "Name of the handler output file.",
       "default": "index.mjs"
     },
+    "outputChunkNames": {
+      "type": "string",
+      "description": "Name of the handler chunk files that are generated during the build.",
+      "default": "lib/[name].mjs"
+    },
     "excludeZipRegExp": {
       "type": "string",
       "description": "Regular expression that defines which contents should be excluded from the handler ZIP file. Remove the option if you don't want to use filtering."
     },
+    "format": {
+      "enum": ["commonjs", "module"],
+      "description": "Defines the Rollup format option. (https://rollupjs.org/configuration-options/#output-format)",
+      "default": "module"
+    },
+    "packageJsonType": {
+      "enum": ["commonjs", "module"],
+      "description": "The package.json 'type' field defines how Node.js should interpret .js files. (https://nodejs.org/api/packages.html#packagejson-and-file-extensions)",
+      "default": "commonjs"
+    },
+    "sourcemap": {
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": ["inline", "hidden"]
+        }
+      ],
+      "description": "Defines the Rollup sourcemap option. (https://rollupjs.org/configuration-options/#output-sourcemap)",
+      "default": "hidden"
+    },
     "treeshake": {
-      "enum": ["smallest", "recommended", "safest"],
-      "description": "Define the Rollup tree shaking option. Use the 'rollupConfig' option, if more control over the tree shaking process is needed. (https://rollupjs.org/configuration-options/#treeshake)",
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": ["smallest", "recommended", "safest"]
+        }
+      ],
+      "description": "Defines the Rollup treeshake option. Use the 'rollupConfig' option, if more control over the tree shaking process is needed. (https://rollupjs.org/configuration-options/#treeshake)",
       "default": "smallest"
     },
     "deleteOutputPath": {
       "type": "boolean",
       "description": "Delete the output path before building.",
       "default": true
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Emits verbose output.",
+      "default": false
     }
   },
   "required": ["handlers", "tsConfig", "outputPath"],
