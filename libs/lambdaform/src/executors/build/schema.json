@@ -40,7 +40,7 @@
                 }
               }
             ],
-            "description": "Dependencies to keep external to the bundle. (`none` (default), `all`, or an array of module names)",
+            "description": "Dependencies to keep external to the bundle. ('none' (default), 'all', or an array of regular expressions that match node module names)",
             "default": "none"
           },
           "excludeAwsSdk": {

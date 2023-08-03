@@ -1,8 +1,9 @@
 import { OutputChunk, RollupOutput } from 'rollup';
 import { copy } from 'fs-extra';
-import { sep, join, isAbsolute, normalize } from 'node:path';
+import { sep, join, normalize } from 'node:path';
 import { access } from 'node:fs/promises';
 import { ProjectGraph } from '@nx/devkit';
+import { excludeAwsSdk } from './external-dependencies';
 
 interface NestedDependency {
   parent: string | NestedDependency;
@@ -13,18 +14,17 @@ export const copyNodeModules = async ({
   rollupOutput,
   contextRootResolved,
   outputPathHandlerResolved,
+  excludeAwsSdk,
   projectGraph,
   verbose,
 }: {
   rollupOutput: RollupOutput;
   contextRootResolved: string;
   outputPathHandlerResolved: string;
+  excludeAwsSdk: boolean;
   projectGraph: ProjectGraph;
   verbose: boolean;
 }): Promise<void> => {
-  // TODO remove
-  //console.log(JSON.stringify(rollupOutput, null, 2));
-
   const uniqueImports = getUniqueImports(rollupOutput);
 
   if (verbose) {
@@ -32,7 +32,15 @@ export const copyNodeModules = async ({
     console.log(JSON.stringify(uniqueImports, null, 2));
   }
 
-  const filteredUniqueImports = filterOutRelativeImports(uniqueImports);
+  const chunkNames = getChunkNames(rollupOutput);
+  let filteredUniqueImports = filterOutRelativeImports({
+    uniqueImports,
+    chunkNames,
+  });
+
+  if (excludeAwsSdk) {
+    filteredUniqueImports = filterOutAwsSdk(filteredUniqueImports);
+  }
 
   if (verbose) {
     console.log('The following external import declarations exists:');
@@ -74,55 +82,46 @@ const getUniqueImports = (rollupOutput: RollupOutput): string[] => {
   return Array.from(new Set([...imports, ...dynamicImports]));
 };
 
-// TODO useless use rollup output module id
-const filterOutRelativeImports = (uniqueImports: string[]): string[] => {
+const getChunkNames = (rollupOutput: RollupOutput): string[] => {
+  return rollupOutput.output.map((output) => output.fileName);
+};
+
+const filterOutRelativeImports = ({
+  uniqueImports,
+  chunkNames,
+}: {
+  uniqueImports: string[];
+  chunkNames: string[];
+}): string[] => {
   return uniqueImports.filter(
-    (uniqueImport) =>
-      !uniqueImport.startsWith('..') && !uniqueImport.startsWith('.')
+    (uniqueImport) => !chunkNames.includes(uniqueImport)
   );
 };
 
-// TODO remove absolute handling
-const getNodeModuleNames = (uniqueImports: string[]): string[] => {
-  const nodeModules = 'node_modules';
+const filterOutAwsSdk = (filteredUniqueImports: string[]): string[] => {
+  const testSdks = excludeAwsSdk.map((sdk) => new RegExp(`^${sdk}`));
 
-  return uniqueImports.map((uniqueImport) => {
-    let nodeModuleName: string;
-
-    if (isAbsolute(uniqueImport)) {
-      const pathParts = normalize(uniqueImport).split(sep);
-      const indexParts = pathParts.lastIndexOf(nodeModules);
-
-      if (indexParts === -1 || indexParts + 1 >= pathParts.length) {
-        throw new Error(
-          `Couldn't extract node module path from '${uniqueImport}'. The module isn't imported from '${nodeModules}'.`
-        );
-      }
-
-      const nodeModulePath = join(...pathParts.slice(indexParts + 1));
-      nodeModuleName = getNodeModuleName(nodeModulePath);
-    } else {
-      nodeModuleName = getNodeModuleName(uniqueImport);
-    }
-
-    return nodeModuleName;
-  });
+  return filteredUniqueImports.filter((uniqueImport) =>
+    testSdks.reduce((acc, testSdk) => acc && !testSdk.test(uniqueImport), true)
+  );
 };
 
-const getNodeModuleName = (nodeModulesPath: string): string => {
-  const parts = normalize(nodeModulesPath).split(sep);
+const getNodeModuleNames = (uniqueImports: string[]): string[] => {
+  return uniqueImports.map((uniqueImport) => {
+    const parts = normalize(uniqueImport).split(sep);
 
-  if (!parts[0]) {
-    throw new Error(
-      `Couldn't extract node module name from '${nodeModulesPath}'`
-    );
-  }
+    if (!parts[0]) {
+      throw new Error(
+        `Couldn't extract node module name from '${uniqueImport}'`
+      );
+    }
 
-  if (parts[0].startsWith('@')) {
-    return Boolean(parts[1]) ? `${parts[0]}/${parts[1]}` : parts[0];
-  }
+    if (parts[0].startsWith('@')) {
+      return Boolean(parts[1]) ? `${parts[0]}/${parts[1]}` : parts[0];
+    }
 
-  return parts[0];
+    return parts[0];
+  });
 };
 
 const getAllDependencies = (

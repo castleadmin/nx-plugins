@@ -103,6 +103,7 @@ export const runExecutor = async (
         rollupOutput,
         contextRootResolved,
         outputPathHandlerResolved,
+        excludeAwsSdk: handler.excludeAwsSdk,
         projectGraph,
         verbose,
       });
