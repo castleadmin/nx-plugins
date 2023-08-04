@@ -9,11 +9,11 @@ export const appendFragment = async <T, U>(
   terraformOptions: U,
   versions: Versions,
   paths: {
-    fragmentPath: string;
+    fragmentPathResolved: string;
     appendFilePath: string;
   }
 ): Promise<void> => {
-  const fragmentTemplate = await readFile(paths.fragmentPath, {
+  const fragmentTemplate = await readFile(paths.fragmentPathResolved, {
     encoding: 'utf8',
   });
   const fragment = render(fragmentTemplate, {

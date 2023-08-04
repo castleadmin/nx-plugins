@@ -21,6 +21,7 @@ import { Linter, lintProjectGenerator } from '@nx/linter';
 import { getVersions, Versions } from '../../utils/versions';
 import { createProjectConfiguration } from './create-project-configuration';
 import { toTerraformName } from '../../utils/to-terraform-name';
+import { resolve } from 'node:path';
 
 const addInitTasks = async (
   tree: Tree,
@@ -97,7 +98,7 @@ export const serviceGenerator = async (
     serviceNameTf: toTerraformName(options.serviceName),
   };
 
-  generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
     ...terraformOptions,
     offset: offsetFromRoot(projectRoot),

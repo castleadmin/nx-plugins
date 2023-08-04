@@ -7,6 +7,11 @@ export const createProjectConfiguration = (
   options: ServiceGeneratorSchema
 ): ProjectConfiguration => {
   const serviceNameTf = toTerraformName(options.serviceName);
+  const terraformDirectoryPath = joinPathFragments(projectRoot, 'terraform');
+  const samConfigurationPath = joinPathFragments(projectRoot, 'samconfig.toml');
+  const workspaceTest = `${serviceNameTf}_test`;
+  const workspaceStaging = `${serviceNameTf}_staging`;
+  const workspaceProduction = `${serviceNameTf}_production`;
 
   return {
     root: projectRoot,
@@ -19,8 +24,8 @@ export const createProjectConfiguration = (
         defaultConfiguration: 'test',
         options: {
           handlers: [],
-          tsConfig: `${projectRoot}/tsconfig.app.json`,
-          outputPath: `dist/${projectRoot}`,
+          tsConfig: joinPathFragments(projectRoot, 'tsconfig.app.json'),
+          outputPath: joinPathFragments('dist', projectRoot),
           outputFileName: 'index.mjs',
           excludeZipRegExp: '\\.[cm]?js\\.map$',
           treeshake: 'smallest',
@@ -35,16 +40,16 @@ export const createProjectConfiguration = (
         executor: 'lambdaform:invoke',
         outputs: [],
         options: {
-          terraformDirectory: `${projectRoot}/terraform`,
-          samConfiguration: `${projectRoot}/samconfig.toml`,
+          terraformDirectory: terraformDirectoryPath,
+          samConfiguration: samConfigurationPath,
         },
       },
       serve: {
         executor: 'lambdaform:serve',
         outputs: [],
         options: {
-          terraformDirectory: `${projectRoot}/terraform`,
-          samConfiguration: `${projectRoot}/samconfig.toml`,
+          terraformDirectory: terraformDirectoryPath,
+          samConfiguration: samConfigurationPath,
           api: false,
         },
       },
@@ -52,7 +57,7 @@ export const createProjectConfiguration = (
         executor: 'lambdaform:format',
         outputs: [],
         options: {
-          terraformDirectory: `${projectRoot}/terraform`,
+          terraformDirectory: terraformDirectoryPath,
         },
       },
       'init-project': {
@@ -63,17 +68,17 @@ export const createProjectConfiguration = (
           createWorkspace: true,
           interactive: false,
           upgrade: false,
-          terraformDirectory: `${projectRoot}/terraform`,
+          terraformDirectory: terraformDirectoryPath,
         },
         configurations: {
           test: {
-            workspace: `${serviceNameTf}_test`,
+            workspace: workspaceTest,
           },
           staging: {
-            workspace: `${serviceNameTf}_staging`,
+            workspace: workspaceStaging,
           },
           production: {
-            workspace: `${serviceNameTf}_production`,
+            workspace: workspaceProduction,
           },
         },
       },
@@ -84,17 +89,17 @@ export const createProjectConfiguration = (
         options: {
           interactive: false,
           planOutput: 'tfplan',
-          terraformDirectory: `${projectRoot}/terraform`,
+          terraformDirectory: terraformDirectoryPath,
         },
         configurations: {
           test: {
-            workspace: `${serviceNameTf}_test`,
+            workspace: workspaceTest,
           },
           staging: {
-            workspace: `${serviceNameTf}_staging`,
+            workspace: workspaceStaging,
           },
           production: {
-            workspace: `${serviceNameTf}_production`,
+            workspace: workspaceProduction,
           },
         },
       },
@@ -105,17 +110,17 @@ export const createProjectConfiguration = (
         options: {
           interactive: false,
           planOutput: 'tfplan',
-          terraformDirectory: `${projectRoot}/terraform`,
+          terraformDirectory: terraformDirectoryPath,
         },
         configurations: {
           test: {
-            workspace: `${serviceNameTf}_test`,
+            workspace: workspaceTest,
           },
           staging: {
-            workspace: `${serviceNameTf}_staging`,
+            workspace: workspaceStaging,
           },
           production: {
-            workspace: `${serviceNameTf}_production`,
+            workspace: workspaceProduction,
           },
         },
       },

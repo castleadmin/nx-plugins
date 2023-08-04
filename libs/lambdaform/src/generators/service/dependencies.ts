@@ -12,7 +12,7 @@ export const addTsDependencies = (
   return addDependenciesToPackageJson(
     tree,
     {
-      tslib: versions.tslib,
+      tslib: versions['tslib'],
     },
     {
       '@types/aws-lambda': versions['@types/aws-lambda'],
@@ -29,7 +29,7 @@ export const addProjectDependencies = (
     tree,
     {},
     {
-      rollup: versions.rollup,
+      rollup: versions['rollup'],
       'rollup-plugin-copy': versions['rollup-plugin-copy'],
       '@rollup/plugin-json': versions['@rollup/plugin-json'],
       '@rollup/plugin-node-resolve': versions['@rollup/plugin-node-resolve'],

@@ -10,6 +10,7 @@ import { HandlerGeneratorSchema } from './schema';
 import { appendFragment } from '../../utils/append-fragment';
 import { getVersions } from '../../utils/versions';
 import { toTerraformName } from '../../utils/to-terraform-name';
+import { resolve } from 'node:path';
 
 export async function handlerGenerator(
   tree: Tree,
@@ -25,7 +26,7 @@ export async function handlerGenerator(
     projectTf: toTerraformName(options.project),
   };
 
-  generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
     ...terraformOptions,
     ...versions,
@@ -33,7 +34,7 @@ export async function handlerGenerator(
   });
 
   await appendFragment(tree, options, terraformOptions, versions, {
-    fragmentPath: joinPathFragments(
+    fragmentPathResolved: resolve(
       __dirname,
       'append-fragments',
       'terraform',

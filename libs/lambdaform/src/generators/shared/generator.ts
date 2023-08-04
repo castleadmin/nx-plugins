@@ -9,6 +9,7 @@ import {
 } from '@nx/devkit';
 import { SharedGeneratorSchema } from './schema';
 import { toTerraformName } from '../../utils/to-terraform-name';
+import { resolve } from 'node:path';
 
 export const sharedGenerator = async (
   tree: Tree,
@@ -22,7 +23,7 @@ export const sharedGenerator = async (
     sharedResourcesNameTf: toTerraformName(options.sharedResourcesName),
   };
 
-  generateFiles(tree, joinPathFragments(__dirname, 'files'), projectRoot, {
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
     ...terraformOptions,
   });
@@ -31,9 +32,8 @@ export const sharedGenerator = async (
     root: projectRoot,
     sourceRoot: joinPathFragments(projectRoot, 'terraform'),
     projectType: 'application',
-    // TODO
+    // TODO add project configuration
     targets: {},
-    // TODO
     tags: [`app:${options.sharedResourcesName}`, 'lambdaform:shared'],
   });
 
