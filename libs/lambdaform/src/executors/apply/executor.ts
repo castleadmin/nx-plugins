@@ -17,15 +17,12 @@ export const runExecutor = async (
   } ${planOutput}`;
   const combinedCommand = `${selectWorkspaceCommand} && ${applyCommand}`;
 
-  const { stderr } = await executeCommand(
-    workspace ? combinedCommand : applyCommand,
-    { cwd: join(contextRootResolved, terraformDirectory) }
-  );
-
-  const success = !stderr;
+  await executeCommand(workspace ? combinedCommand : applyCommand, {
+    cwd: join(contextRootResolved, terraformDirectory),
+  });
 
   return {
-    success,
+    success: true,
   };
 };
 

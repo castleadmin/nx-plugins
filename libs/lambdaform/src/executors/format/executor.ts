@@ -18,18 +18,16 @@ export const runExecutor = async (
   const nxFormatCommand = `nx format --projects=${projectName}`;
   const fmtCommand = `terraform fmt -recursive ${args ?? ''}`;
 
-  const { stderr: nxStderr } = await executeCommand(nxFormatCommand, {
+  await executeCommand(nxFormatCommand, {
     cwd: contextRootResolved,
   });
 
-  const { stderr: fmtStderr } = await executeCommand(fmtCommand, {
+  await executeCommand(fmtCommand, {
     cwd: join(contextRootResolved, terraformDirectory),
   });
 
-  const success = !nxStderr && !fmtStderr;
-
   return {
-    success,
+    success: true,
   };
 };
 
