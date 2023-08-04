@@ -21,18 +21,6 @@
     "args": {
       "type": "string",
       "description": "Used to provide additional arguments to the SAM CLI. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html and https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)"
-    },
-    "__unparsed__": {
-      "description": "The command line input is stored in this internal property. The input is appended to 'sam local start-lambda' or 'sam local start-api', which are executed in the terraform directory.",
-      "hidden": true,
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "$default": {
-        "$source": "unparsed"
-      },
-      "x-priority": "internal"
     }
   },
   "required": ["samConfiguration", "terraformDirectory"]

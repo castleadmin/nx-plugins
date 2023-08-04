@@ -1,5 +1,5 @@
 export interface EventExecutorSchema {
+  _: string[] | undefined;
   create?: string;
   args?: string;
-  __unparsed__: string[];
 }

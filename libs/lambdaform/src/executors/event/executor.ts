@@ -4,7 +4,7 @@ import { ExecutorContext } from '@nx/devkit';
 import { getProjectRoot } from '../../utils/get-project-root';
 import { dirname, resolve, join } from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { filterUnparsed } from '../../utils/filter-unparsed';
+import { additionalArgsToString } from '../../utils/additional-args-to-string';
 
 export const createEventFile = async (
   fileResolved: string,
@@ -22,14 +22,15 @@ export const runExecutor = async (
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
   const projectRoot = getProjectRoot(context);
-
-  const { create, args, __unparsed__ } = options;
-  const filteredUnparsed = filterUnparsed(__unparsed__, ['create', 'args']);
   const workingDirectoryResolved = join(contextRootResolved, projectRoot);
 
+  const { create, args, _, ...rest } = options;
+  const additionalArgs = additionalArgsToString(_, rest);
+
   const generateEventCommand = `sam local generate-event ${
-    args ?? ''
-  } ${filteredUnparsed.join(' ')}`;
+    args ? `${args} ${additionalArgs}` : additionalArgs
+  }`;
+  console.log('Executing command:', generateEventCommand);
 
   const { stdout } = await executeCommand(generateEventCommand, {
     cwd: workingDirectoryResolved,
