@@ -32,6 +32,7 @@ export const createRollupOptions = ({
   treeshake,
   minify,
   copyTargets,
+  verbose,
 }: {
   handlerName: string;
   handlerSrcPathResolved: string;
@@ -45,6 +46,7 @@ export const createRollupOptions = ({
   treeshake: boolean | TreeshakingPreset | TreeshakingOptions;
   minify: boolean | object;
   copyTargets: { src: string; dest: string }[];
+  verbose: boolean;
 }): RollupOptions => {
   let terserPlugin: Plugin | undefined = undefined;
 
@@ -56,6 +58,7 @@ export const createRollupOptions = ({
     input: handlerSrcPathResolved,
     external,
     treeshake,
+    logLevel: verbose ? 'debug' : 'info',
     plugins: [
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (copy as any)({

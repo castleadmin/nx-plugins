@@ -93,6 +93,7 @@ export const runExecutor = async (
         treeshake,
         minify,
         copyTargets,
+        verbose,
       });
 
       if (rollupConfig) {
