@@ -6,6 +6,7 @@
   "properties": {
     "handlerName": {
       "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
       "description": "Define the Lambda handler name.",
       "$default": {
         "$source": "argv",
@@ -15,6 +16,7 @@
     },
     "project": {
       "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
       "description": "Define the project to which the handler will be added",
       "x-prompt": "To which project would you like to add the handler?",
       "x-dropdown": "projects"

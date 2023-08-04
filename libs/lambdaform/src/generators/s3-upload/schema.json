@@ -6,6 +6,7 @@
   "properties": {
     "bucketName": {
       "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
       "description": "Define the S3 bucket name.",
       "$default": {
         "$source": "argv",
@@ -15,6 +16,7 @@
     },
     "project": {
       "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
       "description": "Define the project to which the S3 bucket will be added",
       "x-prompt": "To which project would you like to add the S3 bucket?",
       "x-dropdown": "projects"

@@ -6,6 +6,7 @@
   "properties": {
     "serviceName": {
       "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
       "description": "Define the service name.",
       "$default": {
         "$source": "argv",

@@ -6,6 +6,7 @@
   "properties": {
     "sharedResourcesName": {
       "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
       "description": "Define the shared resources name.",
       "$default": {
         "$source": "argv",
