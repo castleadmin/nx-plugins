@@ -33,6 +33,5 @@
       "description": "The name of the project directory where the *.tf files are stored."
     }
   },
-  "required": ["terraformDirectory"],
-  "additionalProperties": false
+  "required": ["terraformDirectory"]
 }

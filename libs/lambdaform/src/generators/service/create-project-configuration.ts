@@ -46,19 +46,6 @@ export const createProjectConfiguration = (
           },
         },
       },
-      event: {
-        executor: 'lambdaform:event',
-        outputs: [],
-        options: {},
-      },
-      invoke: {
-        executor: 'lambdaform:invoke',
-        outputs: [],
-        options: {
-          terraformDirectory: terraformDirectoryPath,
-          samConfiguration: samConfigurationPath,
-        },
-      },
       serve: {
         executor: 'lambdaform:serve',
         outputs: [],
@@ -67,6 +54,31 @@ export const createProjectConfiguration = (
           samConfiguration: samConfigurationPath,
           api: false,
         },
+        dependsOn: [
+          {
+            target: 'build',
+            params: 'forward',
+          },
+        ],
+      },
+      invoke: {
+        executor: 'lambdaform:invoke',
+        outputs: [],
+        options: {
+          terraformDirectory: terraformDirectoryPath,
+          samConfiguration: samConfigurationPath,
+        },
+        dependsOn: [
+          {
+            target: 'build',
+            params: 'forward',
+          },
+        ],
+      },
+      event: {
+        executor: 'lambdaform:event',
+        outputs: [],
+        options: {},
       },
       'format-project': {
         executor: 'lambdaform:format',
@@ -117,6 +129,12 @@ export const createProjectConfiguration = (
             workspace: workspaceProduction,
           },
         },
+        dependsOn: [
+          {
+            target: 'init-project',
+            params: 'forward',
+          },
+        ],
       },
       apply: {
         executor: 'lambdaform:apply',
@@ -138,6 +156,12 @@ export const createProjectConfiguration = (
             workspace: workspaceProduction,
           },
         },
+        dependsOn: [
+          {
+            target: 'plan',
+            params: 'forward',
+          },
+        ],
       },
       destroy: {
         executor: 'lambdaform:destroy',
