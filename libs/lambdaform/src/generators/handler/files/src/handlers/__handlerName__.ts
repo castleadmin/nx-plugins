@@ -1,9 +1,14 @@
 import { Context, Handler } from 'aws-lambda';
 
-export const handler: Handler<unknown, unknown> = async (
-  event: unknown,
+// TODO define event type
+export type Event = unknown;
+// TODO define result type
+export type Result = unknown;
+
+export const handler: Handler<Event, Result> = async (
+  event: Event,
   context: Context
-): Promise<unknown> => {
+): Promise<Result> => {
   console.log('event', JSON.stringify(event, null, 2));
   console.log('context', JSON.stringify(context, null, 2));
 
