@@ -29,6 +29,5 @@ export interface BuildExecutorSchema {
   rollupConfig?: string;
   deleteOutputPath: boolean;
   verbose: boolean;
-  // TODO
   watch: boolean;
 }

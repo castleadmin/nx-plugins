@@ -7,7 +7,9 @@ import {
   TreeshakingOptions,
   TreeshakingPreset,
   rollup,
+  watch,
   Plugin,
+  RollupWatchOptions,
 } from 'rollup';
 import * as copy from 'rollup-plugin-copy';
 import json from '@rollup/plugin-json';
@@ -110,4 +112,41 @@ export const build = async (
       await bundle.close();
     }
   }
+};
+
+export const buildWatch = async (
+  rollupOptions: RollupOptions,
+  postBuild: (rollupOutput: RollupOutput) => Promise<void>
+): Promise<void> => {
+  const watchOptions: RollupWatchOptions = rollupOptions;
+  watchOptions.watch = { skipWrite: true };
+
+  const watcher = watch(watchOptions);
+
+  return new Promise((_resolve, _reject) => {
+    watcher.on('event', async (event): Promise<void> => {
+      const bundle = (event as { result: RollupBuild | undefined }).result;
+      let rollupOutput: RollupOutput | undefined = undefined;
+
+      if (event.code === 'BUNDLE_START') {
+        console.log('Apply changes...');
+      }
+
+      try {
+        if (event.code === 'BUNDLE_END' && bundle) {
+          rollupOutput = await bundle.write(
+            watchOptions.output as OutputOptions
+          );
+        }
+      } finally {
+        if (bundle) {
+          await bundle.close();
+        }
+      }
+
+      if (rollupOutput) {
+        await postBuild(rollupOutput);
+      }
+    });
+  });
 };

@@ -1,6 +1,6 @@
 import { BuildExecutorSchema } from './schema';
 import { ExecutorContext } from '@nx/devkit';
-import { build, createRollupOptions } from './build';
+import { build, buildWatch, createRollupOptions } from './build';
 import { join, resolve } from 'node:path';
 import { rm } from 'node:fs/promises';
 import { zip } from './zip';
@@ -9,6 +9,7 @@ import { getProjectSourceRoot } from '../../utils/get-project-source-root';
 import { externalDependenciesToRollupOption } from './external-dependencies';
 import { copyNodeModules } from './copy-node-modules';
 import { createPackageJson } from './create-package-json';
+import { RollupOutput } from 'rollup';
 
 const deleteOutput = async (outputPathResolved: string): Promise<void> =>
   rm(outputPathResolved, {
@@ -47,6 +48,7 @@ export const runExecutor = async (
     rollupConfig,
     deleteOutputPath,
     verbose,
+    watch,
   } = options;
 
   if (deleteOutputPath) {
@@ -104,26 +106,34 @@ export const runExecutor = async (
         );
       }
 
-      const rollupOutput = await build(rollupOptions);
-      await createPackageJson({
-        handlerName: handler.name,
-        outputFileName,
-        packageJsonType,
-        outputPathHandlerResolved,
-      });
-      await copyNodeModules({
-        rollupOutput,
-        contextRootResolved,
-        outputPathHandlerResolved,
-        excludeAwsSdk: handler.excludeAwsSdk,
-        projectGraph,
-        verbose,
-      });
-      await zip({
-        outputPathHandlerResolved,
-        zipFileResolved,
-        excludeZipRegExp,
-      });
+      const postBuild = async (rollupOutput: RollupOutput): Promise<void> => {
+        await createPackageJson({
+          handlerName: handler.name,
+          outputFileName,
+          packageJsonType,
+          outputPathHandlerResolved,
+        });
+        await copyNodeModules({
+          rollupOutput,
+          contextRootResolved,
+          outputPathHandlerResolved,
+          excludeAwsSdk: handler.excludeAwsSdk,
+          projectGraph,
+          verbose,
+        });
+        await zip({
+          outputPathHandlerResolved,
+          zipFileResolved,
+          excludeZipRegExp,
+        });
+      };
+
+      if (watch) {
+        await buildWatch(rollupOptions, postBuild);
+      } else {
+        const rollupOutput = await build(rollupOptions);
+        await postBuild(rollupOutput);
+      }
     })
   );
 

@@ -135,6 +135,11 @@
       "type": "boolean",
       "description": "Emits verbose output.",
       "default": false
+    },
+    "watch": {
+      "type": "boolean",
+      "description": "Enable re-building when files change.",
+      "default": false
     }
   },
   "required": ["handlers", "tsConfig", "outputPath"],
