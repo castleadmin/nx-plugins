@@ -17,8 +17,6 @@ const deleteOutput = async (outputPathResolved: string): Promise<void> =>
     maxRetries: 3,
   });
 
-// TODO add terser plugin
-
 export const runExecutor = async (
   options: BuildExecutorSchema,
   context: ExecutorContext
@@ -46,6 +44,7 @@ export const runExecutor = async (
     sourcemap,
     treeshake,
     minify,
+    rollupConfig,
     deleteOutputPath,
     verbose,
   } = options;
@@ -79,7 +78,7 @@ export const runExecutor = async (
         outputPathHandlerResolved
       );
 
-      const rollupOptions = createRollupOptions({
+      let rollupOptions = createRollupOptions({
         handlerName: handler.name,
         handlerSrcPathResolved: join(contextRootResolved, handler.path),
         outputFileName,
@@ -93,6 +92,17 @@ export const runExecutor = async (
         minify,
         copyTargets,
       });
+
+      if (rollupConfig) {
+        const customRollupConfig = (
+          await import(join(contextRootResolved, rollupConfig))
+        ).default;
+        rollupOptions = await customRollupConfig(
+          rollupOptions,
+          options,
+          context
+        );
+      }
 
       const rollupOutput = await build(rollupOptions);
       await createPackageJson({

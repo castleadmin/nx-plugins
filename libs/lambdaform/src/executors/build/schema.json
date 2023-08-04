@@ -122,6 +122,10 @@
       "description": "Minify the bundle with terser. Accepts a boolean or a terser options object. (https://github.com/terser/terser#minify-options)",
       "default": false
     },
+    "rollupConfig": {
+      "type": "string",
+      "description": "Path to a module with a function as default export that modifies or replaces a given rollup configuration. The function should fulfill the following signature: rollupConfig(rollupOptions: RollupOptions, options: BuildExecutorSchema, context: ExecutorContext): Promise<RollupOptions>"
+    },
     "deleteOutputPath": {
       "type": "boolean",
       "description": "Delete the output path before building.",

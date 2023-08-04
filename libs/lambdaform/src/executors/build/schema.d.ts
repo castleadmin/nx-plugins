@@ -26,7 +26,6 @@ export interface BuildExecutorSchema {
   sourcemap: boolean | 'inline' | 'hidden';
   treeshake: boolean | TreeshakingPreset;
   minify: boolean | object;
-  // TODO
   rollupConfig?: string;
   deleteOutputPath: boolean;
   verbose: boolean;

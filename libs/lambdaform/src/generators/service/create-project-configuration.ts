@@ -22,7 +22,7 @@ export const createProjectConfiguration = (
           tsConfig: `${projectRoot}/tsconfig.app.json`,
           outputPath: `dist/${projectRoot}`,
           outputFileName: 'index.mjs',
-          excludeZipRegExp: '\\.m?js\\.map$',
+          excludeZipRegExp: '\\.[cm]?js\\.map$',
           treeshake: 'smallest',
         },
       },
