@@ -25,10 +25,11 @@ export interface BuildExecutorSchema {
   packageJsonType: 'commonjs' | 'module';
   sourcemap: boolean | 'inline' | 'hidden';
   treeshake: boolean | TreeshakingPreset;
+  minify: boolean | object;
   // TODO
   rollupConfig?: string;
   deleteOutputPath: boolean;
-  // TODO
   verbose: boolean;
+  // TODO
   watch: boolean;
 }

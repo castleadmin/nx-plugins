@@ -35,6 +35,7 @@ export const addProjectDependencies = (
       '@rollup/plugin-node-resolve': versions['@rollup/plugin-node-resolve'],
       '@rollup/plugin-commonjs': versions['@rollup/plugin-commonjs'],
       '@rollup/plugin-typescript': versions['@rollup/plugin-typescript'],
+      '@rollup/plugin-terser': versions['@rollup/plugin-terser'],
       '@types/adm-zip': versions['@types/adm-zip'],
       'adm-zip': versions['adm-zip'],
       '@types/fs-extra': versions['@types/fs-extra'],

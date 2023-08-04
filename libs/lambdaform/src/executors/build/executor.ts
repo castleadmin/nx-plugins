@@ -45,6 +45,7 @@ export const runExecutor = async (
     packageJsonType,
     sourcemap,
     treeshake,
+    minify,
     deleteOutputPath,
     verbose,
   } = options;
@@ -89,6 +90,7 @@ export const runExecutor = async (
         format,
         sourcemap,
         treeshake,
+        minify,
         copyTargets,
       });
 

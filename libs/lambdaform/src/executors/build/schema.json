@@ -109,6 +109,19 @@
       "description": "Defines the Rollup treeshake option. Use the 'rollupConfig' option, if more control over the tree shaking process is needed. (https://rollupjs.org/configuration-options/#treeshake)",
       "default": "smallest"
     },
+    "minify": {
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "object",
+          "additionalProperties": true
+        }
+      ],
+      "description": "Minify the bundle with terser. Accepts a boolean or a terser options object. (https://github.com/terser/terser#minify-options)",
+      "default": false
+    },
     "deleteOutputPath": {
       "type": "boolean",
       "description": "Delete the output path before building.",

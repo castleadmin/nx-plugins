@@ -10,6 +10,7 @@ export interface Versions {
   '@rollup/plugin-node-resolve': string;
   '@rollup/plugin-commonjs': string;
   '@rollup/plugin-typescript': string;
+  '@rollup/plugin-terser': string;
   '@types/adm-zip': string;
   'adm-zip': string;
   '@types/fs-extra': string;
@@ -30,6 +31,7 @@ export const getVersions = async (): Promise<Versions> => {
   const rollupPluginNodeResolve = '^15.1.0';
   const rollupPluginCommonJs = '^25.0.3';
   const rollupPluginTypeScript = '^11.1.2';
+  const rollupPluginTerser = '^0.4.3';
   const typesAdmZip = '^0.5.0';
   const admZip = '^0.5.10';
   const typesFsExtra = '^11.0.1';
@@ -49,6 +51,7 @@ export const getVersions = async (): Promise<Versions> => {
     '@rollup/plugin-node-resolve': rollupPluginNodeResolve,
     '@rollup/plugin-commonjs': rollupPluginCommonJs,
     '@rollup/plugin-typescript': rollupPluginTypeScript,
+    '@rollup/plugin-terser': rollupPluginTerser,
     '@types/adm-zip': typesAdmZip,
     'adm-zip': admZip,
     '@types/fs-extra': typesFsExtra,
