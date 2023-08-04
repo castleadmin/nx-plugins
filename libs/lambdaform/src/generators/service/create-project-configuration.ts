@@ -27,8 +27,23 @@ export const createProjectConfiguration = (
           tsConfig: joinPathFragments(projectRoot, 'tsconfig.app.json'),
           outputPath: joinPathFragments('dist', projectRoot),
           outputFileName: 'index.mjs',
+          outputChunkNames: 'lib/[name].mjs',
           excludeZipRegExp: '\\.[cm]?js\\.map$',
+          format: 'module',
+          packageJsonType: 'commonjs',
+          sourcemap: 'hidden',
           treeshake: 'smallest',
+        },
+        configurations: {
+          test: {
+            minify: false,
+          },
+          staging: {
+            minify: true,
+          },
+          production: {
+            minify: true,
+          },
         },
       },
       event: {
@@ -110,6 +125,26 @@ export const createProjectConfiguration = (
         options: {
           interactive: false,
           planOutput: 'tfplan',
+          terraformDirectory: terraformDirectoryPath,
+        },
+        configurations: {
+          test: {
+            workspace: workspaceTest,
+          },
+          staging: {
+            workspace: workspaceStaging,
+          },
+          production: {
+            workspace: workspaceProduction,
+          },
+        },
+      },
+      destroy: {
+        executor: 'lambdaform:destroy',
+        outputs: [],
+        defaultConfiguration: 'test',
+        options: {
+          interactive: false,
           terraformDirectory: terraformDirectoryPath,
         },
         configurations: {
