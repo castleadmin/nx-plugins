@@ -17,6 +17,7 @@ export const createProjectConfiguration = (
     root: projectRoot,
     sourceRoot: joinPathFragments(projectRoot, 'src'),
     projectType: 'application',
+    implicitDependencies: [],
     targets: {
       build: {
         executor: 'lambdaform:build',
@@ -161,6 +162,42 @@ export const createProjectConfiguration = (
           },
         },
       },
+      'plan-all': {
+        executor: 'lambdaform:plan',
+        outputs: [],
+        defaultConfiguration: 'test',
+        options: {
+          interactive: false,
+          planOutput: 'tfplan',
+          terraformDirectory: terraformDirectoryPath,
+        },
+        configurations: {
+          test: {
+            workspace: workspaceTest,
+          },
+          staging: {
+            workspace: workspaceStaging,
+          },
+          production: {
+            workspace: workspaceProduction,
+          },
+        },
+        dependsOn: [
+          {
+            dependencies: true,
+            target: 'apply-all',
+            params: 'ignore',
+          },
+          {
+            target: 'build',
+            params: 'ignore',
+          },
+          {
+            target: 'init-project',
+            params: 'ignore',
+          },
+        ],
+      },
       'apply-all': {
         executor: 'lambdaform:apply',
         outputs: [],
@@ -183,14 +220,14 @@ export const createProjectConfiguration = (
         },
         dependsOn: [
           {
-            target: 'plan',
+            dependencies: true,
+            target: 'apply-all',
             params: 'ignore',
           },
           {
-            projects: [],
-            target: '^apply-all',
+            target: 'plan',
             params: 'ignore',
-          }
+          },
         ],
       },
       destroy: {

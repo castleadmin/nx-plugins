@@ -18,7 +18,7 @@ export const executeCommand = (
       resolve({ stdout, stderr });
     });
 
-    commandProcess.stdout?.pipe(processStdout);
-    commandProcess.stderr?.pipe(processStderr);
+    commandProcess.stdout?.pipe(processStdout, { end: false });
+    commandProcess.stderr?.pipe(processStderr, { end: false });
   });
 };
