@@ -148,7 +148,7 @@ export const createProjectConfiguration = (
             params: 'ignore',
           },
           {
-            target: 'plan',
+            target: 'plan-all',
             params: 'ignore',
           },
         ],
