@@ -1,5 +1,9 @@
 import { exec, ExecOptions } from 'node:child_process';
-import { stdout as processStdout, stderr as processStderr } from 'node:process';
+import {
+  stdin as processStdin,
+  stdout as processStdout,
+  stderr as processStderr,
+} from 'node:process';
 
 export const executeCommand = (
   command: string,
@@ -18,6 +22,9 @@ export const executeCommand = (
       resolve({ stdout, stderr });
     });
 
+    if (commandProcess.stdin) {
+      processStdin.pipe(commandProcess.stdin, { end: false });
+    }
     commandProcess.stdout?.pipe(processStdout, { end: false });
     commandProcess.stderr?.pipe(processStderr, { end: false });
   });
