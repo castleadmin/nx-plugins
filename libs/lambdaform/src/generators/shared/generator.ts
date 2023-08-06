@@ -10,6 +10,7 @@ import {
 import { SharedGeneratorSchema } from './schema';
 import { toTerraformName } from '../../utils/to-terraform-name';
 import { resolve } from 'node:path';
+import { createProjectConfiguration } from './create-project-configuration';
 
 export const sharedGenerator = async (
   tree: Tree,
@@ -28,14 +29,11 @@ export const sharedGenerator = async (
     ...terraformOptions,
   });
 
-  addProjectConfiguration(tree, options.sharedResourcesName, {
-    root: projectRoot,
-    sourceRoot: joinPathFragments(projectRoot, 'terraform'),
-    projectType: 'application',
-    // TODO add project configuration
-    targets: {},
-    tags: [`app:${options.sharedResourcesName}`, 'lambdaform:shared'],
-  });
+  addProjectConfiguration(
+    tree,
+    options.sharedResourcesName,
+    createProjectConfiguration(projectRoot, options)
+  );
 
   if (!options.skipFormat) {
     await formatFiles(tree);
