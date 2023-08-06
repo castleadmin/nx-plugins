@@ -102,7 +102,7 @@ resource "aws_lambda_function" "<%= handlerNameTf %>" {
   handler = "index.handler"
 
   runtime       = "nodejs18.x"
-  architectures = ["arm64"] // arm64 (cost-efficient) or x86_64
+  architectures = ["x86_64"] // arm64 (cost-efficient) or x86_64
   memory_size   = 128       // Minimum: 128 MB, Maximum: 10240 MB, Restriction: The value is a multiple of 1 MB
   // Minimum: 1 second, Maximum: 900 seconds
   // Restriction: The maximum timeout for Lambdas invoked from API Gateway or AppSync is 29 seconds
