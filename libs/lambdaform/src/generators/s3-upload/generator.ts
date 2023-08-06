@@ -23,7 +23,7 @@ export async function s3UploadGenerator(
 
   const terraformOptions = {
     bucketNameTf: toTerraformName(options.bucketName),
-    projectTf: toTerraformName(options.project),
+    projectTf: toTerraformName(projectName),
   };
 
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {

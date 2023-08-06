@@ -11,6 +11,7 @@ import { appendFragment } from '../../utils/append-fragment';
 import { getVersions } from '../../utils/versions';
 import { toTerraformName } from '../../utils/to-terraform-name';
 import { resolve } from 'node:path';
+import { addHandlerToConfiguration } from '../../utils/add-handler-to-configuration';
 
 export async function handlerGenerator(
   tree: Tree,
@@ -23,7 +24,7 @@ export async function handlerGenerator(
 
   const terraformOptions = {
     handlerNameTf: toTerraformName(options.handlerName),
-    projectTf: toTerraformName(options.project),
+    projectTf: toTerraformName(projectName),
   };
 
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
@@ -41,6 +42,18 @@ export async function handlerGenerator(
       'main.tf'
     ),
     appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf'),
+  });
+
+  addHandlerToConfiguration({
+    name: options.handlerName,
+    path: joinPathFragments(
+      projectRoot,
+      'src',
+      'handlers',
+      `${options.handlerName}.ts`
+    ),
+    projectName,
+    tree,
   });
 
   if (!options.skipFormat) {
