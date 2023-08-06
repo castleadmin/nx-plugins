@@ -49,7 +49,6 @@ export const createProjectConfiguration = (
       },
       serve: {
         executor: 'lambdaform:serve',
-        outputs: [],
         options: {
           terraformDirectory: terraformDirectoryPath,
           samConfiguration: samConfigurationPath,
@@ -64,7 +63,6 @@ export const createProjectConfiguration = (
       },
       invoke: {
         executor: 'lambdaform:invoke',
-        outputs: [],
         options: {
           terraformDirectory: terraformDirectoryPath,
           samConfiguration: samConfigurationPath,
@@ -78,19 +76,16 @@ export const createProjectConfiguration = (
       },
       event: {
         executor: 'lambdaform:event',
-        outputs: [],
         options: {},
       },
       'format-project': {
         executor: 'lambdaform:format',
-        outputs: [],
         options: {
           terraformDirectory: terraformDirectoryPath,
         },
       },
       'init-project': {
         executor: 'lambdaform:init',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           createWorkspace: true,
@@ -112,7 +107,6 @@ export const createProjectConfiguration = (
       },
       plan: {
         executor: 'lambdaform:plan',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
@@ -143,7 +137,6 @@ export const createProjectConfiguration = (
       },
       apply: {
         executor: 'lambdaform:apply',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
@@ -164,7 +157,6 @@ export const createProjectConfiguration = (
       },
       'plan-all': {
         executor: 'lambdaform:plan',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
@@ -200,7 +192,6 @@ export const createProjectConfiguration = (
       },
       'apply-all': {
         executor: 'lambdaform:apply',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
@@ -232,7 +223,6 @@ export const createProjectConfiguration = (
       },
       destroy: {
         executor: 'lambdaform:destroy',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,

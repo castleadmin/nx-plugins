@@ -20,14 +20,12 @@ export const createProjectConfiguration = (
     targets: {
       'format-project': {
         executor: 'lambdaform:format',
-        outputs: [],
         options: {
           terraformDirectory: terraformDirectoryPath,
         },
       },
       'init-project': {
         executor: 'lambdaform:init',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           createWorkspace: true,
@@ -49,7 +47,6 @@ export const createProjectConfiguration = (
       },
       plan: {
         executor: 'lambdaform:plan',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
@@ -76,7 +73,6 @@ export const createProjectConfiguration = (
       },
       apply: {
         executor: 'lambdaform:apply',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
@@ -97,7 +93,6 @@ export const createProjectConfiguration = (
       },
       'plan-all': {
         executor: 'lambdaform:plan',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
@@ -129,7 +124,6 @@ export const createProjectConfiguration = (
       },
       'apply-all': {
         executor: 'lambdaform:apply',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
@@ -161,7 +155,6 @@ export const createProjectConfiguration = (
       },
       destroy: {
         executor: 'lambdaform:destroy',
-        outputs: [],
         defaultConfiguration: 'test',
         options: {
           interactive: false,
