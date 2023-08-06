@@ -161,6 +161,38 @@ export const createProjectConfiguration = (
           },
         },
       },
+      'apply-all': {
+        executor: 'lambdaform:apply',
+        outputs: [],
+        defaultConfiguration: 'test',
+        options: {
+          interactive: false,
+          planOutput: 'tfplan',
+          terraformDirectory: terraformDirectoryPath,
+        },
+        configurations: {
+          test: {
+            workspace: workspaceTest,
+          },
+          staging: {
+            workspace: workspaceStaging,
+          },
+          production: {
+            workspace: workspaceProduction,
+          },
+        },
+        dependsOn: [
+          {
+            target: 'plan',
+            params: 'ignore',
+          },
+          {
+            projects: [],
+            target: '^apply-all',
+            params: 'ignore',
+          }
+        ],
+      },
       destroy: {
         executor: 'lambdaform:destroy',
         outputs: [],
