@@ -57,7 +57,7 @@ export const createProjectConfiguration = (
         dependsOn: [
           {
             target: 'build',
-            params: 'forward',
+            params: 'ignore',
           },
         ],
       },
@@ -71,7 +71,7 @@ export const createProjectConfiguration = (
         dependsOn: [
           {
             target: 'build',
-            params: 'forward',
+            params: 'ignore',
           },
         ],
       },
@@ -131,8 +131,12 @@ export const createProjectConfiguration = (
         },
         dependsOn: [
           {
+            target: 'build',
+            params: 'ignore',
+          },
+          {
             target: 'init-project',
-            params: 'forward',
+            params: 'ignore',
           },
         ],
       },
@@ -156,12 +160,6 @@ export const createProjectConfiguration = (
             workspace: workspaceProduction,
           },
         },
-        dependsOn: [
-          {
-            target: 'plan',
-            params: 'forward',
-          },
-        ],
       },
       destroy: {
         executor: 'lambdaform:destroy',
