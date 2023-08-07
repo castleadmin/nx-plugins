@@ -57,9 +57,9 @@ resource "aws_iam_role" "<%= handlerNameTf %>_iam_role" {
   name               = local.workspaces[terraform.workspace].function_name
   description        = "Role for Lambda function ${local.workspaces[terraform.workspace].function_name}"
   assume_role_policy = data.aws_iam_policy_document.<%= handlerNameTf %>_assume_role_policy.json
-  <% if (xray) { %>
+  <%_ if (xray) { _%>
   managed_policy_arns = ["arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"]
-  <% } %>
+  <%_ } _%>
 }
 
 resource "aws_iam_role_policy" "<%= handlerNameTf %>_iam_role_policy" {
@@ -91,6 +91,7 @@ resource "aws_s3_object" "<%= handlerNameTf %>_s3_object" {
 resource "aws_lambda_function" "<%= handlerNameTf %>" {
   function_name = local.workspaces[terraform.workspace].function_name
   role          = aws_iam_role.<%= handlerNameTf %>_iam_role.arn
+  handler       = "index.handler"
   <% if (s3Upload) { %>
   s3_bucket         = data.aws_s3_bucket.<%= handlerNameTf %>_bucket.id
   s3_key            = aws_s3_object.<%= handlerNameTf %>_s3_object.id
@@ -99,17 +100,16 @@ resource "aws_lambda_function" "<%= handlerNameTf %>" {
   filename         = local.zip_file
   source_code_hash = filebase64sha512(local.zip_file)
   <% } %>
-  handler = "index.handler"
-
   runtime       = "nodejs18.x"
   architectures = ["x86_64"] // arm64 (cost-efficient) or x86_64
-  memory_size   = 128       // Minimum: 128 MB, Maximum: 10240 MB, Restriction: The value is a multiple of 1 MB
+  memory_size   = 128        // Minimum: 128 MB, Maximum: 10240 MB, Restriction: The value is a multiple of 1 MB
   // Minimum: 1 second, Maximum: 900 seconds
   // Restriction: The maximum timeout for Lambdas invoked from API Gateway or AppSync is 29 seconds
   timeout = 29
-  <% if (xray) { %>
+  <%_ if (xray) { _%>
+
   tracing_config {
     mode = "Active"
   }
-  <% } %>
+  <%_ } _%>
 }
