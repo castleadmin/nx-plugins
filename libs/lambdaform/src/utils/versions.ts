@@ -19,11 +19,11 @@ export interface Versions {
   awsTerraformProvider: string;
 }
 
-export const getVersions = async (): Promise<Versions> => {
+export const getVersions = (): Versions => {
   // TypeScript
   const tslib = '^2.3.0';
   const typesAwsLambda = '^8.10.119';
-  const typesNode = '18.7.1';
+  const typesNode = '~18.7.1';
   // Build
   const rollup = '^3.26.2';
   const rollupPluginCopy = '^3.4.0';

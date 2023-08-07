@@ -85,7 +85,7 @@ export const serviceGenerator = async (
   options: ServiceGeneratorSchema
 ): Promise<GeneratorCallback> => {
   const appsDir = getWorkspaceLayout(tree).appsDir;
-  const versions = await getVersions();
+  const versions = getVersions();
   const projectName = names(options.serviceName).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
 

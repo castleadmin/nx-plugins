@@ -18,7 +18,7 @@ export async function handlerGenerator(
   options: HandlerGeneratorSchema
 ): Promise<void> {
   const appsDir = getWorkspaceLayout(tree).appsDir;
-  const versions = await getVersions();
+  const versions = getVersions();
   const projectName = names(options.project).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
 
