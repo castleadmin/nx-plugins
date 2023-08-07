@@ -19,14 +19,11 @@ const deleteOutput = async (outputPathResolved: string): Promise<void> =>
     maxRetries: 3,
   });
 
-export const runExecutor = async (
+const buildHandler = async (
+  handler: Handler,
   options: BuildExecutorSchema,
   context: ExecutorContext
-): Promise<{ success: boolean }> => {
-  // TypeScript workaround (Option 4) https://github.com/TypeStrong/ts-node/discussions/1290
-  const dynamicImport = new Function('module', 'return import(module)');
-  const pLimit = (await dynamicImport('p-limit')).default as typeof PLimit;
-
+): Promise<void> => {
   const contextRootResolved = resolve(context.root);
   const projectSourceRoot = getProjectSourceRoot(context);
   const projectSourceRootResolved = join(
@@ -39,7 +36,6 @@ export const runExecutor = async (
   }
 
   const {
-    handlers,
     tsConfig,
     outputPath,
     outputFileName,
@@ -51,96 +47,105 @@ export const runExecutor = async (
     treeshake,
     minify,
     rollupConfig,
-    deleteOutputPath,
-    maxWorkers,
     verbose,
     watch,
   } = options;
+
+  const outputPathHandlerResolved = join(
+    contextRootResolved,
+    outputPath,
+    handler.name
+  );
+  const zipFileResolved = join(
+    contextRootResolved,
+    outputPath,
+    `${handler.name}.zip`
+  );
+
+  const external = externalDependenciesToRollupOption(handler);
+
+  const normalizedAssets = await normalizeAssets(
+    handler.assets ?? [],
+    contextRootResolved,
+    projectSourceRootResolved
+  );
+  const copyTargets = normalizedAssetsToCopyTargets(
+    normalizedAssets,
+    outputPathHandlerResolved
+  );
+
+  let rollupOptions = createRollupOptions({
+    handlerName: handler.name,
+    handlerSrcPathResolved: join(contextRootResolved, handler.path),
+    outputFileName,
+    outputChunkNames,
+    outputPathHandlerResolved,
+    external,
+    tsconfigResolved: join(contextRootResolved, tsConfig),
+    format,
+    sourcemap,
+    treeshake,
+    minify,
+    copyTargets,
+    verbose,
+  });
+
+  if (rollupConfig) {
+    const customRollupConfig = (
+      await import(join(contextRootResolved, rollupConfig))
+    ).default;
+    rollupOptions = await customRollupConfig(rollupOptions, options, context);
+  }
+
+  const postBuild = async (rollupOutput: RollupOutput): Promise<void> => {
+    await createPackageJson({
+      handlerName: handler.name,
+      outputFileName,
+      packageJsonType,
+      outputPathHandlerResolved,
+    });
+    await copyNodeModules({
+      rollupOutput,
+      contextRootResolved,
+      outputPathHandlerResolved,
+      excludeAwsSdk: handler.excludeAwsSdk,
+      projectGraph,
+      verbose,
+    });
+    await zip({
+      outputPathHandlerResolved,
+      zipFileResolved,
+      excludeZipRegExp,
+    });
+  };
+
+  if (watch) {
+    await buildWatch(handler.name, rollupOptions, postBuild);
+  } else {
+    await build(handler.name, rollupOptions, postBuild);
+  }
+};
+
+export const runExecutor = async (
+  options: BuildExecutorSchema,
+  context: ExecutorContext
+): Promise<{ success: boolean }> => {
+  // TypeScript workaround (Option 4) https://github.com/TypeStrong/ts-node/discussions/1290
+  const dynamicImport = new Function('module', 'return import(module)');
+  const pLimit = (await dynamicImport('p-limit')).default as typeof PLimit;
+
+  const contextRootResolved = resolve(context.root);
+  const { handlers, outputPath, deleteOutputPath, maxWorkers } = options;
 
   if (deleteOutputPath) {
     await deleteOutput(join(contextRootResolved, outputPath));
   }
 
-  const buildHandler = async (handler: Handler): Promise<void> => {
-    const outputPathHandlerResolved = join(
-      contextRootResolved,
-      outputPath,
-      handler.name
-    );
-    const zipFileResolved = join(
-      contextRootResolved,
-      outputPath,
-      `${handler.name}.zip`
-    );
-
-    const external = externalDependenciesToRollupOption(handler);
-
-    const normalizedAssets = await normalizeAssets(
-      handler.assets ?? [],
-      contextRootResolved,
-      projectSourceRootResolved
-    );
-    const copyTargets = normalizedAssetsToCopyTargets(
-      normalizedAssets,
-      outputPathHandlerResolved
-    );
-
-    let rollupOptions = createRollupOptions({
-      handlerName: handler.name,
-      handlerSrcPathResolved: join(contextRootResolved, handler.path),
-      outputFileName,
-      outputChunkNames,
-      outputPathHandlerResolved,
-      external,
-      tsconfigResolved: join(contextRootResolved, tsConfig),
-      format,
-      sourcemap,
-      treeshake,
-      minify,
-      copyTargets,
-      verbose,
-    });
-
-    if (rollupConfig) {
-      const customRollupConfig = (
-        await import(join(contextRootResolved, rollupConfig))
-      ).default;
-      rollupOptions = await customRollupConfig(rollupOptions, options, context);
-    }
-
-    const postBuild = async (rollupOutput: RollupOutput): Promise<void> => {
-      await createPackageJson({
-        handlerName: handler.name,
-        outputFileName,
-        packageJsonType,
-        outputPathHandlerResolved,
-      });
-      await copyNodeModules({
-        rollupOutput,
-        contextRootResolved,
-        outputPathHandlerResolved,
-        excludeAwsSdk: handler.excludeAwsSdk,
-        projectGraph,
-        verbose,
-      });
-      await zip({
-        outputPathHandlerResolved,
-        zipFileResolved,
-        excludeZipRegExp,
-      });
-    };
-
-    if (watch) {
-      await buildWatch(handler.name, rollupOptions, postBuild);
-    } else {
-      await build(handler.name, rollupOptions, postBuild);
-    }
-  };
-
   const limit = pLimit(maxWorkers);
-
   await Promise.all(
-    handlers.map((handler): Promise<void> => limit(buildHandler, handler))
+    handlers.map(
+      (handler): Promise<void> => limit(buildHandler, handler, options, context)
+    )
   );
 
   return {
