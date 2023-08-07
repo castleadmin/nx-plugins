@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "pre:commit": "nx format && npx nx affected --target=lint && npx nx affected --target=test --code-coverage && npx nx affected --target=build --exclude=\"apps/*\" && git add libs/*"
+    "pre:commit": "./pre-commit.sh"
   },
   "private": true,
   "devDependencies": {
