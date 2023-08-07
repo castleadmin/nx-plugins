@@ -131,6 +131,12 @@
       "description": "Delete the output path before building.",
       "default": true
     },
+    "maxWorkers": {
+      "type": "number",
+      "description": "Defines the maximum number of builds that could be executed in parallel.",
+      "minimum": 1,
+      "default": 10
+    },
     "verbose": {
       "type": "boolean",
       "description": "Emits verbose output.",

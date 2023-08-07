@@ -21,7 +21,7 @@ export const addTsDependencies = (
   );
 };
 
-export const addProjectDependencies = (
+export const addPluginRuntimeDependencies = (
   tree: Tree,
   versions: Versions
 ): GeneratorCallback => {
@@ -40,6 +40,7 @@ export const addProjectDependencies = (
       'adm-zip': versions['adm-zip'],
       '@types/fs-extra': versions['@types/fs-extra'],
       'fs-extra': versions['fs-extra'],
+      'p-limit': versions['p-limit'],
     }
   );
 };

@@ -14,6 +14,7 @@ const options: BuildExecutorSchema = {
   treeshake: 'smallest',
   minify: true,
   deleteOutputPath: false,
+  maxWorkers: 10,
   verbose: false,
   watch: false,
 };

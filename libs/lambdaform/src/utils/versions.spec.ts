@@ -31,6 +31,7 @@ describe('getVersions', () => {
       'adm-zip': expect.stringMatching(semanticVersionMinorUpgrade),
       '@types/fs-extra': expect.stringMatching(semanticVersionMinorUpgrade),
       'fs-extra': expect.stringMatching(semanticVersionMinorUpgrade),
+      'p-limit': expect.stringMatching(semanticVersionMinorUpgrade),
       // Terraform
       awsTerraformProvider: expect.stringMatching(semanticVersion),
     });

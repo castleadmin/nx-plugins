@@ -16,7 +16,10 @@ import {
   initGenerator as jsInitGenerator,
 } from '@nx/js';
 import { jestInitGenerator, jestProjectGenerator } from '@nx/jest';
-import { addProjectDependencies, addTsDependencies } from './dependencies';
+import {
+  addPluginRuntimeDependencies,
+  addTsDependencies,
+} from './dependencies';
 import { Linter, lintProjectGenerator } from '@nx/linter';
 import { getVersions, Versions } from '../../utils/versions';
 import { createProjectConfiguration } from './create-project-configuration';
@@ -92,7 +95,7 @@ export const serviceGenerator = async (
   const tasks: GeneratorCallback[] = [];
 
   tasks.push(await addInitTasks(tree, options, versions));
-  tasks.push(await addProjectDependencies(tree, versions));
+  tasks.push(await addPluginRuntimeDependencies(tree, versions));
 
   const terraformOptions = {
     serviceNameTf: toTerraformName(options.serviceName),

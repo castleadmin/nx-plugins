@@ -28,6 +28,7 @@ export interface BuildExecutorSchema {
   minify: boolean | object;
   rollupConfig?: string;
   deleteOutputPath: boolean;
+  maxWorkers: number;
   verbose: boolean;
   watch: boolean;
 }
