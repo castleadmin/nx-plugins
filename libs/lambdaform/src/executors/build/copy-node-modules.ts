@@ -117,7 +117,7 @@ const getNodeModuleNames = (uniqueImports: string[]): string[] => {
     }
 
     if (parts[0].startsWith('@')) {
-      return Boolean(parts[1]) ? `${parts[0]}/${parts[1]}` : parts[0];
+      return parts[1] ? `${parts[0]}/${parts[1]}` : parts[0];
     }
 
     return parts[0];

@@ -130,10 +130,9 @@ export const runExecutor = async (
       };
 
       if (watch) {
-        await buildWatch(rollupOptions, postBuild);
+        await buildWatch(handler.name, rollupOptions, postBuild);
       } else {
-        const rollupOutput = await build(rollupOptions);
-        await postBuild(rollupOutput);
+        await build(handler.name, rollupOptions, postBuild);
       }
     })
   );

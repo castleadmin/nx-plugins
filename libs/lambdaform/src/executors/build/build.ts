@@ -103,21 +103,33 @@ const paths = (id: string): string => {
 };
 
 export const build = async (
-  rollupOptions: RollupOptions
-): Promise<RollupOutput> => {
+  handlerName: string,
+  rollupOptions: RollupOptions,
+  postBuild: (rollupOutput: RollupOutput) => Promise<void>
+): Promise<void> => {
   let bundle: RollupBuild | undefined = undefined;
+  let rollupOutput: RollupOutput | undefined = undefined;
+
+  console.log(`Building ${handlerName}...`);
 
   try {
     bundle = await rollup(rollupOptions);
-    return await bundle.write(rollupOptions.output as OutputOptions);
+    rollupOutput = await bundle.write(rollupOptions.output as OutputOptions);
   } finally {
     if (bundle) {
       await bundle.close();
     }
   }
+
+  if (rollupOutput) {
+    await postBuild(rollupOutput);
+
+    console.log(`${handlerName} has been build successfully!`);
+  }
 };
 
 export const buildWatch = async (
+  handlerName: string,
   rollupOptions: RollupOptions,
   postBuild: (rollupOutput: RollupOutput) => Promise<void>
 ): Promise<void> => {
@@ -126,13 +138,13 @@ export const buildWatch = async (
 
   const watcher = watch(watchOptions);
 
-  return new Promise((_resolve, _reject) => {
+  return new Promise((resolve) => {
     watcher.on('event', async (event): Promise<void> => {
       const bundle = (event as { result: RollupBuild | undefined }).result;
       let rollupOutput: RollupOutput | undefined = undefined;
 
       if (event.code === 'BUNDLE_START') {
-        console.log('Apply changes...');
+        console.log(`Building ${handlerName}...`);
       }
 
       try {
@@ -149,7 +161,13 @@ export const buildWatch = async (
 
       if (rollupOutput) {
         await postBuild(rollupOutput);
+
+        console.log(`${handlerName} has been build successfully!`);
       }
+    });
+
+    watcher.on('close', () => {
+      resolve();
     });
   });
 };
