@@ -9,7 +9,7 @@ import { getProjectSourceRoot } from '../../utils/get-project-source-root';
 import { externalDependenciesToRollupOption } from './external-dependencies';
 import { copyNodeModules } from './copy-node-modules';
 import { createPackageJson } from './create-package-json';
-import { RollupOutput } from 'rollup';
+import { RollupOutput, RollupWatcher } from 'rollup';
 import type PLimit from 'p-limit';
 
 const deleteOutput = async (outputPathResolved: string): Promise<void> =>
@@ -23,7 +23,7 @@ const buildHandler = async (
   handler: Handler,
   options: BuildExecutorSchema,
   context: ExecutorContext
-): Promise<void> => {
+): Promise<void | RollupWatcher> => {
   const contextRootResolved = resolve(context.root);
   const projectSourceRoot = getProjectSourceRoot(context);
   const projectSourceRootResolved = join(
@@ -120,9 +120,9 @@ const buildHandler = async (
   };
 
   if (watch) {
-    await buildWatch(handler.name, rollupOptions, postBuild);
+    return await buildWatch(handler.name, rollupOptions, postBuild);
   } else {
-    await build(handler.name, rollupOptions, postBuild);
+    return await build(handler.name, rollupOptions, postBuild);
   }
 };
 
@@ -135,18 +135,32 @@ export const runExecutor = async (
   const pLimit = (await dynamicImport('p-limit')).default as typeof PLimit;
 
   const contextRootResolved = resolve(context.root);
-  const { handlers, outputPath, deleteOutputPath, maxWorkers } = options;
+  const { handlers, outputPath, deleteOutputPath, maxWorkers, watch } = options;
 
   if (deleteOutputPath) {
     await deleteOutput(join(contextRootResolved, outputPath));
   }
 
   const limit = pLimit(maxWorkers);
-  await Promise.all(
+  const watchers = await Promise.all(
     handlers.map(
-      (handler): Promise<void> => limit(buildHandler, handler, options, context)
+      (handler): Promise<void | RollupWatcher> =>
+        limit(buildHandler, handler, options, context)
     )
   );
+
+  if (watch) {
+    await Promise.all(
+      (watchers as RollupWatcher[]).map(
+        (watcher): Promise<void> =>
+          new Promise((resolve) => {
+            watcher.on('close', () => {
+              resolve();
+            });
+          })
+      )
+    );
+  }
 
   return {
     success: true,

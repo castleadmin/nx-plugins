@@ -10,6 +10,7 @@ import {
   watch,
   Plugin,
   RollupWatchOptions,
+  RollupWatcher,
 } from 'rollup';
 import * as copy from 'rollup-plugin-copy';
 import json from '@rollup/plugin-json';
@@ -132,13 +133,15 @@ export const buildWatch = async (
   handlerName: string,
   rollupOptions: RollupOptions,
   postBuild: (rollupOutput: RollupOutput) => Promise<void>
-): Promise<void> => {
+): Promise<RollupWatcher> => {
   const watchOptions: RollupWatchOptions = rollupOptions;
   watchOptions.watch = { skipWrite: true };
 
   const watcher = watch(watchOptions);
 
   return new Promise((resolve) => {
+    let firstSuccessfulBuild = false;
+
     watcher.on('event', async (event): Promise<void> => {
       const bundle = (event as { result: RollupBuild | undefined }).result;
       let rollupOutput: RollupOutput | undefined = undefined;
@@ -163,11 +166,12 @@ export const buildWatch = async (
         await postBuild(rollupOutput);
 
         console.log(`${handlerName} has been build successfully!`);
-      }
-    });
 
-    watcher.on('close', () => {
-      resolve();
+        if (!firstSuccessfulBuild) {
+          firstSuccessfulBuild = true;
+          resolve(watcher);
+        }
+      }
     });
   });
 };
