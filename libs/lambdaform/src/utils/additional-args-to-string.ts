@@ -7,7 +7,15 @@ export const additionalArgsToString = (
     .map((key) => argToString(key, additionalArgs))
     .join(' ');
 
-  return `${positionalArgsString} ${additionalArgsString}`;
+  if (positionalArgsString && additionalArgsString) {
+    return `${positionalArgsString} ${additionalArgsString}`;
+  }
+
+  if (positionalArgsString) {
+    return positionalArgsString;
+  }
+
+  return additionalArgsString;
 };
 
 const argToString = (
@@ -16,10 +24,22 @@ const argToString = (
 ): string => {
   const argNameString = key.length === 1 ? `-${key}` : `--${key}`;
   const argValue = additionalArgs[key];
-  let argValueString = `=${argValue?.toString()}`;
+  let argValueString = `="${argValue?.toString()}"`;
 
   if (argValue === true) {
     argValueString = '';
+  }
+
+  if (argValue === false) {
+    argValueString = '=false';
+  }
+
+  if (typeof argValue === 'string') {
+    argValueString = `="${argValue}"`;
+  }
+
+  if (typeof argValue === 'number') {
+    argValueString = `=${argValue}`;
   }
 
   return `${argNameString}${argValueString}`;
