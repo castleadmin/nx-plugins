@@ -10,7 +10,7 @@ export const runExecutor = async (
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
 
-  const { samConfiguration, terraformDirectory, api, args, _, ...rest } =
+  const { samConfiguration, terraformDirectory, api, args, shell, _, ...rest } =
     options;
   const additionalArgs = additionalArgsToString(_, rest);
 
@@ -33,6 +33,7 @@ export const runExecutor = async (
 
   await executeCommand(startCommand, {
     cwd: workingDirectoryResolved,
+    shell,
   });
 
   return {

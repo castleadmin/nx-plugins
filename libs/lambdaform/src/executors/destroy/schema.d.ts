@@ -3,4 +3,5 @@ export interface DestroyExecutorSchema {
   interactive: boolean;
   args?: string;
   terraformDirectory: string;
+  shell?: string;
 }

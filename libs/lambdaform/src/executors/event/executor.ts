@@ -1,5 +1,5 @@
 import { EventExecutorSchema } from './schema';
-import { executeCommand } from '../../utils/execute-command';
+import { executeCommandBufferResults } from '../../utils/execute-command';
 import { ExecutorContext } from '@nx/devkit';
 import { getProjectRoot } from '../../utils/get-project-root';
 import { dirname, resolve, join } from 'node:path';
@@ -24,7 +24,7 @@ export const runExecutor = async (
   const projectRoot = getProjectRoot(context);
   const workingDirectoryResolved = join(contextRootResolved, projectRoot);
 
-  const { create, args, _, ...rest } = options;
+  const { create, args, shell, _, ...rest } = options;
   const additionalArgs = additionalArgsToString(_, rest);
 
   const generateEventCommand = `sam local generate-event ${
@@ -32,8 +32,9 @@ export const runExecutor = async (
   }`;
   console.log('Executing command:', generateEventCommand);
 
-  const { stdout } = await executeCommand(generateEventCommand, {
+  const { stdout } = await executeCommandBufferResults(generateEventCommand, {
     cwd: workingDirectoryResolved,
+    shell,
   });
 
   if (create) {

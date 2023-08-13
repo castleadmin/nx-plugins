@@ -8,7 +8,7 @@ export const runExecutor = async (
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
-  const { workspace, interactive, args, terraformDirectory } = options;
+  const { workspace, interactive, args, terraformDirectory, shell } = options;
 
   const selectWorkspaceCommand = `terraform workspace select ${workspace}`;
   const destroyCommand = `terraform destroy -input=${interactive} ${
@@ -18,6 +18,7 @@ export const runExecutor = async (
 
   await executeCommand(workspace ? combinedCommand : destroyCommand, {
     cwd: join(contextRootResolved, terraformDirectory),
+    shell,
   });
 
   return {

@@ -13,17 +13,19 @@ export const runExecutor = async (
     throw new Error(`Project name isn't defined`);
   }
 
-  const { args, terraformDirectory } = options;
+  const { args, terraformDirectory, shell } = options;
 
   const nxFormatCommand = `nx format --projects=${projectName}`;
   const fmtCommand = `terraform fmt -recursive ${args ?? ''}`;
 
   await executeCommand(nxFormatCommand, {
     cwd: contextRootResolved,
+    shell,
   });
 
   await executeCommand(fmtCommand, {
     cwd: join(contextRootResolved, terraformDirectory),
+    shell,
   });
 
   return {

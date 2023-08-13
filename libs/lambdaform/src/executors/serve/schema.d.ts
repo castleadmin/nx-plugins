@@ -4,4 +4,5 @@ export interface ServeExecutorSchema {
   terraformDirectory: string;
   api?: boolean;
   args?: string;
+  shell?: string;
 }

@@ -3,4 +3,5 @@ export interface InvokeExecutorSchema {
   samConfiguration: string;
   terraformDirectory: string;
   args?: string;
+  shell?: string;
 }

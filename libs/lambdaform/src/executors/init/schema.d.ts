@@ -5,4 +5,5 @@ export interface InitExecutorSchema {
   upgrade: boolean;
   args?: string;
   terraformDirectory: string;
+  shell?: string;
 }

@@ -4,4 +4,5 @@ export interface ApplyExecutorSchema {
   args?: string;
   planOutput: string;
   terraformDirectory: string;
+  shell?: string;
 }

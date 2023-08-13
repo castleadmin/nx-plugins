@@ -12,6 +12,10 @@
     "args": {
       "type": "string",
       "description": "Used to provide additional arguments to the SAM CLI. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)"
+    },
+    "shell": {
+      "type": "string",
+      "description": "Shell to execute the command with. Uses '/bin/sh' on Unix, and 'process.env.ComSpec' on Windows, if no shell is specified."
     }
   },
   "required": []

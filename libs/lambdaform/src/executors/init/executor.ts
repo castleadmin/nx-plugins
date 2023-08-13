@@ -15,6 +15,7 @@ export const runExecutor = async (
     upgrade,
     args,
     terraformDirectory,
+    shell,
   } = options;
 
   const selectWorkspaceCommand = `terraform workspace select -or-create=${createWorkspace} ${workspace}`;
@@ -25,6 +26,7 @@ export const runExecutor = async (
 
   await executeCommand(workspace ? combinedCommand : initCommand, {
     cwd: join(contextRootResolved, terraformDirectory),
+    shell,
   });
 
   return {

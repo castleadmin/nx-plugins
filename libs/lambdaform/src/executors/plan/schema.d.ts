@@ -4,4 +4,5 @@ export interface PlanExecutorSchema {
   args?: string;
   planOutput: string;
   terraformDirectory: string;
+  shell?: string;
 }
