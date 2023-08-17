@@ -42,6 +42,7 @@
     "nx": "16.5.2",
     "p-limit": "^4.0.0",
     "prettier": "^2.6.2",
+    "prettier-plugin-organize-imports": "^3.2.3",
     "rollup": "^3.26.2",
     "rollup-plugin-copy": "^3.4.0",
     "ts-jest": "^29.1.0",
