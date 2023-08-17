@@ -27,8 +27,7 @@ describe('executeCommand', () => {
         callbackError = listener;
       }
     };
-    (spawn as jest.MockedFunction<typeof spawn>).mockReset();
-    (spawn as jest.MockedFunction<typeof spawn>).mockImplementationOnce(
+    (spawn as jest.MockedFunction<typeof spawn>).mockImplementation(
       () =>
         ({
           on,
@@ -120,7 +119,6 @@ describe('executeCommandBufferResults', () => {
 
   beforeEach(() => {
     execMocked = exec as jest.MockedFunction<typeof exec>;
-    execMocked.mockReset();
     command = faker.word.words();
     cwd = faker.system.directoryPath();
     commandStdout = faker.lorem.lines(5);

@@ -14,4 +14,5 @@ module.exports = {
   },
   */
   coverageReporters: ['clover', 'text'],
+  resetMocks: true,
 };

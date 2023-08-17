@@ -75,11 +75,6 @@ describe('addHandlerToConfiguration', () => {
         typeof readProjectConfiguration
       >
     ).mockImplementation((): ProjectConfiguration => projectConfiguration);
-    (
-      updateProjectConfiguration as jest.MockedFunction<
-        typeof updateProjectConfiguration
-      >
-    ).mockClear();
   });
 
   it('Should add the handler to the build options and configurations', () => {

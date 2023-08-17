@@ -38,13 +38,13 @@ describe('appendFragment', () => {
     )} <%= testVariable2 %> ${faker.lorem.lines(2)}`;
     console.log('originalContent', originalContent);
 
-    (readFile as jest.MockedFunction<typeof readFile>).mockImplementationOnce(
-      () => Promise.resolve(fragmentContent)
+    (readFile as jest.MockedFunction<typeof readFile>).mockImplementation(() =>
+      Promise.resolve(fragmentContent)
     );
-    (
-      tree.exists as jest.MockedFunction<typeof tree.exists>
-    ).mockImplementationOnce(() => true);
-    (tree.read as jest.MockedFunction<typeof tree.read>).mockImplementationOnce(
+    (tree.exists as jest.MockedFunction<typeof tree.exists>).mockImplementation(
+      () => true
+    );
+    (tree.read as jest.MockedFunction<typeof tree.read>).mockImplementation(
       () => originalContent
     );
 
@@ -80,7 +80,6 @@ describe('appendFragment', () => {
   });
 
   it('Should only write the fragment content, if the original content is empty.', async () => {
-    (tree.read as jest.MockedFunction<typeof tree.read>).mockReset();
     (tree.read as jest.MockedFunction<typeof tree.read>).mockImplementationOnce(
       () => ''
     );
@@ -111,7 +110,6 @@ describe('appendFragment', () => {
   });
 
   it("Should throw an error, if the append file doesn't exist.", async () => {
-    (tree.exists as jest.MockedFunction<typeof tree.exists>).mockReset();
     (
       tree.exists as jest.MockedFunction<typeof tree.exists>
     ).mockImplementationOnce(() => false);
