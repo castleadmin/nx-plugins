@@ -1,8 +1,8 @@
-import { OutputChunk, RollupOutput } from 'rollup';
-import { copy } from 'fs-extra';
-import { sep, join, normalize } from 'node:path';
-import { access } from 'node:fs/promises';
 import { ProjectGraph } from '@nx/devkit';
+import { copy } from 'fs-extra';
+import { access } from 'node:fs/promises';
+import { join, normalize, sep } from 'node:path';
+import { OutputChunk, RollupOutput } from 'rollup';
 import { excludeAwsSdk } from './external-dependencies';
 
 interface NestedDependency {

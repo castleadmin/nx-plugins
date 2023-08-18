@@ -1,7 +1,7 @@
 import { ExecutorContext } from '@nx/devkit';
-import { ApplyExecutorSchema } from './schema';
-import { executeCommand } from '../../utils/execute-command';
 import { join, resolve } from 'node:path';
+import { executeCommand } from '../../utils/execute-command';
+import { ApplyExecutorSchema } from './schema';
 
 export const runExecutor = async (
   options: ApplyExecutorSchema,

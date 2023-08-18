@@ -1,8 +1,8 @@
-import { InvokeExecutorSchema } from './schema';
-import { executeCommand } from '../../utils/execute-command';
-import { join, relative, resolve } from 'node:path';
 import { ExecutorContext } from '@nx/devkit';
+import { join, relative, resolve } from 'node:path';
 import { additionalArgsToString } from '../../utils/additional-args-to-string';
+import { executeCommand } from '../../utils/execute-command';
+import { InvokeExecutorSchema } from './schema';
 
 export const runExecutor = async (
   options: InvokeExecutorSchema,

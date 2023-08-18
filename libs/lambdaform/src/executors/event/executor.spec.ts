@@ -1,5 +1,5 @@
-import { EventExecutorSchema } from './schema';
 import executor from './executor';
+import { EventExecutorSchema } from './schema';
 
 const options: EventExecutorSchema = {
   _: [],

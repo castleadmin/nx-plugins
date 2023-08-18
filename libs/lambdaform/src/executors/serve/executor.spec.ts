@@ -1,5 +1,5 @@
-import { ServeExecutorSchema } from './schema';
 import executor from './executor';
+import { ServeExecutorSchema } from './schema';
 
 const options: ServeExecutorSchema = {
   _: [],

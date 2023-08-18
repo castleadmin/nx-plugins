@@ -1,5 +1,5 @@
-import { ExecutorContext, ProjectConfiguration } from '@nx/devkit';
 import { faker } from '@faker-js/faker';
+import { ExecutorContext, ProjectConfiguration } from '@nx/devkit';
 import { ProjectsConfigurations } from 'nx/src/config/workspace-json-project-json';
 import { getProjectSourceRoot } from './get-project-source-root';
 

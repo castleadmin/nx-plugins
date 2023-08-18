@@ -1,5 +1,5 @@
-import { InvokeExecutorSchema } from './schema';
 import executor from './executor';
+import { InvokeExecutorSchema } from './schema';
 
 const options: InvokeExecutorSchema = {
   _: [],

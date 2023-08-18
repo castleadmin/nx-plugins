@@ -1,5 +1,5 @@
-import { ExecutorContext } from '@nx/devkit';
 import { faker } from '@faker-js/faker';
+import { ExecutorContext } from '@nx/devkit';
 import { getProjectRoot } from './get-project-root';
 
 describe('getProjectRoot', () => {

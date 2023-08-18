@@ -7,10 +7,10 @@ import {
   names,
   Tree,
 } from '@nx/devkit';
-import { SharedGeneratorSchema } from './schema';
-import { toTerraformName } from '../../utils/to-terraform-name';
 import { resolve } from 'node:path';
+import { toTerraformName } from '../../utils/to-terraform-name';
 import { createProjectConfiguration } from './create-project-configuration';
+import { SharedGeneratorSchema } from './schema';
 
 export const sharedGenerator = async (
   tree: Tree,

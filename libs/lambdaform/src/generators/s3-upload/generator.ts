@@ -6,11 +6,11 @@ import {
   names,
   Tree,
 } from '@nx/devkit';
-import { S3UploadGeneratorSchema } from './schema';
-import { appendFragment } from '../../utils/append-fragment';
-import { getVersions } from '../../utils/versions';
-import { toTerraformName } from '../../utils/to-terraform-name';
 import { resolve } from 'node:path';
+import { appendFragment } from '../../utils/append-fragment';
+import { toTerraformName } from '../../utils/to-terraform-name';
+import { getVersions } from '../../utils/versions';
+import { S3UploadGeneratorSchema } from './schema';
 
 export async function s3UploadGenerator(
   tree: Tree,

@@ -1,6 +1,6 @@
-import { AssetGlobPattern } from './schema';
-import { basename, dirname, join, relative } from 'node:path';
 import { stat } from 'node:fs/promises';
+import { basename, dirname, join, relative } from 'node:path';
+import { AssetGlobPattern } from './schema';
 
 export const normalizedAssetsToCopyTargets = (
   assets: AssetGlobPattern[],

@@ -1,4 +1,4 @@
-import { join, normalize, resolve, posix, win32 } from 'node:path';
+import { join, normalize, posix, resolve, win32 } from 'node:path';
 
 jest.mock('node:path', () => {
   const originalModule = jest.requireActual('node:path');

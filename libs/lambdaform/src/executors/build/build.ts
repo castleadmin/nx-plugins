@@ -1,24 +1,24 @@
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
+import { isAbsolute } from 'node:path';
 import {
   ExternalOption,
   OutputOptions,
+  Plugin,
   RollupBuild,
   RollupOptions,
   RollupOutput,
+  RollupWatchOptions,
+  RollupWatcher,
   TreeshakingOptions,
   TreeshakingPreset,
   rollup,
   watch,
-  Plugin,
-  RollupWatchOptions,
-  RollupWatcher,
 } from 'rollup';
 import * as copy from 'rollup-plugin-copy';
-import json from '@rollup/plugin-json';
-import typescript from '@rollup/plugin-typescript';
-import nodeResolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import terser from '@rollup/plugin-terser';
-import { isAbsolute } from 'node:path';
 
 export const createRollupOptions = ({
   handlerName,

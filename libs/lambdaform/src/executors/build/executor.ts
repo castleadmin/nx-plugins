@@ -1,16 +1,16 @@
-import { BuildExecutorSchema, Handler } from './schema';
 import { ExecutorContext } from '@nx/devkit';
-import { build, buildWatch, createRollupOptions } from './build';
-import { join, resolve } from 'node:path';
 import { rm } from 'node:fs/promises';
-import { zip } from './zip';
-import { normalizeAssets, normalizedAssetsToCopyTargets } from './assets';
+import { join, resolve } from 'node:path';
+import type PLimit from 'p-limit';
+import { RollupOutput, RollupWatcher } from 'rollup';
 import { getProjectSourceRoot } from '../../utils/get-project-source-root';
-import { externalDependenciesToRollupOption } from './external-dependencies';
+import { normalizeAssets, normalizedAssetsToCopyTargets } from './assets';
+import { build, buildWatch, createRollupOptions } from './build';
 import { copyNodeModules } from './copy-node-modules';
 import { createPackageJson } from './create-package-json';
-import { RollupOutput, RollupWatcher } from 'rollup';
-import type PLimit from 'p-limit';
+import { externalDependenciesToRollupOption } from './external-dependencies';
+import { BuildExecutorSchema, Handler } from './schema';
+import { zip } from './zip';
 
 const deleteOutput = async (outputPathResolved: string): Promise<void> =>
   rm(outputPathResolved, {

@@ -1,5 +1,5 @@
-import { DestroyExecutorSchema } from './schema';
 import executor from './executor';
+import { DestroyExecutorSchema } from './schema';
 
 const options: DestroyExecutorSchema = {
   workspace: 'destroy-test',

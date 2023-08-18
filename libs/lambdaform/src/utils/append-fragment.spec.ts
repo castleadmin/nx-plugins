@@ -1,6 +1,6 @@
+import { faker } from '@faker-js/faker';
 import { Tree } from '@nx/devkit';
 import { readFile } from 'node:fs/promises';
-import { faker } from '@faker-js/faker';
 import { appendFragment } from './append-fragment';
 import { getVersions } from './versions';
 

@@ -6,12 +6,12 @@ import {
   names,
   Tree,
 } from '@nx/devkit';
-import { HandlerGeneratorSchema } from './schema';
-import { appendFragment } from '../../utils/append-fragment';
-import { getVersions } from '../../utils/versions';
-import { toTerraformName } from '../../utils/to-terraform-name';
 import { resolve } from 'node:path';
 import { addHandlerToConfiguration } from '../../utils/add-handler-to-configuration';
+import { appendFragment } from '../../utils/append-fragment';
+import { toTerraformName } from '../../utils/to-terraform-name';
+import { getVersions } from '../../utils/versions';
+import { HandlerGeneratorSchema } from './schema';
 
 export async function handlerGenerator(
   tree: Tree,

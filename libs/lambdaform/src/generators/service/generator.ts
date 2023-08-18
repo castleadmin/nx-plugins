@@ -10,21 +10,21 @@ import {
   runTasksInSerial,
   Tree,
 } from '@nx/devkit';
-import { ServiceGeneratorSchema } from './schema';
+import { jestInitGenerator, jestProjectGenerator } from '@nx/jest';
 import {
   getRelativePathToRootTsConfig,
   initGenerator as jsInitGenerator,
 } from '@nx/js';
-import { jestInitGenerator, jestProjectGenerator } from '@nx/jest';
+import { Linter, lintProjectGenerator } from '@nx/linter';
+import { resolve } from 'node:path';
+import { toTerraformName } from '../../utils/to-terraform-name';
+import { getVersions, Versions } from '../../utils/versions';
+import { createProjectConfiguration } from './create-project-configuration';
 import {
   addPluginRuntimeDependencies,
   addTsDependencies,
 } from './dependencies';
-import { Linter, lintProjectGenerator } from '@nx/linter';
-import { getVersions, Versions } from '../../utils/versions';
-import { createProjectConfiguration } from './create-project-configuration';
-import { toTerraformName } from '../../utils/to-terraform-name';
-import { resolve } from 'node:path';
+import { ServiceGeneratorSchema } from './schema';
 
 const addInitTasks = async (
   tree: Tree,

@@ -1,6 +1,6 @@
 import { joinPathFragments, ProjectConfiguration } from '@nx/devkit';
-import { SharedGeneratorSchema } from './schema';
 import { toTerraformName } from '../../utils/to-terraform-name';
+import { SharedGeneratorSchema } from './schema';
 
 export const createProjectConfiguration = (
   projectRoot: string,

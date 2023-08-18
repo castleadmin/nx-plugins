@@ -1,10 +1,10 @@
-import { EventExecutorSchema } from './schema';
-import { executeCommandBufferResults } from '../../utils/execute-command';
 import { ExecutorContext } from '@nx/devkit';
-import { getProjectRoot } from '../../utils/get-project-root';
-import { dirname, resolve, join } from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
 import { additionalArgsToString } from '../../utils/additional-args-to-string';
+import { executeCommandBufferResults } from '../../utils/execute-command';
+import { getProjectRoot } from '../../utils/get-project-root';
+import { EventExecutorSchema } from './schema';
 
 export const createEventFile = async (
   fileResolved: string,

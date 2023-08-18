@@ -1,12 +1,12 @@
+import { faker } from '@faker-js/faker';
 import {
   ProjectConfiguration,
   readProjectConfiguration,
   Tree,
   updateProjectConfiguration,
 } from '@nx/devkit';
-import { addHandlerToConfiguration } from './add-handler-to-configuration';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
-import { faker } from '@faker-js/faker';
+import { addHandlerToConfiguration } from './add-handler-to-configuration';
 
 jest.mock('@nx/devkit', () => {
   const originalModule = jest.requireActual('@nx/devkit');

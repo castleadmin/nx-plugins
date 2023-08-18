@@ -1,5 +1,5 @@
-import { exec, spawn, ChildProcess, ExecException } from 'node:child_process';
 import { faker } from '@faker-js/faker';
+import { ChildProcess, ExecException, exec, spawn } from 'node:child_process';
 import { executeCommand, executeCommandBufferResults } from './execute-command';
 
 jest.mock('node:child_process', () => {

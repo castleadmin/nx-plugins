@@ -1,5 +1,5 @@
-import { FormatExecutorSchema } from './schema';
 import executor from './executor';
+import { FormatExecutorSchema } from './schema';
 
 const options: FormatExecutorSchema = {
   terraformDirectory: 'terraform',

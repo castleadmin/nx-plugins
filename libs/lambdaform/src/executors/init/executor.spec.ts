@@ -1,5 +1,5 @@
-import { InitExecutorSchema } from './schema';
 import executor from './executor';
+import { InitExecutorSchema } from './schema';
 
 const options: InitExecutorSchema = {
   workspace: 'init-test',

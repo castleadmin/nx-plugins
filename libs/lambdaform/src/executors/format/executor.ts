@@ -1,7 +1,7 @@
-import { FormatExecutorSchema } from './schema';
 import { ExecutorContext } from '@nx/devkit';
-import { executeCommand } from '../../utils/execute-command';
 import { join, resolve } from 'node:path';
+import { executeCommand } from '../../utils/execute-command';
+import { FormatExecutorSchema } from './schema';
 
 export const runExecutor = async (
   options: FormatExecutorSchema,
