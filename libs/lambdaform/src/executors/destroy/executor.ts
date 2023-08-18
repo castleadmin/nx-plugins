@@ -11,8 +11,8 @@ export const runExecutor = async (
   const { workspace, interactive, args, terraformDirectory, shell } = options;
 
   const selectWorkspaceCommand = `terraform workspace select ${workspace}`;
-  const destroyCommand = `terraform destroy -input=${interactive} ${
-    args ?? ''
+  const destroyCommand = `terraform destroy -input=${interactive}${
+    args ? ` ${args}` : ''
   }`;
   const combinedCommand = `${selectWorkspaceCommand} && ${destroyCommand}`;
 
