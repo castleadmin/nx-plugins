@@ -1,7 +1,7 @@
-import { PlanExecutorSchema } from './schema';
 import { ExecutorContext } from '@nx/devkit';
-import { executeCommand } from '../../utils/execute-command';
 import { join, resolve } from 'node:path';
+import { executeCommand } from '../../utils/execute-command';
+import { PlanExecutorSchema } from './schema';
 
 export const runExecutor = async (
   options: PlanExecutorSchema,
@@ -18,8 +18,8 @@ export const runExecutor = async (
   } = options;
 
   const selectWorkspaceCommand = `terraform workspace select ${workspace}`;
-  const planCommand = `terraform plan -input=${interactive} -out=${planOutput} ${
-    args ?? ''
+  const planCommand = `terraform plan -input=${interactive} -out=${planOutput}${
+    args ? ` ${args}` : ''
   }`;
   const combinedCommand = `${selectWorkspaceCommand} && ${planCommand}`;
 
