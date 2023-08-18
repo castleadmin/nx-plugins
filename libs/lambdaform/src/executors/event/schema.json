@@ -15,7 +15,7 @@
     },
     "shell": {
       "type": "string",
-      "description": "Shell to execute the command with. Uses '/bin/sh' on Unix, and 'process.env.ComSpec' on Windows, if no shell is specified."
+      "description": "Shell to execute the command with. Uses '/bin/sh' on Unix, and process.env.ComSpec on Windows, if no shell is specified."
     }
   },
   "required": []
