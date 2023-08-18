@@ -19,9 +19,9 @@ export const runExecutor = async (
   } = options;
 
   const selectWorkspaceCommand = `terraform workspace select -or-create=${createWorkspace} ${workspace}`;
-  const initCommand = `terraform init -input=${interactive} ${
-    upgrade ? '-upgrade' : ''
-  } ${args ?? ''}`;
+  const initCommand = `terraform init -input=${interactive}${
+    upgrade ? ' -upgrade' : ''
+  }${args ? ` ${args}` : ''}`;
   const combinedCommand = `${selectWorkspaceCommand} && ${initCommand}`;
 
   await executeCommand(workspace ? combinedCommand : initCommand, {
