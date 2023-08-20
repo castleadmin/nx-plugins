@@ -1,6 +1,6 @@
 export interface EventExecutorSchema {
   _: string[] | undefined;
-  create?: string;
   args?: string;
+  save?: string;
   shell?: string;
 }

@@ -24,7 +24,7 @@ export const runExecutor = async (
   const projectRoot = getProjectRoot(context);
   const workingDirectoryResolved = join(contextRootResolved, projectRoot);
 
-  const { create, args, shell, _, ...rest } = options;
+  const { args, save, shell, _, ...rest } = options;
   const additionalArgs = additionalArgsToString(_, rest);
 
   const generateEventCommand = `sam local generate-event${
@@ -37,8 +37,8 @@ export const runExecutor = async (
     shell,
   });
 
-  if (create) {
-    await createEventFile(join(workingDirectoryResolved, create), stdout);
+  if (save) {
+    await createEventFile(join(workingDirectoryResolved, save), stdout);
   }
 
   return {

@@ -5,13 +5,13 @@
   "description": "Wrapper around the 'sam local generate-event' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)",
   "type": "object",
   "properties": {
-    "create": {
-      "type": "string",
-      "description": "Defines the path where the event file should be created."
-    },
     "args": {
       "type": "string",
       "description": "Used to provide additional arguments to the SAM CLI. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)"
+    },
+    "save": {
+      "type": "string",
+      "description": "Defines the path where the event file should be saved."
     },
     "shell": {
       "type": "string",
