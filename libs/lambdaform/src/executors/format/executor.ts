@@ -8,20 +8,10 @@ export const runExecutor = async (
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
-  const projectName = context.projectName;
-  if (!projectName) {
-    throw new Error(`Project name isn't defined`);
-  }
 
   const { args, terraformDirectory, shell } = options;
 
-  const nxFormatCommand = `nx format --projects=${projectName}`;
-  const fmtCommand = `terraform fmt -recursive ${args ?? ''}`;
-
-  await executeCommand(nxFormatCommand, {
-    cwd: contextRootResolved,
-    shell,
-  });
+  const fmtCommand = `terraform fmt -recursive${args ? ` ${args}` : ''}`;
 
   await executeCommand(fmtCommand, {
     cwd: join(contextRootResolved, terraformDirectory),

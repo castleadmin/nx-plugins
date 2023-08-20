@@ -25,7 +25,7 @@
     },
     "terraformDirectory": {
       "type": "string",
-      "description": "The name of the project directory where the *.tf files are stored."
+      "description": "The path of the directory where the '*.tf' files are stored."
     },
     "shell": {
       "type": "string",

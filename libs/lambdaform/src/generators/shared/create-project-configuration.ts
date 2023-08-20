@@ -18,13 +18,13 @@ export const createProjectConfiguration = (
     projectType: 'application',
     implicitDependencies: [],
     targets: {
-      'format-project': {
+      fmt: {
         executor: 'lambdaform:format',
         options: {
           terraformDirectory: terraformDirectoryPath,
         },
       },
-      'init-project': {
+      'tf-init': {
         executor: 'lambdaform:init',
         defaultConfiguration: 'test',
         options: {
@@ -66,7 +66,7 @@ export const createProjectConfiguration = (
         },
         dependsOn: [
           {
-            target: 'init-project',
+            target: 'tf-init',
             params: 'ignore',
           },
         ],
@@ -117,7 +117,7 @@ export const createProjectConfiguration = (
             params: 'ignore',
           },
           {
-            target: 'init-project',
+            target: 'tf-init',
             params: 'ignore',
           },
         ],
