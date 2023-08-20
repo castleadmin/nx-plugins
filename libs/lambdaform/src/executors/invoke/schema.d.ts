@@ -1,5 +1,5 @@
 export interface InvokeExecutorSchema {
-  _: string[] | undefined;
+  _?: string[];
   samConfiguration: string;
   terraformDirectory: string;
   args?: string;

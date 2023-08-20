@@ -1,5 +1,5 @@
 export interface ServeExecutorSchema {
-  _: string[] | undefined;
+  _?: string[];
   samConfiguration: string;
   terraformDirectory: string;
   api?: boolean;

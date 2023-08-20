@@ -9,6 +9,7 @@ export const createProjectConfiguration = (
   const serviceNameTf = toTerraformName(options.serviceName);
   const terraformDirectoryPath = joinPathFragments(projectRoot, 'terraform');
   const samConfigurationPath = joinPathFragments(projectRoot, 'samconfig.toml');
+  const eventsDirectoryPath = joinPathFragments(projectRoot, 'events');
   const workspaceTest = `${serviceNameTf}_test`;
   const workspaceStaging = `${serviceNameTf}_staging`;
   const workspaceProduction = `${serviceNameTf}_production`;
@@ -76,7 +77,9 @@ export const createProjectConfiguration = (
       },
       event: {
         executor: 'lambdaform:event',
-        options: {},
+        options: {
+          eventsDirectory: eventsDirectoryPath,
+        },
       },
       'format-project': {
         executor: 'lambdaform:format',

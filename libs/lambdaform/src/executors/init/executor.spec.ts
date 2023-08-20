@@ -7,14 +7,19 @@ import { InitExecutorSchema } from './schema';
 jest.mock('node:path', () => {
   const originalModule = jest.requireActual('node:path');
 
-  return {
+  const module = {
     __esModule: true,
     ...originalModule,
+    basename: jest.fn(),
+    dirname: jest.fn(),
     join: jest.fn(),
     normalize: jest.fn(),
     relative: jest.fn(),
     resolve: jest.fn(),
   };
+  Object.defineProperty(module, 'sep', { get: jest.fn() });
+
+  return module;
 });
 
 jest.mock('../../utils/execute-command');

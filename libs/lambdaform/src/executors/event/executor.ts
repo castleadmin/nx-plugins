@@ -3,10 +3,9 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { additionalArgsToString } from '../../utils/additional-args-to-string';
 import { executeCommandBufferResults } from '../../utils/execute-command';
-import { getProjectRoot } from '../../utils/get-project-root';
 import { EventExecutorSchema } from './schema';
 
-export const createEventFile = async (
+const createEventFile = async (
   fileResolved: string,
   data: string
 ): Promise<void> => {
@@ -21,11 +20,11 @@ export const runExecutor = async (
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
-  const projectRoot = getProjectRoot(context);
-  const workingDirectoryResolved = join(contextRootResolved, projectRoot);
 
-  const { args, save, shell, _, ...rest } = options;
+  const { eventsDirectory, args, save, shell, _, ...rest } = options;
   const additionalArgs = additionalArgsToString(_, rest);
+
+  const workingDirectoryResolved = join(contextRootResolved, eventsDirectory);
 
   const generateEventCommand = `sam local generate-event${
     args ? ` ${args}` : ''
