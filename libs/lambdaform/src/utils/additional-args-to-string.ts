@@ -22,24 +22,29 @@ const argToString = (
   key: string,
   additionalArgs: { [key: string]: unknown }
 ): string => {
-  const argNameString = key.length === 1 ? `-${key}` : `--${key}`;
+  let argNameString = key.length === 1 ? `-${key}` : `--${key}`;
   const argValue = additionalArgs[key];
-  let argValueString = `="${argValue?.toString()}"`;
+  let argValueString = ` "${argValue?.toString()}"`;
 
   if (argValue === true) {
     argValueString = '';
   }
 
-  if (argValue === false) {
-    argValueString = '=false';
+  if (argValue === false && key.length === 1) {
+    argValueString = ' false';
+  }
+
+  if (argValue === false && key.length !== 1) {
+    argNameString = `--no-${key}`;
+    argValueString = '';
   }
 
   if (typeof argValue === 'string') {
-    argValueString = `="${argValue}"`;
+    argValueString = ` "${argValue}"`;
   }
 
   if (typeof argValue === 'number') {
-    argValueString = `=${argValue}`;
+    argValueString = ` ${argValue}`;
   }
 
   return `${argNameString}${argValueString}`;

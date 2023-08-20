@@ -18,9 +18,9 @@ export const runExecutor = async (
   } = options;
 
   const selectWorkspaceCommand = `terraform workspace select ${workspace}`;
-  const applyCommand = `terraform apply -input=${interactive} ${
-    args ? `${args} ` : ''
-  }${planOutput}`;
+  const applyCommand = `terraform apply -input=${interactive}${
+    args ? ` ${args}` : ''
+  } "${planOutput}"`;
   const combinedCommand = `${selectWorkspaceCommand} && ${applyCommand}`;
 
   await executeCommand(workspace ? combinedCommand : applyCommand, {

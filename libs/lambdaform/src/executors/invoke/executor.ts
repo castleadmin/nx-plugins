@@ -24,9 +24,9 @@ export const runExecutor = async (
     join(contextRootResolved, samConfiguration)
   );
 
-  const invokeCommand = `sam local invoke --config-file ${samConfigurationRelative} ${
-    args ? `${args} ${additionalArgs}` : additionalArgs
-  }`;
+  const invokeCommand = `sam local invoke --config-file "${samConfigurationRelative}"${
+    args ? ` ${args}` : ''
+  }${additionalArgs ? ` ${additionalArgs}` : ''}`;
   console.log('Executing command:', invokeCommand);
 
   await executeCommand(invokeCommand, {

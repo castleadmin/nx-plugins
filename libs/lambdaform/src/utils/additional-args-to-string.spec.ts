@@ -14,7 +14,7 @@ describe('additionalArgsToString', () => {
         L45: 34,
         c: true,
       })
-    ).toBe('--ab="de5456" --L45=34 -c');
+    ).toBe('--ab "de5456" --L45 34 -c');
   });
 
   it('Should join positional and additional arguments', () => {
@@ -24,7 +24,7 @@ describe('additionalArgsToString', () => {
         L45: 34,
         c: true,
       })
-    ).toBe('ab c12 34-Bv --ab="de5456" --L45=34 -c');
+    ).toBe('ab c12 34-Bv --ab "de5456" --L45 34 -c');
   });
 
   it('Should return the empty string if there are no arguments', () => {
@@ -38,7 +38,7 @@ describe('additionalArgsToString', () => {
         L: 34,
         c: true,
       })
-    ).toBe('-t="test" -L=34 -c');
+    ).toBe('-t "test" -L 34 -c');
   });
 
   it('Should convert multi-character additional arguments to options', () => {
@@ -48,7 +48,7 @@ describe('additionalArgsToString', () => {
         Long: 34,
         channel: true,
       })
-    ).toBe('--tea="test" --Long=34 --channel');
+    ).toBe('--tea "test" --Long 34 --channel');
   });
 
   it('Should convert boolean options', () => {
@@ -59,7 +59,7 @@ describe('additionalArgsToString', () => {
         cake: true,
         direction: false,
       })
-    ).toBe('-a -b=false --cake --direction=false');
+    ).toBe('-a -b false --cake --no-direction');
   });
 
   it('Should convert string options', () => {
@@ -68,7 +68,7 @@ describe('additionalArgsToString', () => {
         a: 'a34',
         cake: 'cake 45',
       })
-    ).toBe('-a="a34" --cake="cake 45"');
+    ).toBe('-a "a34" --cake "cake 45"');
   });
 
   it('Should convert number options', () => {
@@ -77,6 +77,6 @@ describe('additionalArgsToString', () => {
         a: 3,
         cake: 56046,
       })
-    ).toBe('-a=3 --cake=56046');
+    ).toBe('-a 3 --cake 56046');
   });
 });

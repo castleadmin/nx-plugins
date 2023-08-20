@@ -27,9 +27,9 @@ export const runExecutor = async (
   const { create, args, shell, _, ...rest } = options;
   const additionalArgs = additionalArgsToString(_, rest);
 
-  const generateEventCommand = `sam local generate-event ${
-    args ? `${args} ${additionalArgs}` : additionalArgs
-  }`;
+  const generateEventCommand = `sam local generate-event${
+    args ? ` ${args}` : ''
+  }${additionalArgs ? ` ${additionalArgs}` : ''}`;
   console.log('Executing command:', generateEventCommand);
 
   const { stdout } = await executeCommandBufferResults(generateEventCommand, {

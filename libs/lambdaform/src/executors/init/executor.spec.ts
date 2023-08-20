@@ -12,6 +12,7 @@ jest.mock('node:path', () => {
     ...originalModule,
     join: jest.fn(),
     normalize: jest.fn(),
+    relative: jest.fn(),
     resolve: jest.fn(),
   };
 });

@@ -1,4 +1,4 @@
-import { join, normalize, posix, resolve, win32 } from 'node:path';
+import { join, normalize, posix, relative, resolve, win32 } from 'node:path';
 
 jest.mock('node:path', () => {
   const originalModule = jest.requireActual('node:path');
@@ -8,26 +8,33 @@ jest.mock('node:path', () => {
     ...originalModule,
     join: jest.fn(),
     normalize: jest.fn(),
+    relative: jest.fn(),
     resolve: jest.fn(),
   };
 });
 
 export const useUnixPath = () => {
   (join as jest.MockedFunction<typeof join>).mockImplementation(posix.join);
-  (resolve as jest.MockedFunction<typeof resolve>).mockImplementation(
-    posix.resolve
-  );
   (normalize as jest.MockedFunction<typeof normalize>).mockImplementation(
     posix.normalize
+  );
+  (relative as jest.MockedFunction<typeof relative>).mockImplementation(
+    posix.relative
+  );
+  (resolve as jest.MockedFunction<typeof resolve>).mockImplementation(
+    posix.resolve
   );
 };
 export const useWindowsPath = () => {
   (join as jest.MockedFunction<typeof join>).mockImplementation(win32.join);
-  (resolve as jest.MockedFunction<typeof resolve>).mockImplementation(
-    win32.resolve
-  );
   (normalize as jest.MockedFunction<typeof normalize>).mockImplementation(
     win32.normalize
+  );
+  (relative as jest.MockedFunction<typeof relative>).mockImplementation(
+    win32.relative
+  );
+  (resolve as jest.MockedFunction<typeof resolve>).mockImplementation(
+    win32.resolve
   );
 };
 
@@ -43,6 +50,10 @@ describe('path.mock', () => {
 
     it('normalize', () => {
       expect(normalize('a/b/c/./d/e')).toBe('a/b/c/d/e');
+    });
+
+    it('relative', () => {
+      expect(relative('/a/b/d/e', '/a/b/c')).toBe('../../c');
     });
 
     it('resolve', () => {
@@ -61,6 +72,10 @@ describe('path.mock', () => {
 
     it('normalize', () => {
       expect(normalize('a/b/c\\.\\d\\e')).toBe('a\\b\\c\\d\\e');
+    });
+
+    it('relative', () => {
+      expect(relative('C:\\a/b\\d/e', 'C:\\a\\b/c')).toBe('..\\..\\c');
     });
 
     it('resolve', () => {

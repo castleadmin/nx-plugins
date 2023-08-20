@@ -12,6 +12,7 @@ jest.mock('node:path', () => {
     ...originalModule,
     join: jest.fn(),
     normalize: jest.fn(),
+    relative: jest.fn(),
     resolve: jest.fn(),
   };
 });
@@ -55,7 +56,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
@@ -71,7 +72,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform apply -input=false tfplan',
+          'terraform apply -input=false "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
@@ -89,7 +90,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=true tfplan',
+          'terraform workspace select app_test && terraform apply -input=true "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
@@ -105,7 +106,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
@@ -123,7 +124,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false -no-color -parallelism=8 tfplan',
+          'terraform workspace select app_test && terraform apply -input=false -no-color -parallelism=8 "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
@@ -139,7 +140,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
@@ -157,7 +158,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: '/bin/bash',
@@ -173,7 +174,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
@@ -192,7 +193,7 @@ describe('Apply Executor', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
@@ -232,7 +233,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
@@ -248,7 +249,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform apply -input=false tfplan',
+          'terraform apply -input=false "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
@@ -266,7 +267,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=true tfplan',
+          'terraform workspace select app_test && terraform apply -input=true "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
@@ -282,7 +283,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
@@ -300,7 +301,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false -no-color -parallelism=8 tfplan',
+          'terraform workspace select app_test && terraform apply -input=false -no-color -parallelism=8 "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
@@ -316,7 +317,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
@@ -334,7 +335,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: 'powershell.exe',
@@ -350,7 +351,7 @@ describe('Apply Executor', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
@@ -369,7 +370,7 @@ describe('Apply Executor', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'terraform workspace select app_test && terraform apply -input=false tfplan',
+          'terraform workspace select app_test && terraform apply -input=false "tfplan"',
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
