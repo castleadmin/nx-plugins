@@ -26,7 +26,7 @@ export const runExecutor = async (
 
   const samCommand = api ? 'sam local start-api' : 'sam local start-lambda';
 
-  const startCommand = `${samCommand} --config-file ${samConfigurationRelative}${
+  const startCommand = `${samCommand} --config-file "${samConfigurationRelative}"${
     args ? ` ${args}` : ''
   }${additionalArgs ? ` ${additionalArgs}` : ''}`;
   console.log('Executing command:', startCommand);

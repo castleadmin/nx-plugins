@@ -80,6 +80,42 @@ describe('Invoke Executor', () => {
       });
     });
 
+    describe('additional args', () => {
+      it('Should execute command with custom additional arguments.', async () => {
+        (options as any)['event'] = false;
+        (options as any)['log-file'] = '../log.txt';
+
+        const output = await executor(options, context);
+
+        expect(output.success).toBe(true);
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam local invoke --config-file "../samconfig.toml" --no-event --log-file "../log.txt"',
+          {
+            cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
+            shell: undefined,
+          }
+        );
+      });
+
+      it("Shouldn't execute command without custom additional arguments.", async () => {
+        delete (options as any)['event'];
+        delete (options as any)['log-file'];
+
+        const output = await executor(options, context);
+
+        expect(output.success).toBe(true);
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam local invoke --config-file "../samconfig.toml"',
+          {
+            cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
+            shell: undefined,
+          }
+        );
+      });
+    });
+
     describe('shell', () => {
       it('Should execute command with a specific shell.', async () => {
         options.shell = '/bin/bash';
@@ -173,6 +209,42 @@ describe('Invoke Executor', () => {
 
       it("Shouldn't execute command without custom arguments.", async () => {
         delete options.args;
+
+        const output = await executor(options, context);
+
+        expect(output.success).toBe(true);
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam local invoke --config-file "..\\samconfig.toml"',
+          {
+            cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
+            shell: undefined,
+          }
+        );
+      });
+    });
+
+    describe('additional args', () => {
+      it('Should execute command with custom additional arguments.', async () => {
+        (options as any)['event'] = false;
+        (options as any)['log-file'] = '..\\log.txt';
+
+        const output = await executor(options, context);
+
+        expect(output.success).toBe(true);
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam local invoke --config-file "..\\samconfig.toml" --no-event --log-file "..\\log.txt"',
+          {
+            cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
+            shell: undefined,
+          }
+        );
+      });
+
+      it("Shouldn't execute command without custom additional arguments.", async () => {
+        delete (options as any)['event'];
+        delete (options as any)['log-file'];
 
         const output = await executor(options, context);
 
