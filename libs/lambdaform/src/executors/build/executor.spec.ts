@@ -1,20 +1,25 @@
 import executor from './executor';
-import { BuildExecutorSchema } from './schema';
+import { BuildExecutorSchema, Output, PackType } from './schema';
 
 const options: BuildExecutorSchema = {
   handlers: [],
   tsConfig: '',
+  pack: PackType.separately,
+  externalDependencies: 'none',
+  excludeAwsSdk: true,
   outputPath: '',
-  outputFileName: '',
-  outputChunkNames: '',
-  excludeZipRegExp: '',
+  outputType: {
+    type: Output.zip,
+    zipFileNames: '[name].zip',
+  },
+  entryFileNames: '[name].mjs',
+  chunkFileNames: 'chunks/[name].mjs',
   format: 'module',
   packageJsonType: 'commonjs',
   sourcemap: 'hidden',
   treeshake: 'smallest',
   minify: true,
   deleteOutputPath: false,
-  maxWorkers: 10,
   verbose: false,
   watch: false,
 };

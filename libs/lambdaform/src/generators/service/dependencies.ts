@@ -40,7 +40,6 @@ export const addPluginRuntimeDependencies = (
       'adm-zip': versions['adm-zip'],
       '@types/fs-extra': versions['@types/fs-extra'],
       'fs-extra': versions['fs-extra'],
-      'p-limit': versions['p-limit'],
     }
   );
 };

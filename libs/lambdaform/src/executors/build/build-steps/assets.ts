@@ -1,26 +1,52 @@
 import { stat } from 'node:fs/promises';
 import { basename, dirname, join, relative } from 'node:path';
-import { AssetGlobPattern } from './schema';
+import { ExtendedHandler } from '../extended-handler';
+import { AssetGlobPattern } from '../schema';
 
-export const normalizedAssetsToCopyTargets = (
-  assets: AssetGlobPattern[],
-  outputPathHandlerResolved: string
-): {
+export interface AssetCopyTarget {
   src: string;
   dest: string;
-}[] => {
-  return assets.map((asset) => ({
-    // replace backslashes with slashes (https://github.com/sindresorhus/globby/issues/179)
-    src: join(asset.input, asset.glob).replace(/\\/g, '/'),
-    dest: join(outputPathHandlerResolved, asset.output).replace(/\\/g, '/'),
-  }));
+}
+
+export const assetCopyTargets = async ({
+  extendedHandlers,
+  contextRootResolved,
+  projectSourceRootResolved,
+}: {
+  extendedHandlers: ExtendedHandler[];
+  contextRootResolved: string;
+  projectSourceRootResolved: string;
+}): Promise<AssetCopyTarget[]> => {
+  const assetCopyTargets: AssetCopyTarget[] = [];
+
+  await Promise.all(
+    extendedHandlers.map(async (handler): Promise<void> => {
+      const normalizedAssets = await normalizeAssets({
+        assets: handler.assets,
+        contextRootResolved,
+        projectSourceRootResolved,
+      });
+      assetCopyTargets.push(
+        ...normalizedAssetsToAssetCopyTargets(
+          normalizedAssets,
+          handler.handlerOutputPathResolved
+        )
+      );
+    })
+  );
+
+  return assetCopyTargets;
 };
 
-export const normalizeAssets = async (
-  assets: (AssetGlobPattern | string)[],
-  contextRootResolved: string,
-  projectSourceRootResolved: string
-): Promise<AssetGlobPattern[]> => {
+const normalizeAssets = async ({
+  assets,
+  contextRootResolved,
+  projectSourceRootResolved,
+}: {
+  assets: (AssetGlobPattern | string)[];
+  contextRootResolved: string;
+  projectSourceRootResolved: string;
+}): Promise<AssetGlobPattern[]> => {
   const normalizedAssets: AssetGlobPattern[] = [];
 
   for (const asset of assets) {
@@ -46,7 +72,7 @@ export const normalizeAssets = async (
   return normalizedAssets;
 };
 
-export const normalizeStringAsset = async (
+const normalizeStringAsset = async (
   asset: string,
   contextRootResolved: string,
   projectSourceRootResolved: string
@@ -74,7 +100,7 @@ export const normalizeStringAsset = async (
   };
 };
 
-export const normalizeGlobAsset = (
+const normalizeGlobAsset = (
   asset: AssetGlobPattern,
   contextRootResolved: string,
   projectSourceRootResolved: string
@@ -92,4 +118,15 @@ export const normalizeGlobAsset = (
     input: inputResolved,
     output: asset.output,
   };
+};
+
+const normalizedAssetsToAssetCopyTargets = (
+  assets: AssetGlobPattern[],
+  assetOutputPathResolved: string
+): AssetCopyTarget[] => {
+  return assets.map((asset) => ({
+    // replace backslashes with slashes (https://github.com/sindresorhus/globby/issues/179)
+    src: join(asset.input, asset.glob).replace(/\\/g, '/'),
+    dest: join(assetOutputPathResolved, asset.output).replace(/\\/g, '/'),
+  }));
 };

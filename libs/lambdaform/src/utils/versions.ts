@@ -15,7 +15,6 @@ export interface Versions {
   'adm-zip': string;
   '@types/fs-extra': string;
   'fs-extra': string;
-  'p-limit': string;
   // Terraform
   awsTerraformProvider: string;
 }
@@ -37,7 +36,6 @@ export const getVersions = (): Versions => {
   const admZip = '^0.5.10';
   const typesFsExtra = '^11.0.1';
   const fsExtra = '^11.1.1';
-  const pLimit = '^4.0.0';
   // Terraform
   const awsTerraformProvider = '5.8.0';
 
@@ -58,7 +56,6 @@ export const getVersions = (): Versions => {
     'adm-zip': admZip,
     '@types/fs-extra': typesFsExtra,
     'fs-extra': fsExtra,
-    'p-limit': pLimit,
     // Terraform
     awsTerraformProvider,
   };

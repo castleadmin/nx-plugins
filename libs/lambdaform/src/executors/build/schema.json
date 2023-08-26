@@ -150,7 +150,14 @@
       "default": false
     }
   },
-  "required": ["handlers", "tsConfig", "outputPath", "outputType", "entryFileNames", "chunkFileNames"],
+  "required": [
+    "handlers",
+    "tsConfig",
+    "outputPath",
+    "outputType",
+    "entryFileNames",
+    "chunkFileNames"
+  ],
   "additionalProperties": false,
   "definitions": {
     "assetPattern": {

@@ -46,7 +46,7 @@ export async function handlerGenerator(
 
   addHandlerToConfiguration({
     name: options.handlerName,
-    path: joinPathFragments(
+    main: joinPathFragments(
       projectRoot,
       'src',
       'handlers',

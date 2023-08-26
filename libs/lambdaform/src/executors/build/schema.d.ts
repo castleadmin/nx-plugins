@@ -1,12 +1,12 @@
 import { TreeshakingPreset } from 'rollup';
 
 export enum Output {
-  zip = 'zip'
+  zip = 'zip',
 }
 
 export enum PackType {
   separately = 'separately',
-  together = 'together'
+  together = 'together',
 }
 
 export interface ZipOutputType {
@@ -15,7 +15,7 @@ export interface ZipOutputType {
   excludeZipRegExp?: string;
 }
 
-export type OutputType = ZipOutputType
+export type OutputType = ZipOutputType;
 
 export interface AssetGlobPattern {
   glob: string;

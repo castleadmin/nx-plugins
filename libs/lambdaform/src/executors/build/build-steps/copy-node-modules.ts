@@ -3,7 +3,7 @@ import { copy } from 'fs-extra';
 import { access } from 'node:fs/promises';
 import { join, normalize, sep } from 'node:path';
 import { OutputChunk, RollupOutput } from 'rollup';
-import { excludeAwsSdk } from './external-dependencies';
+import { excludeAwsSdkModules } from './external-dependencies';
 
 interface NestedDependency {
   parent: string | NestedDependency;
@@ -99,10 +99,10 @@ const filterOutRelativeImports = ({
 };
 
 const filterOutAwsSdk = (filteredUniqueImports: string[]): string[] => {
-  const testSdks = excludeAwsSdk.map((sdk) => new RegExp(`^${sdk}`));
+  const awsSdks = excludeAwsSdkModules.map((sdk) => new RegExp(`^${sdk}`));
 
   return filteredUniqueImports.filter((uniqueImport) =>
-    testSdks.reduce((acc, testSdk) => acc && !testSdk.test(uniqueImport), true)
+    awsSdks.reduce((acc, awsSdk) => acc && !awsSdk.test(uniqueImport), true)
   );
 };
 
