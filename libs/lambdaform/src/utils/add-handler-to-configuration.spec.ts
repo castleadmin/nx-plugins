@@ -21,13 +21,13 @@ jest.mock('@nx/devkit', () => {
 
 describe('addHandlerToConfiguration', () => {
   let name: string;
-  let path: string;
+  let main: string;
   let projectName: string;
   let tree: Tree;
 
   beforeEach(() => {
     name = faker.word.sample();
-    path = faker.system.filePath();
+    main = faker.system.filePath();
     projectName = faker.word.sample();
     tree = createTreeWithEmptyWorkspace();
     const projectConfiguration: ProjectConfiguration = {
@@ -45,11 +45,11 @@ describe('addHandlerToConfiguration', () => {
               handlers: [
                 {
                   name: 'a',
-                  path: 'b',
+                  main: 'b',
                 },
                 {
                   name: 'c',
-                  path: 'd',
+                  main: 'd',
                 },
               ],
               minify: false,
@@ -80,7 +80,7 @@ describe('addHandlerToConfiguration', () => {
   it('Should add the handler to the build options and configurations', () => {
     addHandlerToConfiguration({
       name,
-      path,
+      main,
       projectName,
       tree,
     });
@@ -95,10 +95,8 @@ describe('addHandlerToConfiguration', () => {
             handlers: [
               {
                 name,
-                path,
+                main,
                 assets: [],
-                externalDependencies: 'none',
-                excludeAwsSdk: true,
               },
             ],
             outputFileName: 'index.mjs',
@@ -109,18 +107,16 @@ describe('addHandlerToConfiguration', () => {
               handlers: [
                 {
                   name: 'a',
-                  path: 'b',
+                  main: 'b',
                 },
                 {
                   name: 'c',
-                  path: 'd',
+                  main: 'd',
                 },
                 {
                   name,
-                  path,
+                  main,
                   assets: [],
-                  externalDependencies: 'none',
-                  excludeAwsSdk: true,
                 },
               ],
               minify: false,
@@ -129,10 +125,8 @@ describe('addHandlerToConfiguration', () => {
               handlers: [
                 {
                   name,
-                  path,
+                  main,
                   assets: [],
-                  externalDependencies: 'none',
-                  excludeAwsSdk: true,
                 },
               ],
               minify: true,
@@ -141,10 +135,8 @@ describe('addHandlerToConfiguration', () => {
               handlers: [
                 {
                   name,
-                  path,
+                  main,
                   assets: [],
-                  externalDependencies: 'none',
-                  excludeAwsSdk: true,
                 },
               ],
               minify: true,
@@ -165,7 +157,7 @@ describe('addHandlerToConfiguration', () => {
 
     addHandlerToConfiguration({
       name,
-      path,
+      main,
       projectName,
       tree,
     });
@@ -180,10 +172,8 @@ describe('addHandlerToConfiguration', () => {
             handlers: [
               {
                 name,
-                path,
+                main,
                 assets: [],
-                externalDependencies: 'none',
-                excludeAwsSdk: true,
               },
             ],
             outputFileName: 'index.mjs',
@@ -204,7 +194,7 @@ describe('addHandlerToConfiguration', () => {
 
     addHandlerToConfiguration({
       name,
-      path,
+      main,
       projectName,
       tree,
     });

@@ -13,67 +13,34 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the handler."
+            "description": "Defines the name of the handler."
           },
-          "path": {
+          "main": {
             "type": "string",
-            "description": "The path to the file that contains the handler function."
+            "description": "Defines the path of the source code file that contains the handler function."
           },
           "assets": {
             "type": "array",
-            "description": "List of static assets.",
+            "description": "List of static assets that are bundled with the handler function.",
             "default": [],
             "items": {
               "$ref": "#/definitions/assetPattern"
             }
-          },
-          "externalDependencies": {
-            "oneOf": [
-              {
-                "type": "string",
-                "enum": ["none", "all"]
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "Dependencies to keep external to the bundle. ('none' (default), 'all', or an array of regular expressions that match node module names)",
-            "default": "none"
-          },
-          "excludeAwsSdk": {
-            "type": "boolean",
-            "description": "Should the AWS SDK be excluded? The SDK is part of the Lambda runtime. Set this option to false, if a different SDK version is needed. (https://docs.aws.amazon.com/lambda/latest/dg/lambda-nodejs.html)",
-            "default": true
           }
         },
-        "required": ["name", "path"],
+        "required": ["name", "main"],
         "additionalProperties": false
       }
     },
     "tsConfig": {
       "type": "string",
-      "description": "File path of the TypeScript configuration."
+      "description": "Defines the file path of the TypeScript configuration."
     },
-    "outputPath": {
+    "pack": {
       "type": "string",
-      "description": "The output path of the generated files."
-    },
-    "outputFileName": {
-      "type": "string",
-      "description": "Name of the handler output file.",
-      "default": "index.mjs"
-    },
-    "outputChunkNames": {
-      "type": "string",
-      "description": "Name of the handler chunk files that are generated during the build.",
-      "default": "lib/[name].mjs"
-    },
-    "excludeZipRegExp": {
-      "type": "string",
-      "description": "Regular expression that defines which contents should be excluded from the handler ZIP file. Remove the option if you don't want to use filtering."
+      "enum": ["separately", "together"],
+      "description": "The handler functions could be packed into separate bundles (default) or into a single bundle.",
+      "default": "separately"
     },
     "format": {
       "enum": ["commonjs", "module"],
@@ -82,8 +49,28 @@
     },
     "packageJsonType": {
       "enum": ["commonjs", "module"],
-      "description": "The package.json 'type' field defines how Node.js should interpret .js files. (https://nodejs.org/api/packages.html#packagejson-and-file-extensions)",
+      "description": "The package.json 'type' field defines how Node.js should interpret '*.js' files. (https://nodejs.org/api/packages.html#packagejson-and-file-extensions)",
       "default": "commonjs"
+    },
+    "outputPath": {
+      "type": "string",
+      "description": "Defines the output path of the generated files."
+    },
+    "outputType": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/zipOutputType"
+        }
+      ],
+      "description": "Defines the type of the output bundle."
+    },
+    "entryFileNames": {
+      "type": "string",
+      "description": "Defines the Rollup entryFileNames option. (https://rollupjs.org/configuration-options/#output-entryfilenames)"
+    },
+    "chunkFileNames": {
+      "type": "string",
+      "description": "Defines the Rollup chunkFileNames option. (https://rollupjs.org/configuration-options/#output-chunkfilenames)"
     },
     "sourcemap": {
       "oneOf": [
@@ -122,20 +109,35 @@
       "description": "Minify the bundle with terser. Accepts a boolean or a terser options object. (https://github.com/terser/terser#minify-options)",
       "default": false
     },
+    "externalDependencies": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["none", "all"]
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "Defines the dependencies that are kept external to the bundle. ('none' (default), 'all', or an array of regular expressions that define the external node modules)",
+      "default": "none"
+    },
+    "excludeAwsSdk": {
+      "type": "boolean",
+      "description": "Should the AWS SDK be excluded? The AWS SDK is part of the Lambda runtime. Set this option to false, if a different SDK version is needed. (https://docs.aws.amazon.com/lambda/latest/dg/lambda-nodejs.html)",
+      "default": true
+    },
     "rollupConfig": {
       "type": "string",
-      "description": "Path to a module with a function as default export that modifies or replaces a given rollup configuration. The function should fulfill the following signature: rollupConfig(rollupOptions: RollupOptions, options: BuildExecutorSchema, context: ExecutorContext): Promise<RollupOptions>"
+      "description": "Path to a ES module (.mjs) file with a function as default export that modifies or replaces a given rollup configuration. The function should fulfill the following signature: rollupConfig(rollupOptions: RollupOptions, options: BuildExecutorSchema, context: ExecutorContext): Promise<RollupOptions>"
     },
     "deleteOutputPath": {
       "type": "boolean",
       "description": "Delete the output path before building.",
       "default": true
-    },
-    "maxWorkers": {
-      "type": "number",
-      "description": "Defines the maximum number of builds that could be executed in parallel.",
-      "minimum": 1,
-      "default": 10
     },
     "verbose": {
       "type": "boolean",
@@ -148,7 +150,7 @@
       "default": false
     }
   },
-  "required": ["handlers", "tsConfig", "outputPath"],
+  "required": ["handlers", "tsConfig", "outputPath", "outputType", "entryFileNames", "chunkFileNames"],
   "additionalProperties": false,
   "definitions": {
     "assetPattern": {
@@ -158,7 +160,7 @@
           "properties": {
             "glob": {
               "type": "string",
-              "description": "The pattern to match."
+              "description": "Defines the input file pattern."
             },
             "input": {
               "type": "string",
@@ -166,7 +168,7 @@
             },
             "output": {
               "type": "string",
-              "description": "Relative path within the output folder."
+              "description": "Defines the relative path within the output directory."
             }
           },
           "required": ["glob", "input", "output"],
@@ -176,6 +178,27 @@
           "type": "string"
         }
       ]
+    },
+    "zipOutputType": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["zip"],
+          "description": "Defines that the handlers should be packed as ZIP files."
+        },
+        "zipFileNames": {
+          "type": "string",
+          "description": "Defines the name of the handler ZIP files. [name] could be used as a placeholder. It will be replaced with the handler name, if the handlers are packed separately or with the project name, if the handlers are packed together.",
+          "default": "[name].zip"
+        },
+        "excludeZipRegExp": {
+          "type": "string",
+          "description": "Regular expression that defines which files should be excluded from the handler ZIP file. Remove this option, if you don't want to exclude any files."
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
     }
   }
 }

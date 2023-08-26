@@ -7,12 +7,12 @@ import { Handler } from '../executors/build/schema';
 
 export const addHandlerToConfiguration = ({
   name,
-  path,
+  main,
   projectName,
   tree,
 }: {
   name: string;
-  path: string;
+  main: string;
   projectName: string;
   tree: Tree;
 }): void => {
@@ -43,10 +43,8 @@ export const addHandlerToConfiguration = ({
 
   const handler: Handler = {
     name,
-    path,
+    main,
     assets: [],
-    externalDependencies: 'none',
-    excludeAwsSdk: true,
   };
 
   handlerDeclarations.forEach((declaration) => {
