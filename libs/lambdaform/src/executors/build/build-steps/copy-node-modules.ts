@@ -1,26 +1,27 @@
-import { ProjectGraph } from '@nx/devkit';
+import { ProjectGraph, ProjectGraphDependency } from '@nx/devkit';
 import { copy } from 'fs-extra';
 import { access } from 'node:fs/promises';
 import { join, normalize, sep } from 'node:path';
 import { OutputChunk, RollupOutput } from 'rollup';
-import { excludeAwsSdkModules } from './external-dependencies';
+import { excludeAwsSdkModules } from './external';
 
 interface NestedDependency {
   parent: string | NestedDependency;
   dependency: string;
 }
 
+//TODO only copy handle imports
 export const copyNodeModules = async ({
   rollupOutput,
   contextRootResolved,
-  outputPathHandlerResolved,
+  bundleOutputPathResolved,
   excludeAwsSdk,
   projectGraph,
   verbose,
 }: {
   rollupOutput: RollupOutput;
   contextRootResolved: string;
-  outputPathHandlerResolved: string;
+  bundleOutputPathResolved: string;
   excludeAwsSdk: boolean;
   projectGraph: ProjectGraph;
   verbose: boolean;
@@ -38,9 +39,7 @@ export const copyNodeModules = async ({
     chunkNames,
   });
 
-  if (excludeAwsSdk) {
-    filteredUniqueImports = filterOutAwsSdk(filteredUniqueImports);
-  }
+  filteredUniqueImports = filterOutAwsSdk(excludeAwsSdk, filteredUniqueImports);
 
   if (verbose) {
     console.log('The following external import declarations exists:');
@@ -55,7 +54,7 @@ export const copyNodeModules = async ({
 
   if (verbose) {
     console.log(
-      `The following top-level node modules will be added to ${outputPathHandlerResolved}:`
+      `The following top-level node modules will be added to ${bundleOutputPathResolved}:`
     );
     console.log(JSON.stringify(dependencies, null, 2));
     console.log(
@@ -67,7 +66,7 @@ export const copyNodeModules = async ({
   await copyDependencies({
     dependencies,
     contextRootResolved,
-    outputPathHandlerResolved,
+    bundleOutputPathResolved,
   });
 };
 
@@ -98,12 +97,19 @@ const filterOutRelativeImports = ({
   );
 };
 
-const filterOutAwsSdk = (filteredUniqueImports: string[]): string[] => {
-  const awsSdks = excludeAwsSdkModules.map((sdk) => new RegExp(`^${sdk}`));
+const filterOutAwsSdk = (
+  excludeAwsSdk: boolean,
+  filteredUniqueImports: string[]
+): string[] => {
+  if (excludeAwsSdk) {
+    const awsSdks = excludeAwsSdkModules.map((sdk) => new RegExp(`^${sdk}`));
 
-  return filteredUniqueImports.filter((uniqueImport) =>
-    awsSdks.reduce((acc, awsSdk) => acc && !awsSdk.test(uniqueImport), true)
-  );
+    return filteredUniqueImports.filter((uniqueImport) =>
+      awsSdks.reduce((acc, awsSdk) => acc && !awsSdk.test(uniqueImport), true)
+    );
+  }
+
+  return filteredUniqueImports;
 };
 
 const getNodeModuleNames = (uniqueImports: string[]): string[] => {
@@ -147,7 +153,8 @@ const getAllDependencies = (
 
   while (stack.length > 0) {
     const item = stack.pop() as string | NestedDependency;
-    let directDependencyEntries;
+    let directDependencyEntries: ProjectGraphDependency[] | undefined =
+      undefined;
 
     if (typeof item === 'string') {
       if (dependencies.includes(item)) {
@@ -171,7 +178,7 @@ const getAllDependencies = (
       directDependencyEntries = projectGraph.dependencies[item.dependency];
     }
 
-    if (directDependencyEntries) {
+    if (directDependencyEntries && directDependencyEntries.length > 0) {
       directDependencyEntries.forEach((entry) => {
         if (isNestedDependency(entry.target)) {
           stack.push({ parent: item, dependency: entry.target });
@@ -188,9 +195,7 @@ const getAllDependencies = (
       parent:
         typeof nestedDependency.parent === 'string'
           ? removeNpmPrefix(nestedDependency.parent)
-          : // All nested dependencies are contained in the nested dependencies array and are processed.
-            // Therefore, nothing needs to be done.
-            nestedDependency.parent,
+          : removeNpmPrefix(nestedDependency.parent.dependency),
       dependency: removeNpmPrefix(nestedDependency.dependency),
     })),
   };
@@ -199,22 +204,22 @@ const getAllDependencies = (
 const copyDependencies = async ({
   dependencies,
   contextRootResolved,
-  outputPathHandlerResolved,
+  bundleOutputPathResolved,
 }: {
   dependencies: string[];
   contextRootResolved: string;
-  outputPathHandlerResolved: string;
+  bundleOutputPathResolved: string;
 }): Promise<void> => {
   await Promise.all(
     dependencies.map(async (dependency: string): Promise<void> => {
       const { sourceResolved, destinationResolved } = getCopyPaths({
         dependency,
         contextRootResolved,
-        outputPathHandlerResolved,
+        bundleOutputPathResolved,
       });
 
       if (await pathExists(sourceResolved)) {
-        await copy(sourceResolved, destinationResolved, {});
+        await copy(sourceResolved, destinationResolved, { overwrite: true });
       } else {
         console.warn(`Ignoring node module '${dependency}'`);
       }
@@ -225,11 +230,11 @@ const copyDependencies = async ({
 const getCopyPaths = ({
   dependency,
   contextRootResolved,
-  outputPathHandlerResolved,
+  bundleOutputPathResolved,
 }: {
   dependency: string;
   contextRootResolved: string;
-  outputPathHandlerResolved: string;
+  bundleOutputPathResolved: string;
 }): {
   sourceResolved: string;
   destinationResolved: string;
@@ -237,7 +242,7 @@ const getCopyPaths = ({
   const nodeModules = 'node_modules';
   const sourceResolved = join(contextRootResolved, nodeModules, dependency);
   const destinationResolved = join(
-    outputPathHandlerResolved,
+    bundleOutputPathResolved,
     nodeModules,
     dependency
   );

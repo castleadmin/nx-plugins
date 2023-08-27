@@ -2,27 +2,24 @@ import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export const createPackageJson = async ({
-  handlerName,
-  outputFileName,
+  name,
   packageJsonType,
-  outputPathHandlerResolved,
+  bundleOutputPathResolved,
 }: {
-  handlerName: string;
-  outputFileName: string;
+  name: string;
   packageJsonType: 'commonjs' | 'module';
-  outputPathHandlerResolved: string;
+  bundleOutputPathResolved: string;
 }): Promise<void> => {
   const packageJson = {
-    name: handlerName,
+    name,
     version: '0.0.0',
     scripts: {},
     private: true,
-    main: outputFileName,
     type: packageJsonType,
   };
 
   await writeFile(
-    join(outputPathHandlerResolved, 'package.json'),
+    join(bundleOutputPathResolved, 'package.json'),
     JSON.stringify(packageJson, null, 2),
     { encoding: 'utf8' }
   );

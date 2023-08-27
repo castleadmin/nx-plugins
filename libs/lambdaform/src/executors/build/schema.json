@@ -56,13 +56,13 @@
       "type": "string",
       "description": "Defines the output path of the generated files."
     },
-    "outputType": {
+    "output": {
       "oneOf": [
         {
-          "$ref": "#/definitions/zipOutputType"
+          "$ref": "#/definitions/zipOutput"
         }
       ],
-      "description": "Defines the type of the output bundle."
+      "description": "Defines the output type of the bundles."
     },
     "entryFileNames": {
       "type": "string",
@@ -154,7 +154,7 @@
     "handlers",
     "tsConfig",
     "outputPath",
-    "outputType",
+    "output",
     "entryFileNames",
     "chunkFileNames"
   ],
@@ -186,7 +186,7 @@
         }
       ]
     },
-    "zipOutputType": {
+    "zipOutput": {
       "type": "object",
       "properties": {
         "type": {

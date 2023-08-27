@@ -1,21 +1,14 @@
 import { TreeshakingPreset } from 'rollup';
+import { OutputType } from './output-type';
+import { PackType } from './pack-type';
 
-export enum Output {
-  zip = 'zip',
-}
-
-export enum PackType {
-  separately = 'separately',
-  together = 'together',
-}
-
-export interface ZipOutputType {
-  type: Output.zip;
+export interface ZipOutput {
+  type: OutputType.zip;
   zipFileNames: string;
   excludeZipRegExp?: string;
 }
 
-export type OutputType = ZipOutputType;
+export type Output = ZipOutput;
 
 export interface AssetGlobPattern {
   glob: string;
@@ -36,7 +29,7 @@ export interface BuildExecutorSchema {
   format: 'commonjs' | 'module';
   packageJsonType: 'commonjs' | 'module';
   outputPath: string;
-  outputType: OutputType;
+  output: Output;
   entryFileNames: string;
   chunkFileNames: string;
   sourcemap: boolean | 'inline' | 'hidden';

@@ -1,14 +1,16 @@
-import {ExecutorContext} from '@nx/devkit';
-import {BuildExecutorSchema, Output, OutputType, PackType} from './schema';
-import {BuildStrategy} from "./build-strategy/build-strategy";
-import packSeparatelyZip from "./build-strategy/pack-separately-zip";
-import packTogetherZip from "./build-strategy/pack-together-zip";
+import { ExecutorContext } from '@nx/devkit';
+import { BuildStrategy } from './build-strategy/build-strategy';
+import packSeparatelyZip from './build-strategy/pack-separately-zip';
+import packTogetherZip from './build-strategy/pack-together-zip';
+import { OutputType } from './output-type';
+import { PackType } from './pack-type';
+import { BuildExecutorSchema, Output } from './schema';
 
 export const runExecutor = async (
   options: BuildExecutorSchema,
   context: ExecutorContext
 ): Promise<{ success: boolean }> => {
-  const { handlers, outputType, pack } = options;
+  const { handlers, output, pack } = options;
 
   if (handlers.length === 0) {
     return {
@@ -16,7 +18,7 @@ export const runExecutor = async (
     };
   }
 
-  const executeBuild: BuildStrategy = getBuildStrategy(outputType, pack);
+  const executeBuild: BuildStrategy = getBuildStrategy(output, pack);
   const watcher = await executeBuild(options, context);
 
   if (watcher) {
@@ -32,17 +34,17 @@ export const runExecutor = async (
   };
 };
 
-const getBuildStrategy = (outputType: OutputType, pack: PackType): BuildStrategy => {
-  switch (outputType.type) {
-    case Output.zip:
+const getBuildStrategy = (output: Output, pack: PackType): BuildStrategy => {
+  switch (output.type) {
+    case OutputType.zip:
       if (pack === PackType.separately) {
         return packSeparatelyZip;
       } else {
         return packTogetherZip;
       }
     default:
-      throw new Error(`Unknown output type ${outputType.type}.`);
+      throw new Error(`Unknown output type ${output.type}.`);
   }
-}
+};
 
 export default runExecutor;

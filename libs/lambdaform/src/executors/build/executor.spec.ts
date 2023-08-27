@@ -1,5 +1,9 @@
 import executor from './executor';
-import { BuildExecutorSchema, Output, PackType } from './schema';
+import { OutputType } from './output-type';
+import { PackType } from './pack-type';
+import { BuildExecutorSchema } from './schema';
+
+console.log('packtype', PackType);
 
 const options: BuildExecutorSchema = {
   handlers: [],
@@ -8,8 +12,8 @@ const options: BuildExecutorSchema = {
   externalDependencies: 'none',
   excludeAwsSdk: true,
   outputPath: '',
-  outputType: {
-    type: Output.zip,
+  output: {
+    type: OutputType.zip,
     zipFileNames: '[name].zip',
   },
   entryFileNames: '[name].mjs',

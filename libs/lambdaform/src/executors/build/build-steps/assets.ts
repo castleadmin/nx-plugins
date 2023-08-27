@@ -29,7 +29,7 @@ export const assetCopyTargets = async ({
       assetCopyTargets.push(
         ...normalizedAssetsToAssetCopyTargets(
           normalizedAssets,
-          handler.handlerOutputPathResolved
+          handler.bundleOutputPathResolved
         )
       );
     })
@@ -122,11 +122,11 @@ const normalizeGlobAsset = (
 
 const normalizedAssetsToAssetCopyTargets = (
   assets: AssetGlobPattern[],
-  assetOutputPathResolved: string
+  bundleOutputPathResolved: string
 ): AssetCopyTarget[] => {
   return assets.map((asset) => ({
     // replace backslashes with slashes (https://github.com/sindresorhus/globby/issues/179)
-    src: join(asset.input, asset.glob).replace(/\\/g, '/'),
-    dest: join(assetOutputPathResolved, asset.output).replace(/\\/g, '/'),
+    src: join(asset.input, asset.glob).replaceAll('\\', '/'),
+    dest: join(bundleOutputPathResolved, asset.output).replaceAll('\\', '/'),
   }));
 };

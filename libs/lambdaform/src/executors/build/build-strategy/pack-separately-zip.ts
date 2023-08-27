@@ -4,15 +4,19 @@ import { applyRollupConfig } from '../build-steps/apply-rollup-config';
 import { AssetCopyTarget, assetCopyTargets } from '../build-steps/assets';
 import { build, buildWatch } from '../build-steps/build';
 import { buildPrerequisites } from '../build-steps/build-prerequisites';
+import { copyNodeModules } from '../build-steps/copy-node-modules';
+import { createPackageJson } from '../build-steps/create-package-json';
 import { createRollupOptions } from '../build-steps/create-rollup-options';
 import { deleteOutput } from '../build-steps/delete-output';
 import { externalRegularExpressions } from '../build-steps/external';
+import { zip } from '../build-steps/zip';
 import { ExtendedHandler } from '../extended-handler';
-import { zip } from '../zip';
+import { OutputType } from '../output-type';
 import { BuildStrategy } from './build-strategy';
 
 export const executeBuild: BuildStrategy = async (options, context) => {
   const {
+    output,
     handlers,
     deleteOutputPath,
     externalDependencies,
@@ -26,8 +30,13 @@ export const executeBuild: BuildStrategy = async (options, context) => {
     minify,
     verbose,
     rollupConfig,
+    packageJsonType,
     watch,
   } = options;
+
+  if (output.type !== OutputType.zip) {
+    throw new Error(`Invalid output type '${output.type}'.`);
+  }
 
   const {
     contextRootResolved,
@@ -39,7 +48,7 @@ export const executeBuild: BuildStrategy = async (options, context) => {
   const extendedHandlers: ExtendedHandler[] = handlers.map((handler) => ({
     ...handler,
     mainResolved: join(contextRootResolved, handler.main),
-    handlerOutputPathResolved: join(outputPathResolved, handler.name),
+    bundleOutputPathResolved: join(outputPathResolved, handler.name),
   }));
 
   await deleteOutput(deleteOutputPath, outputPathResolved);
@@ -84,24 +93,24 @@ export const executeBuild: BuildStrategy = async (options, context) => {
     await Promise.all(
       extendedHandlers.map(async (handler): Promise<void> => {
         await createPackageJson({
-          handlerName: handler.name,
-          // TODO check
-          outputFileName,
+          name: handler.name,
           packageJsonType,
-          outputPathHandlerResolved: handler.outputPathResolved,
+          bundleOutputPathResolved: handler.bundleOutputPathResolved,
         });
         await copyNodeModules({
           rollupOutput,
           contextRootResolved,
-          outputPathHandlerResolved: handler.outputPathResolved,
+          bundleOutputPathResolved: handler.bundleOutputPathResolved,
           excludeAwsSdk,
           projectGraph,
           verbose,
         });
         await zip({
-          outputPathHandlerResolved: handler.outputPathResolved,
-          zipFileResolved: handler.zipFileResolved,
-          excludeZipRegExp,
+          name: handler.name,
+          zipFileNames: output.zipFileNames,
+          outputPathResolved,
+          bundleOutputPathResolved: handler.bundleOutputPathResolved,
+          excludeZipRegExp: output.excludeZipRegExp,
         });
       })
     );
