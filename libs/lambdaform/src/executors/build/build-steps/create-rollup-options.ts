@@ -27,7 +27,7 @@ export const createRollupOptions = ({
   assetCopyTargets,
   verbose,
 }: {
-  inputsResolved: string[];
+  inputsResolved: { [handlerName: string]: string };
   tsConfigResolved: string;
   format: 'commonjs' | 'module';
   buildOutputPathResolved: string;

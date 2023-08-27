@@ -20,7 +20,7 @@ export const executeCommand = (
       if (code !== 0) {
         reject(
           new Error(
-            `Command process exited with error code ${code?.toString()}.`
+            `Command process exited with error code '${code?.toString()}'.`
           )
         );
         return;

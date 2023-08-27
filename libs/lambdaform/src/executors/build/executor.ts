@@ -43,7 +43,7 @@ const getBuildStrategy = (output: Output, pack: PackType): BuildStrategy => {
         return packTogetherZip;
       }
     default:
-      throw new Error(`Unknown output type ${output.type}.`);
+      throw new Error(`Unknown output type '${output.type}'.`);
   }
 };
 

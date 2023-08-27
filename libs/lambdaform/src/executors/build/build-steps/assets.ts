@@ -81,7 +81,7 @@ const normalizeStringAsset = async (
 
   if (!assetResolved.startsWith(projectSourceRootResolved)) {
     throw new Error(
-      `The asset path '${assetResolved}' must start with the project source root '${projectSourceRootResolved}'`
+      `The asset path '${assetResolved}' must start with the project source root '${projectSourceRootResolved}'.`
     );
   }
 
@@ -109,7 +109,7 @@ const normalizeGlobAsset = (
 
   if (!inputResolved.startsWith(projectSourceRootResolved)) {
     throw new Error(
-      `The asset path '${inputResolved}' must start with the project source root '${projectSourceRootResolved}'`
+      `The asset path '${inputResolved}' must start with the project source root '${projectSourceRootResolved}'.`
     );
   }
 

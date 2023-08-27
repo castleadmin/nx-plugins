@@ -2,7 +2,7 @@ import { ProjectGraph, ProjectGraphDependency } from '@nx/devkit';
 import { copy } from 'fs-extra';
 import { access } from 'node:fs/promises';
 import { join, normalize, sep } from 'node:path';
-import { OutputChunk, RollupOutput } from 'rollup';
+import { OutputAsset, OutputChunk, RollupOutput } from 'rollup';
 import { excludeAwsSdkModules } from './external';
 
 interface NestedDependency {
@@ -10,8 +10,8 @@ interface NestedDependency {
   dependency: string;
 }
 
-//TODO only copy handle imports
 export const copyNodeModules = async ({
+  handlerFileNames,
   rollupOutput,
   contextRootResolved,
   bundleOutputPathResolved,
@@ -19,6 +19,7 @@ export const copyNodeModules = async ({
   projectGraph,
   verbose,
 }: {
+  handlerFileNames?: string[];
   rollupOutput: RollupOutput;
   contextRootResolved: string;
   bundleOutputPathResolved: string;
@@ -26,17 +27,17 @@ export const copyNodeModules = async ({
   projectGraph: ProjectGraph;
   verbose: boolean;
 }): Promise<void> => {
-  const uniqueImports = getUniqueImports(rollupOutput);
+  const uniqueImports = getUniqueImports(handlerFileNames, rollupOutput);
 
   if (verbose) {
     console.log('The following import declarations exists:');
     console.log(JSON.stringify(uniqueImports, null, 2));
   }
 
-  const chunkNames = getChunkNames(rollupOutput);
+  const fileNames = getFileNames(rollupOutput);
   let filteredUniqueImports = filterOutRelativeImports({
     uniqueImports,
-    chunkNames,
+    fileNames,
   });
 
   filteredUniqueImports = filterOutAwsSdk(excludeAwsSdk, filteredUniqueImports);
@@ -54,7 +55,7 @@ export const copyNodeModules = async ({
 
   if (verbose) {
     console.log(
-      `The following top-level node modules will be added to ${bundleOutputPathResolved}:`
+      `The following top-level node modules will be added to '${bundleOutputPathResolved}':`
     );
     console.log(JSON.stringify(dependencies, null, 2));
     console.log(
@@ -70,30 +71,40 @@ export const copyNodeModules = async ({
   });
 };
 
-const getUniqueImports = (rollupOutput: RollupOutput): string[] => {
-  const imports = rollupOutput.output.flatMap(
+const getUniqueImports = (
+  handlerFileNames: string[] | undefined,
+  rollupOutput: RollupOutput
+): string[] => {
+  let outputs: (OutputChunk | OutputAsset)[] = rollupOutput.output;
+  if (handlerFileNames) {
+    outputs = outputs.filter((output) =>
+      handlerFileNames.includes(output.fileName)
+    );
+  }
+
+  const imports = outputs.flatMap(
     (output) => (output as OutputChunk)?.imports ?? []
   );
-  const dynamicImports = rollupOutput.output.flatMap(
+  const dynamicImports = outputs.flatMap(
     (output) => (output as OutputChunk)?.dynamicImports ?? []
   );
 
   return Array.from(new Set([...imports, ...dynamicImports]));
 };
 
-const getChunkNames = (rollupOutput: RollupOutput): string[] => {
+const getFileNames = (rollupOutput: RollupOutput): string[] => {
   return rollupOutput.output.map((output) => output.fileName);
 };
 
 const filterOutRelativeImports = ({
   uniqueImports,
-  chunkNames,
+  fileNames,
 }: {
   uniqueImports: string[];
-  chunkNames: string[];
+  fileNames: string[];
 }): string[] => {
   return uniqueImports.filter(
-    (uniqueImport) => !chunkNames.includes(uniqueImport)
+    (uniqueImport) => !fileNames.includes(uniqueImport)
   );
 };
 
@@ -118,7 +129,7 @@ const getNodeModuleNames = (uniqueImports: string[]): string[] => {
 
     if (!parts[0]) {
       throw new Error(
-        `Couldn't extract node module name from '${uniqueImport}'`
+        `Couldn't extract node module name from '${uniqueImport}'.`
       );
     }
 
@@ -221,7 +232,7 @@ const copyDependencies = async ({
       if (await pathExists(sourceResolved)) {
         await copy(sourceResolved, destinationResolved, { overwrite: true });
       } else {
-        console.warn(`Ignoring node module '${dependency}'`);
+        console.warn(`Ignoring node module '${dependency}'.`);
       }
     })
   );

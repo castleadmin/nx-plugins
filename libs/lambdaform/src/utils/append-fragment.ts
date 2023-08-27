@@ -24,7 +24,7 @@ export const appendFragment = async <T, U>(
   });
 
   if (!tree.exists(paths.appendFilePath)) {
-    throw new Error(`Append file '${paths.appendFilePath}' couldn't be found`);
+    throw new Error(`Append file '${paths.appendFilePath}' couldn't be found.`);
   }
 
   const appendFileContent = tree.read(paths.appendFilePath, 'utf8');

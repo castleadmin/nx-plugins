@@ -14,7 +14,7 @@ export const getProjectRoot = (context: ExecutorContext): string => {
   const projectConfiguration =
     context.projectsConfigurations.projects[projectName];
   if (!projectConfiguration) {
-    throw new Error(`Project configuration ${projectName} isn't defined`);
+    throw new Error(`Project configuration '${projectName}' isn't defined.`);
   }
 
   const { root } = projectConfiguration;

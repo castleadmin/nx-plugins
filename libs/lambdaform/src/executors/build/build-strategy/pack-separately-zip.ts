@@ -4,11 +4,13 @@ import { applyRollupConfig } from '../build-steps/apply-rollup-config';
 import { AssetCopyTarget, assetCopyTargets } from '../build-steps/assets';
 import { build, buildWatch } from '../build-steps/build';
 import { buildPrerequisites } from '../build-steps/build-prerequisites';
+import { copyHandlerFiles } from '../build-steps/copy-handler-files';
 import { copyNodeModules } from '../build-steps/copy-node-modules';
 import { createPackageJson } from '../build-steps/create-package-json';
 import { createRollupOptions } from '../build-steps/create-rollup-options';
 import { deleteOutput } from '../build-steps/delete-output';
 import { externalRegularExpressions } from '../build-steps/external';
+import { getHandlerFileNames } from '../build-steps/get-handler-file-names';
 import { zip } from '../build-steps/zip';
 import { ExtendedHandler } from '../extended-handler';
 import { OutputType } from '../output-type';
@@ -64,14 +66,18 @@ export const executeBuild: BuildStrategy = async (options, context) => {
     excludeAwsSdk
   );
 
+  const inputsResolved: { [handlerName: string]: string } = {};
+  extendedHandlers.forEach((handler) => {
+    inputsResolved[handler.name] = handler.mainResolved;
+  });
   const buildOutputPathResolved = join(outputPathResolved, '__build__');
 
   let rollupOptions = createRollupOptions({
-    inputsResolved: extendedHandlers.map((handler) => handler.mainResolved),
+    inputsResolved,
     tsConfigResolved: join(contextRootResolved, tsConfig),
     format,
     buildOutputPathResolved,
-    entryFileNames,
+    entryFileNames: `${entryFileNames}__[name]__`,
     chunkFileNames,
     sourcemap,
     treeshake,
@@ -97,7 +103,18 @@ export const executeBuild: BuildStrategy = async (options, context) => {
           packageJsonType,
           bundleOutputPathResolved: handler.bundleOutputPathResolved,
         });
+        const handlerFileNames = getHandlerFileNames(
+          handler.name,
+          rollupOutput
+        );
+        await copyHandlerFiles({
+          handlerName: handler.name,
+          handlerFileNames,
+          buildOutputPathResolved,
+          bundleOutputPathResolved: handler.bundleOutputPathResolved,
+        });
         await copyNodeModules({
+          handlerFileNames,
           rollupOutput,
           contextRootResolved,
           bundleOutputPathResolved: handler.bundleOutputPathResolved,
