@@ -1,5 +1,10 @@
 import { copyFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import {
+  isHandlerBuildOutput,
+  isHandlerSourceMapBuildOutput,
+  removeSuffixFromOutput,
+} from '../handler-file-names';
 
 export const copyHandlerFiles = async ({
   handlerName,
@@ -16,8 +21,11 @@ export const copyHandlerFiles = async ({
     handlerFileNames.map(async (buildFileName) => {
       let bundleFileName = buildFileName;
 
-      if (buildFileName.endsWith(`__${handlerName}__`)) {
-        bundleFileName = buildFileName.replaceAll(`__${handlerName}__`, '');
+      if (
+        isHandlerBuildOutput(buildFileName, handlerName) ||
+        isHandlerSourceMapBuildOutput(buildFileName, handlerName)
+      ) {
+        bundleFileName = removeSuffixFromOutput(buildFileName, handlerName);
       }
 
       return await copyFile(

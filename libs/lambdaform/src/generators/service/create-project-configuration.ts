@@ -1,4 +1,6 @@
 import { joinPathFragments, ProjectConfiguration } from '@nx/devkit';
+import { OutputType } from '../../executors/build/output-type';
+import { PackType } from '../../executors/build/pack-type';
 import { toTerraformName } from '../../utils/to-terraform-name';
 import { ServiceGeneratorSchema } from './schema';
 
@@ -27,16 +29,22 @@ export const createProjectConfiguration = (
         options: {
           handlers: [],
           tsConfig: joinPathFragments(projectRoot, 'tsconfig.app.json'),
-          outputPath: joinPathFragments('dist', projectRoot),
-          outputFileName: 'index.[name].mjs',
-          outputChunkNames: 'lib/[name].mjs',
-          externalDependencies: 'none',
-          excludeAwsSdk: true,
-          excludeZipRegExp: '\\.[cm]?js\\.map$',
+          pack: PackType.separately,
           format: 'module',
           packageJsonType: 'commonjs',
+          outputPath: joinPathFragments('dist', projectRoot),
+          output: {
+            type: OutputType.zip,
+            zipFileNames: '[name].zip',
+            excludeZipRegExp: '\\.[cm]?js\\.map$',
+          },
+          entryFileNames: 'index.mjs',
+          chunkFileNames: 'chunks/[name].mjs',
           sourcemap: 'hidden',
           treeshake: 'smallest',
+          externalDependencies: 'none',
+          excludeAwsSdk: true,
+          verbose: false,
         },
         configurations: {
           test: {

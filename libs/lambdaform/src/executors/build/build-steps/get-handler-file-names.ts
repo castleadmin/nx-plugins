@@ -1,4 +1,5 @@
 import { OutputAsset, OutputChunk, RollupOutput } from 'rollup';
+import { isHandlerBuildOutput } from '../handler-file-names';
 
 export const getHandlerFileNames = (
   handlerName: string,
@@ -22,7 +23,7 @@ const findHandler = (
   rollupOutput: RollupOutput
 ): OutputChunk | OutputAsset | undefined => {
   return rollupOutput.output.find((output) =>
-    output.fileName.endsWith(`__${handlerName}__`)
+    isHandlerBuildOutput(output.fileName, handlerName)
   );
 };
 

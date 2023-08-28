@@ -13,6 +13,7 @@ import { externalRegularExpressions } from '../build-steps/external';
 import { getHandlerFileNames } from '../build-steps/get-handler-file-names';
 import { zip } from '../build-steps/zip';
 import { ExtendedHandler } from '../extended-handler';
+import { addSuffixToEntryFileNames } from '../handler-file-names';
 import { OutputType } from '../output-type';
 import { BuildStrategy } from './build-strategy';
 
@@ -45,6 +46,7 @@ export const executeBuild: BuildStrategy = async (options, context) => {
     projectSourceRootResolved,
     projectGraph,
     outputPathResolved,
+    buildOutputPathResolved,
   } = buildPrerequisites(options, context);
 
   const extendedHandlers: ExtendedHandler[] = handlers.map((handler) => ({
@@ -70,14 +72,13 @@ export const executeBuild: BuildStrategy = async (options, context) => {
   extendedHandlers.forEach((handler) => {
     inputsResolved[handler.name] = handler.mainResolved;
   });
-  const buildOutputPathResolved = join(outputPathResolved, '__build__');
 
   let rollupOptions = createRollupOptions({
     inputsResolved,
     tsConfigResolved: join(contextRootResolved, tsConfig),
     format,
     buildOutputPathResolved,
-    entryFileNames: `${entryFileNames}__[name]__`,
+    entryFileNames: addSuffixToEntryFileNames(entryFileNames),
     chunkFileNames,
     sourcemap,
     treeshake,

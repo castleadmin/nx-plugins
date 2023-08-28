@@ -11,6 +11,7 @@ export const buildPrerequisites = (
   projectSourceRootResolved: string;
   projectGraph: ProjectGraph;
   outputPathResolved: string;
+  buildOutputPathResolved: string;
 } => {
   const contextRootResolved = resolve(context.root);
 
@@ -26,11 +27,13 @@ export const buildPrerequisites = (
   }
 
   const outputPathResolved = join(contextRootResolved, options.outputPath);
+  const buildOutputPathResolved = join(outputPathResolved, '__build__');
 
   return {
     contextRootResolved,
     projectSourceRootResolved,
     projectGraph,
     outputPathResolved,
+    buildOutputPathResolved,
   };
 };
