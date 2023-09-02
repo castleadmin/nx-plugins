@@ -101,8 +101,10 @@ describe('Event Executor', () => {
     describe('additional args', () => {
       it('Should execute command with custom additional arguments.', async () => {
         options._ = ['cloudwatch', 'scheduled-event'];
-        (options as any)['region'] = 'eu-central-1';
-        (options as any)['account-id'] = '123456789876';
+        (options as typeof options & { region?: string })['region'] =
+          'eu-central-1';
+        (options as typeof options & { 'account-id'?: string })['account-id'] =
+          '123456789876';
 
         const output = await executor(options, context);
 
@@ -121,8 +123,10 @@ describe('Event Executor', () => {
 
       it("Shouldn't execute command without custom additional arguments.", async () => {
         delete options._;
-        delete (options as any)['region'];
-        delete (options as any)['account-id'];
+        delete (options as typeof options & { region?: string })['region'];
+        delete (options as typeof options & { 'account-id'?: string })[
+          'account-id'
+        ];
 
         const output = await executor(options, context);
 
@@ -311,8 +315,10 @@ describe('Event Executor', () => {
     describe('additional args', () => {
       it('Should execute command with custom additional arguments.', async () => {
         options._ = ['cloudwatch', 'scheduled-event'];
-        (options as any)['region'] = 'eu-central-1';
-        (options as any)['account-id'] = '123456789876';
+        (options as typeof options & { region?: string })['region'] =
+          'eu-central-1';
+        (options as typeof options & { 'account-id'?: string })['account-id'] =
+          '123456789876';
 
         const output = await executor(options, context);
 
@@ -331,8 +337,10 @@ describe('Event Executor', () => {
 
       it("Shouldn't execute command without custom additional arguments.", async () => {
         delete options._;
-        delete (options as any)['region'];
-        delete (options as any)['account-id'];
+        delete (options as typeof options & { region?: string })['region'];
+        delete (options as typeof options & { 'account-id'?: string })[
+          'account-id'
+        ];
 
         const output = await executor(options, context);
 

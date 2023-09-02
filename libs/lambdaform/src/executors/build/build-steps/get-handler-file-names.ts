@@ -1,11 +1,16 @@
+import * as console from 'console';
 import { OutputAsset, OutputChunk, RollupOutput } from 'rollup';
-import { isHandlerBuildOutput } from '../handler-file-names';
 
-export const getHandlerFileNames = (
-  handlerName: string,
-  rollupOutput: RollupOutput
-): string[] => {
-  const handlerChunk = findHandler(handlerName, rollupOutput);
+export const getHandlerFileNames = ({
+  handlerName,
+  inputsResolved,
+  rollupOutput,
+}: {
+  handlerName: string;
+  inputsResolved: { [handlerName: string]: string };
+  rollupOutput: RollupOutput;
+}): string[] => {
+  const handlerChunk = findHandler(handlerName, inputsResolved, rollupOutput);
 
   if (!handlerChunk) {
     throw new Error(
@@ -14,17 +19,43 @@ export const getHandlerFileNames = (
   }
 
   const dependencies = getDependencies(handlerChunk, rollupOutput);
+  const sourceMapAssets = getSourceMapAssets(dependencies, rollupOutput);
 
-  return dependencies.map((dependency) => dependency.fileName);
+  const dependencyPaths = new Set<string>([
+    ...dependencies.map((dependency) => dependency.fileName),
+    ...sourceMapAssets.map((asset) => asset.fileName),
+  ]);
+
+  return Array.from(dependencyPaths);
 };
 
 const findHandler = (
   handlerName: string,
+  inputsResolved: { [handlerName: string]: string },
   rollupOutput: RollupOutput
 ): OutputChunk | OutputAsset | undefined => {
+  const handlerInputResolved = inputsResolved[handlerName];
+
+  if (!handlerInputResolved) {
+    throw new Error(
+      `Couldn't find the entry file for the handler '${handlerName}' in '${JSON.stringify(
+        inputsResolved,
+        null,
+        2
+      )}'.`
+    );
+  }
+
   return rollupOutput.output.find((output) =>
-    isHandlerBuildOutput(output.fileName, handlerName)
+    isHandlerBuildOutput(output, handlerInputResolved)
   );
+};
+
+const isHandlerBuildOutput = (
+  output: OutputChunk | OutputAsset,
+  handlerInputResolved: string
+): boolean => {
+  return (output as OutputChunk)?.facadeModuleId === handlerInputResolved;
 };
 
 const getDependencies = (
@@ -59,11 +90,9 @@ const getFileNames = (rollupOutput: RollupOutput): string[] => {
 const getFileNameMap = (
   rollupOutput: RollupOutput
 ): Map<string, OutputChunk | OutputAsset> => {
-  const map = new Map<string, OutputChunk | OutputAsset>();
-
-  rollupOutput.output.forEach((output) => map.set(output.fileName, output));
-
-  return map;
+  return new Map<string, OutputChunk | OutputAsset>(
+    rollupOutput.output.map((output) => [output.fileName, output])
+  );
 };
 
 const getRelativeImports = (
@@ -105,4 +134,31 @@ const filterOutNodeImports = ({
   return uniqueImports.filter((uniqueImport) =>
     fileNames.includes(uniqueImport)
   );
+};
+
+const getSourceMapAssets = (
+  dependencies: (OutputChunk | OutputAsset)[],
+  rollupOutput: RollupOutput
+): OutputAsset[] => {
+  const assets = rollupOutput.output.filter(
+    (output) => output.type === 'asset'
+  ) as OutputAsset[];
+  const assetMap = new Map<string, OutputAsset>(
+    assets.map((asset) => [asset.fileName, asset])
+  );
+
+  const sourceMapAssets: OutputAsset[] = [];
+  dependencies.forEach((dependency) => {
+    const sourceMapAsset = assetMap.get(`${dependency.fileName}.map`);
+
+    if (!sourceMapAsset) {
+      console.warn(`Couldn't find source map for '${dependency.fileName}'.`);
+
+      return;
+    }
+
+    sourceMapAssets.push(sourceMapAsset);
+  });
+
+  return sourceMapAssets;
 };

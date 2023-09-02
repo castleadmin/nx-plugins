@@ -3,6 +3,7 @@ import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
+import { dirname, resolve } from 'node:path';
 import {
   ExternalOption,
   Plugin,
@@ -52,21 +53,27 @@ export const createRollupOptions = ({
     external,
     logLevel: verbose ? 'debug' : 'info',
     plugins: [
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (copy as any)({
         targets: assetCopyTargets,
       }),
       json(),
-      typescript({
-        tsconfig: tsConfigResolved,
-        compilerOptions: {
-          outDir: buildOutputPathResolved,
-        },
-      }),
       nodeResolve({
         preferBuiltins: true,
       }),
       commonjs(),
+      typescript({
+        tsconfig: tsConfigResolved,
+        compilerOptions: {
+          outDir: buildOutputPathResolved,
+          // The following source map options are ignored by rollup.
+          // The corresponding rollup options are used to define how source maps should be generated.
+          sourceMap: Boolean(sourcemap),
+          inlineSourceMap: false,
+          mapRoot: undefined,
+          sourceRoot: undefined,
+          inlineSources: undefined,
+        },
+      }),
       terserPlugin,
     ],
     output: {
@@ -75,6 +82,19 @@ export const createRollupOptions = ({
       entryFileNames,
       chunkFileNames,
       sourcemap,
+      //sourcemapBaseUrl: 'https://example.com/path/',
+      sourcemapExcludeSources: false,
+      sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
+        console.log(
+          'resolve',
+          sourcemapPath,
+          dirname(sourcemapPath),
+          relativeSourcePath,
+          resolve(dirname(sourcemapPath), relativeSourcePath)
+        );
+
+        return relativeSourcePath;
+      },
     },
   };
 };

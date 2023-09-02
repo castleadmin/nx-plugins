@@ -1,4 +1,4 @@
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export const createPackageJson = async ({
@@ -18,6 +18,7 @@ export const createPackageJson = async ({
     type: packageJsonType,
   };
 
+  await mkdir(bundleOutputPathResolved, { recursive: true });
   await writeFile(
     join(bundleOutputPathResolved, 'package.json'),
     JSON.stringify(packageJson, null, 2),

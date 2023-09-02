@@ -1,36 +1,23 @@
-import { copyFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import {
-  isHandlerBuildOutput,
-  isHandlerSourceMapBuildOutput,
-  removeSuffixFromOutput,
-} from '../handler-file-names';
+import { copyFile, mkdir } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 
 export const copyHandlerFiles = async ({
-  handlerName,
   handlerFileNames,
   buildOutputPathResolved,
   bundleOutputPathResolved,
 }: {
-  handlerName: string;
   handlerFileNames: string[];
   buildOutputPathResolved: string;
   bundleOutputPathResolved: string;
 }): Promise<void> => {
   await Promise.all(
     handlerFileNames.map(async (buildFileName) => {
-      let bundleFileName = buildFileName;
+      const bundleFileResolved = join(bundleOutputPathResolved, buildFileName);
 
-      if (
-        isHandlerBuildOutput(buildFileName, handlerName) ||
-        isHandlerSourceMapBuildOutput(buildFileName, handlerName)
-      ) {
-        bundleFileName = removeSuffixFromOutput(buildFileName, handlerName);
-      }
-
+      await mkdir(dirname(bundleFileResolved), { recursive: true });
       return await copyFile(
         join(buildOutputPathResolved, buildFileName),
-        join(bundleOutputPathResolved, bundleFileName)
+        bundleFileResolved
       );
     })
   );

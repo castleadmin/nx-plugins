@@ -66,7 +66,8 @@
     },
     "entryFileNames": {
       "type": "string",
-      "description": "Defines the Rollup entryFileNames option. (https://rollupjs.org/configuration-options/#output-entryfilenames)"
+      "description": "Defines the Rollup entryFileNames option. (https://rollupjs.org/configuration-options/#output-entryfilenames)",
+      "pattern": "^.*\\[name\\].*$"
     },
     "chunkFileNames": {
       "type": "string",

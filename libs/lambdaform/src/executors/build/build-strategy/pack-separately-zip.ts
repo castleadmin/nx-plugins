@@ -13,7 +13,6 @@ import { externalRegularExpressions } from '../build-steps/external';
 import { getHandlerFileNames } from '../build-steps/get-handler-file-names';
 import { zip } from '../build-steps/zip';
 import { ExtendedHandler } from '../extended-handler';
-import { addSuffixToEntryFileNames } from '../handler-file-names';
 import { OutputType } from '../output-type';
 import { BuildStrategy } from './build-strategy';
 
@@ -78,7 +77,7 @@ export const executeBuild: BuildStrategy = async (options, context) => {
     tsConfigResolved: join(contextRootResolved, tsConfig),
     format,
     buildOutputPathResolved,
-    entryFileNames: addSuffixToEntryFileNames(entryFileNames),
+    entryFileNames,
     chunkFileNames,
     sourcemap,
     treeshake,
@@ -104,12 +103,12 @@ export const executeBuild: BuildStrategy = async (options, context) => {
           packageJsonType,
           bundleOutputPathResolved: handler.bundleOutputPathResolved,
         });
-        const handlerFileNames = getHandlerFileNames(
-          handler.name,
-          rollupOutput
-        );
-        await copyHandlerFiles({
+        const handlerFileNames = getHandlerFileNames({
           handlerName: handler.name,
+          inputsResolved,
+          rollupOutput,
+        });
+        await copyHandlerFiles({
           handlerFileNames,
           buildOutputPathResolved,
           bundleOutputPathResolved: handler.bundleOutputPathResolved,

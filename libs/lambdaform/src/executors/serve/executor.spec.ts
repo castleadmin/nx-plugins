@@ -120,8 +120,9 @@ describe('Serve Executor', () => {
 
     describe('additional args', () => {
       it('Should execute command with custom additional arguments.', async () => {
-        (options as any)['debug'] = true;
-        (options as any)['log-file'] = '../log.txt';
+        (options as typeof options & { debug?: boolean })['debug'] = true;
+        (options as typeof options & { 'log-file'?: string })['log-file'] =
+          '../log.txt';
 
         const output = await executor(options, context);
 
@@ -137,8 +138,10 @@ describe('Serve Executor', () => {
       });
 
       it("Shouldn't execute command without custom additional arguments.", async () => {
-        delete (options as any)['event'];
-        delete (options as any)['log-file'];
+        delete (options as typeof options & { debug?: boolean })['debug'];
+        delete (options as typeof options & { 'log-file'?: string })[
+          'log-file'
+        ];
 
         const output = await executor(options, context);
 
@@ -297,8 +300,9 @@ describe('Serve Executor', () => {
 
     describe('additional args', () => {
       it('Should execute command with custom additional arguments.', async () => {
-        (options as any)['debug'] = true;
-        (options as any)['log-file'] = '..\\log.txt';
+        (options as typeof options & { debug?: boolean })['debug'] = true;
+        (options as typeof options & { 'log-file'?: string })['log-file'] =
+          '..\\log.txt';
 
         const output = await executor(options, context);
 
@@ -314,8 +318,10 @@ describe('Serve Executor', () => {
       });
 
       it("Shouldn't execute command without custom additional arguments.", async () => {
-        delete (options as any)['event'];
-        delete (options as any)['log-file'];
+        delete (options as typeof options & { debug?: boolean })['debug'];
+        delete (options as typeof options & { 'log-file'?: string })[
+          'log-file'
+        ];
 
         const output = await executor(options, context);
 

@@ -25,12 +25,12 @@ export const getVersions = (): Versions => {
   const typesAwsLambda = '^8.10.119';
   const typesNode = '~18.7.1';
   // Build
-  const rollup = '^3.26.2';
+  const rollup = '^3.28.1';
   const rollupPluginCopy = '^3.4.0';
   const rollupPluginJson = '^6.0.0';
-  const rollupPluginNodeResolve = '^15.1.0';
-  const rollupPluginCommonJs = '^25.0.3';
-  const rollupPluginTypeScript = '^11.1.2';
+  const rollupPluginNodeResolve = '^15.2.1';
+  const rollupPluginCommonJs = '^25.0.4';
+  const rollupPluginTypeScript = '^11.1.3';
   const rollupPluginTerser = '^0.4.3';
   const typesAdmZip = '^0.5.0';
   const admZip = '^0.5.10';
