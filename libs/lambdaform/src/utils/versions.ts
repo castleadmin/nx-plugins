@@ -21,9 +21,9 @@ export interface Versions {
 
 export const getVersions = (): Versions => {
   // TypeScript
-  const tslib = '^2.3.0';
+  const tslib = '^2.6.2';
   const typesAwsLambda = '^8.10.119';
-  const typesNode = '~18.7.1';
+  const typesNode = '^18.17.14';
   // Build
   const rollup = '^3.28.1';
   const rollupPluginCopy = '^3.5.0';
@@ -37,7 +37,7 @@ export const getVersions = (): Versions => {
   const typesFsExtra = '^11.0.1';
   const fsExtra = '^11.1.1';
   // Terraform
-  const awsTerraformProvider = '5.8.0';
+  const awsTerraformProvider = '5.15.0';
 
   return {
     // TypeScript

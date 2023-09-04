@@ -3,14 +3,13 @@ import { getVersions } from './versions';
 describe('getVersions', () => {
   it('All versions should be defined', () => {
     const semanticVersion = /^\d+\.\d+\.\d+$/;
-    const semanticVersionPatchUpgrade = /^~\d+\.\d+\.\d+$/;
     const semanticVersionMinorUpgrade = /^\^\d+\.\d+\.\d+$/;
 
     expect(getVersions()).toEqual({
       // TypeScript
       tslib: expect.stringMatching(semanticVersionMinorUpgrade),
       '@types/aws-lambda': expect.stringMatching(semanticVersionMinorUpgrade),
-      '@types/node': expect.stringMatching(semanticVersionPatchUpgrade),
+      '@types/node': expect.stringMatching(semanticVersionMinorUpgrade),
       // Build
       rollup: expect.stringMatching(semanticVersionMinorUpgrade),
       'rollup-plugin-copy': expect.stringMatching(semanticVersionMinorUpgrade),
