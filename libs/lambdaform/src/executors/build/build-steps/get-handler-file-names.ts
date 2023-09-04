@@ -5,12 +5,12 @@ export const getHandlerFileNames = ({
   handlerName,
   inputsResolved,
   rollupOutput,
-  sourcemap,
+  sourceMap,
 }: {
   handlerName: string;
   inputsResolved: { [handlerName: string]: string };
   rollupOutput: RollupOutput;
-  sourcemap: boolean | 'inline' | 'hidden';
+  sourceMap: boolean | 'inline' | 'hidden';
 }): string[] => {
   const handlerChunk = findHandler(handlerName, inputsResolved, rollupOutput);
 
@@ -23,7 +23,7 @@ export const getHandlerFileNames = ({
   const dependencies = getDependencies(handlerChunk, rollupOutput);
 
   let handlerFileNames: string[] = [];
-  if (sourcemap === true || sourcemap === 'hidden') {
+  if (sourceMap === true || sourceMap === 'hidden') {
     const sourceMapAssets = getSourceMapAssets(dependencies, rollupOutput);
 
     const combinedFileNames = new Set<string>([

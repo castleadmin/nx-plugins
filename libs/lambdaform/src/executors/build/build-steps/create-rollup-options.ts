@@ -13,7 +13,7 @@ import {
   TreeshakingPreset,
 } from 'rollup';
 import copy from 'rollup-plugin-copy';
-import { SourcemapPathTransform } from '../sourcemap-path-transform';
+import { SourceMapPathTransform } from '../source-map-path-transform';
 import { AssetCopyTarget } from './assets';
 
 export const createRollupOptions = ({
@@ -24,10 +24,10 @@ export const createRollupOptions = ({
   buildOutputPathResolved,
   entryFileNames,
   chunkFileNames,
-  sourcemap,
-  sourcemapExcludeSources,
-  sourcemapBaseUrl,
-  sourcemapPathTransform,
+  sourceMap,
+  sourceMapExcludeSources,
+  sourceMapBaseUrl,
+  sourceMapPathTransform,
   treeshake,
   minify,
   external,
@@ -41,10 +41,10 @@ export const createRollupOptions = ({
   buildOutputPathResolved: string;
   entryFileNames: string;
   chunkFileNames: string;
-  sourcemap: boolean | 'inline' | 'hidden';
-  sourcemapExcludeSources: boolean;
-  sourcemapBaseUrl: string | undefined;
-  sourcemapPathTransform: SourcemapPathTransform;
+  sourceMap: boolean | 'inline' | 'hidden';
+  sourceMapExcludeSources: boolean;
+  sourceMapBaseUrl: string | undefined;
+  sourceMapPathTransform: SourceMapPathTransform;
   treeshake: boolean | TreeshakingPreset | TreeshakingOptions;
   minify: boolean | object;
   external: ExternalOption;
@@ -67,10 +67,10 @@ export const createRollupOptions = ({
       dir: buildOutputPathResolved,
       entryFileNames,
       chunkFileNames,
-      sourcemap,
-      sourcemapExcludeSources: sourcemapExcludeSources,
+      sourcemap: sourceMap,
+      sourcemapExcludeSources: sourceMapExcludeSources,
       sourcemapPathTransform: (relativeSourcePath, sourceMapPath) => {
-        if (sourcemapPathTransform === SourcemapPathTransform.relative) {
+        if (sourceMapPathTransform === SourceMapPathTransform.relative) {
           return relativeSourcePath;
         }
 
@@ -79,7 +79,7 @@ export const createRollupOptions = ({
           relativeSourcePath
         );
 
-        if (sourcemapPathTransform === SourcemapPathTransform.absolute) {
+        if (sourceMapPathTransform === SourceMapPathTransform.absolute) {
           return absoluteSourcePath;
         }
 
@@ -106,7 +106,7 @@ export const createRollupOptions = ({
           outDir: buildOutputPathResolved,
           // The following source map options are ignored by rollup.
           // The corresponding rollup options are used to define how source maps should be generated.
-          sourceMap: Boolean(sourcemap),
+          sourceMap: Boolean(sourceMap),
           inlineSourceMap: false,
           mapRoot: undefined,
           sourceRoot: undefined,
@@ -117,8 +117,8 @@ export const createRollupOptions = ({
     ],
   };
 
-  if (sourcemapBaseUrl) {
-    (rollupOptions.output as OutputOptions).sourcemapBaseUrl = sourcemapBaseUrl;
+  if (sourceMapBaseUrl) {
+    (rollupOptions.output as OutputOptions).sourcemapBaseUrl = sourceMapBaseUrl;
   }
 
   return rollupOptions;

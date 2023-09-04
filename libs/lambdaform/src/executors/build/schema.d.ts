@@ -1,6 +1,7 @@
 import { TreeshakingPreset } from 'rollup';
 import { OutputType } from './output-type';
 import { PackType } from './pack-type';
+import { SourceMapPathTransform } from './source-map-path-transform';
 
 export interface ZipOutput {
   type: OutputType.zip;
@@ -32,10 +33,10 @@ export interface BuildExecutorSchema {
   output: Output;
   entryFileNames: string;
   chunkFileNames: string;
-  sourcemap: boolean | 'inline' | 'hidden';
-  sourcemapExcludeSources: boolean;
-  sourcemapBaseUrl?: string;
-  sourcemapPathTransform: SourcemapPathTransform;
+  sourceMap: boolean | 'inline' | 'hidden';
+  sourceMapExcludeSources: boolean;
+  sourceMapBaseUrl?: string;
+  sourceMapPathTransform: SourceMapPathTransform;
   treeshake: boolean | TreeshakingPreset;
   minify: boolean | object;
   externalDependencies: 'all' | 'none' | string[];
