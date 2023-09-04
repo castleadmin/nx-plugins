@@ -2,6 +2,7 @@ import executor from './executor';
 import { OutputType } from './output-type';
 import { PackType } from './pack-type';
 import { BuildExecutorSchema } from './schema';
+import { SourcemapPathTransform } from './sourcemap-path-transform';
 
 console.log('packtype', PackType);
 
@@ -21,6 +22,8 @@ const options: BuildExecutorSchema = {
   format: 'module',
   packageJsonType: 'commonjs',
   sourcemap: 'hidden',
+  sourcemapExcludeSources: false,
+  sourcemapPathTransform: SourcemapPathTransform.absolute,
   treeshake: 'smallest',
   minify: true,
   deleteOutputPath: false,

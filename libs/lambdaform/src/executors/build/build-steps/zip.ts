@@ -1,4 +1,4 @@
-import * as AdmZip from 'adm-zip';
+import AdmZip from 'adm-zip';
 import { mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
