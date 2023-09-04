@@ -33,6 +33,9 @@ export interface BuildExecutorSchema {
   entryFileNames: string;
   chunkFileNames: string;
   sourcemap: boolean | 'inline' | 'hidden';
+  sourcemapExcludeSources: boolean;
+  sourcemapBaseUrl?: string;
+  sourcemapPathTransform: SourcemapPathTransform;
   treeshake: boolean | TreeshakingPreset;
   minify: boolean | object;
   externalDependencies: 'all' | 'none' | string[];

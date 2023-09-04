@@ -5,10 +5,12 @@ export const getHandlerFileNames = ({
   handlerName,
   inputsResolved,
   rollupOutput,
+  sourcemap,
 }: {
   handlerName: string;
   inputsResolved: { [handlerName: string]: string };
   rollupOutput: RollupOutput;
+  sourcemap: boolean | 'inline' | 'hidden';
 }): string[] => {
   const handlerChunk = findHandler(handlerName, inputsResolved, rollupOutput);
 
@@ -19,14 +21,22 @@ export const getHandlerFileNames = ({
   }
 
   const dependencies = getDependencies(handlerChunk, rollupOutput);
-  const sourceMapAssets = getSourceMapAssets(dependencies, rollupOutput);
 
-  const dependencyPaths = new Set<string>([
-    ...dependencies.map((dependency) => dependency.fileName),
-    ...sourceMapAssets.map((asset) => asset.fileName),
-  ]);
+  let handlerFileNames: string[] = [];
+  if (sourcemap === true || sourcemap === 'hidden') {
+    const sourceMapAssets = getSourceMapAssets(dependencies, rollupOutput);
 
-  return Array.from(dependencyPaths);
+    const combinedFileNames = new Set<string>([
+      ...dependencies.map((dependency) => dependency.fileName),
+      ...sourceMapAssets.map((asset) => asset.fileName),
+    ]);
+
+    handlerFileNames = Array.from(combinedFileNames);
+  } else {
+    handlerFileNames = dependencies.map((dependency) => dependency.fileName);
+  }
+
+  return handlerFileNames;
 };
 
 const findHandler = (

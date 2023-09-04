@@ -26,7 +26,7 @@ export const getVersions = (): Versions => {
   const typesNode = '~18.7.1';
   // Build
   const rollup = '^3.28.1';
-  const rollupPluginCopy = '^3.4.0';
+  const rollupPluginCopy = '^3.5.0';
   const rollupPluginJson = '^6.0.0';
   const rollupPluginNodeResolve = '^15.2.1';
   const rollupPluginCommonJs = '^25.0.4';

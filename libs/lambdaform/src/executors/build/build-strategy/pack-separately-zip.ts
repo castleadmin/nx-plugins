@@ -28,6 +28,9 @@ export const executeBuild: BuildStrategy = async (options, context) => {
     entryFileNames,
     chunkFileNames,
     sourcemap,
+    sourcemapExcludeSources,
+    sourcemapBaseUrl,
+    sourcemapPathTransform,
     treeshake,
     minify,
     verbose,
@@ -75,11 +78,15 @@ export const executeBuild: BuildStrategy = async (options, context) => {
   let rollupOptions = createRollupOptions({
     inputsResolved,
     tsConfigResolved: join(contextRootResolved, tsConfig),
+    contextRootResolved,
     format,
     buildOutputPathResolved,
     entryFileNames,
     chunkFileNames,
     sourcemap,
+    sourcemapExcludeSources,
+    sourcemapBaseUrl,
+    sourcemapPathTransform,
     treeshake,
     minify,
     external,
@@ -107,6 +114,7 @@ export const executeBuild: BuildStrategy = async (options, context) => {
           handlerName: handler.name,
           inputsResolved,
           rollupOutput,
+          sourcemap,
         });
         await copyHandlerFiles({
           handlerFileNames,

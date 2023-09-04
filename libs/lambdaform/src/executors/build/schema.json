@@ -85,6 +85,20 @@
       "description": "Defines the Rollup sourcemap option. (https://rollupjs.org/configuration-options/#output-sourcemap)",
       "default": "hidden"
     },
+    "sourcemapExcludeSources": {
+      "type": "boolean",
+      "description": "Defines the Rollup sourcemapExcludeSources option. (https://rollupjs.org/configuration-options/#output-sourcemapexcludesources)",
+      "default": false
+    },
+    "sourcemapBaseUrl": {
+      "type": "string",
+      "description": "Defines the Rollup sourcemapBaseUrl option. (https://rollupjs.org/configuration-options/#output-sourcemapbaseurl)"
+    },
+    "sourcemapPathTransform": {
+      "enum": ["relative", "absolute", "repository"],
+      "description": "The source map 'sources' property contains paths that are 'relative', 'absolute' (useful for local debugging) or paths from the repository root (useful if combined with the 'sourcemapBaseUrl' option).",
+      "default": "absolute"
+    },
     "treeshake": {
       "oneOf": [
         {
