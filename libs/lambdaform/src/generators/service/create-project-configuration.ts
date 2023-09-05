@@ -40,11 +40,10 @@ export const createProjectConfiguration = (
           },
           entryFileNames: 'index.[name].mjs',
           chunkFileNames: 'chunks/[name].mjs',
-          sourcemap: 'hidden',
+          sourceMap: 'hidden',
           treeshake: 'smallest',
           externalDependencies: 'none',
           excludeAwsSdk: true,
-          verbose: false,
         },
         configurations: {
           test: {
