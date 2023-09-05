@@ -32,6 +32,7 @@ export async function handlerGenerator(
     ...terraformOptions,
     ...versions,
     appsDir,
+    tmpl: '',
   });
 
   await appendFragment(tree, options, terraformOptions, versions, {

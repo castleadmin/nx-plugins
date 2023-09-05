@@ -1,11 +1,11 @@
-import { Context, Handler } from 'aws-lambda';
+import { Context } from 'aws-lambda';
 
 // TODO define event type
 export type Event = unknown;
 // TODO define result type
 export type Result = unknown;
 
-export const handler: Handler<Event, Result> = async (
+export const <%= handlerName %> = async (
   event: Event,
   context: Context
 ): Promise<Result> => {

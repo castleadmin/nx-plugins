@@ -2,7 +2,7 @@ const nxPreset = require('@nx/jest/preset').default;
 
 module.exports = {
   ...nxPreset,
-  collectCoverageFrom: ['**/*.ts', '!**/node_modules/**'],
+  collectCoverageFrom: ['**/*.ts', '!**/jest.config.ts', '!**/node_modules/**'],
   /*
   coverageThreshold: {
     global: {

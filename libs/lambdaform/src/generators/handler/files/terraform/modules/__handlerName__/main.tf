@@ -91,7 +91,7 @@ resource "aws_s3_object" "<%= handlerNameTf %>_s3_object" {
 resource "aws_lambda_function" "<%= handlerNameTf %>" {
   function_name = local.workspaces[terraform.workspace].function_name
   role          = aws_iam_role.<%= handlerNameTf %>_iam_role.arn
-  handler       = "index.<%= handlerName %>.handler"
+  handler       = "<%= handlerName %>.<%= handlerName %>"
   <% if (s3Upload) { %>
   s3_bucket         = data.aws_s3_bucket.<%= handlerNameTf %>_bucket.id
   s3_key            = aws_s3_object.<%= handlerNameTf %>_s3_object.id

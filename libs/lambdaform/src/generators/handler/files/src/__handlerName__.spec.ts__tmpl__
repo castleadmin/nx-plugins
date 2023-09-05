@@ -1,0 +1,18 @@
+import { Context } from 'aws-lambda';
+import { Event, <%= handlerName %> } from './<%= handlerName %>';
+
+describe('<%= handlerName %>', () => {
+  let context: Context;
+
+  beforeEach(() => {
+    context = {} as unknown as Context;
+  });
+
+  it('Should execute successfully.', async () => {
+    const event: Event = {};
+
+    const result = await <%= handlerName %>(event, context);
+
+    expect(result).toBe(undefined);
+  });
+});

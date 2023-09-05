@@ -38,7 +38,7 @@ export const createProjectConfiguration = (
             zipFileNames: '[name].zip',
             excludeZipRegExp: '\\.[cm]?js\\.map$',
           },
-          entryFileNames: 'index.[name].mjs',
+          entryFileNames: '[name].mjs',
           chunkFileNames: 'chunks/[name].mjs',
           sourceMap: 'hidden',
           treeshake: 'smallest',
