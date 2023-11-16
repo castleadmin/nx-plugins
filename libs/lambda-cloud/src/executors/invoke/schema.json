@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 2,
+  "title": "lambda-cloud invoke executor",
+  "description": "Wrapper around the 'sam local invoke' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)",
+  "type": "object",
+  "properties": {
+    "samConfiguration": {
+      "type": "string",
+      "description": "SAM configuration file path."
+    },
+    "terraformDirectory": {
+      "type": "string",
+      "description": "The path of the directory where the '*.tf' files are stored."
+    },
+    "args": {
+      "type": "string",
+      "description": "Used to provide additional arguments to the SAM CLI. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)"
+    },
+    "shell": {
+      "type": "string",
+      "description": "Shell to execute the command with. Uses '/bin/sh' on Unix, and process.env.ComSpec on Windows, if no shell is specified."
+    }
+  },
+  "required": ["samConfiguration", "terraformDirectory"]
+}

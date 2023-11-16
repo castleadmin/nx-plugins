@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "serverless-cdk": ["libs/serverless-cdk/src/index.ts"]
+      "lambda-cloud": ["libs/lambda-cloud/src/index.ts"]
     },
     "strict": true,
     "allowUnreachableCode": false,
