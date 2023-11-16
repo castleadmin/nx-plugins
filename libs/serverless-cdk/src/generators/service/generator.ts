@@ -10,12 +10,12 @@ import {
   runTasksInSerial,
   Tree,
 } from '@nx/devkit';
+import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { jestInitGenerator, jestProjectGenerator } from '@nx/jest';
 import {
   getRelativePathToRootTsConfig,
   initGenerator as jsInitGenerator,
 } from '@nx/js';
-import { Linter, lintProjectGenerator } from '@nx/linter';
 import { resolve } from 'node:path';
 import { toTerraformName } from '../../utils/to-terraform-name';
 import { getVersions, Versions } from '../../utils/versions';
