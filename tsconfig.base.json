@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "lambdaform": ["libs/lambdaform/src/index.ts"]
+      "serverless-cdk": ["libs/serverless-cdk/src/index.ts"]
     },
     "strict": true,
     "allowUnreachableCode": false,

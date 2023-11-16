@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 2,
+  "title": "serverless-cdk format executor",
+  "description": "Wrapper around the 'terraform fmt' command. (https://developer.hashicorp.com/terraform/cli/commands/fmt)",
+  "type": "object",
+  "properties": {
+    "args": {
+      "type": "string",
+      "description": "Used to provide additional arguments to the Terraform CLI. (https://developer.hashicorp.com/terraform/cli/commands/fmt)"
+    },
+    "terraformDirectory": {
+      "type": "string",
+      "description": "The path of the directory where the '*.tf' files are stored."
+    },
+    "shell": {
+      "type": "string",
+      "description": "Shell to execute the command with. Uses '/bin/sh' on Unix, and process.env.ComSpec on Windows, if no shell is specified."
+    }
+  },
+  "required": ["terraformDirectory"],
+  "additionalProperties": false
+}

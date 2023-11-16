@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "S3Upload",
+  "title": "serverless-cdk S3 upload generator",
+  "type": "object",
+  "properties": {
+    "bucketName": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
+      "description": "Define the S3 bucket name.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What S3 bucket name would you like to use?"
+    },
+    "project": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
+      "description": "Define the project to which the S3 bucket will be added",
+      "x-prompt": "To which project would you like to add the S3 bucket?",
+      "x-dropdown": "projects"
+    },
+    "skipFormat": {
+      "description": "Skip formatting files.",
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["bucketName", "project"],
+  "additionalProperties": false
+}

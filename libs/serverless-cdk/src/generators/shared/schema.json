@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "Shared",
+  "title": "serverless-cdk shared resources generator",
+  "type": "object",
+  "properties": {
+    "sharedResourcesName": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
+      "description": "Define the shared resources name.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What shared resources name would you like to use?"
+    },
+    "skipFormat": {
+      "description": "Skip formatting files.",
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["sharedResourcesName"],
+  "additionalProperties": false
+}
