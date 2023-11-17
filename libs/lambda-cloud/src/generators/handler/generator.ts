@@ -7,7 +7,6 @@ import {
   Tree,
 } from '@nx/devkit';
 import { resolve } from 'node:path';
-import { addHandlerToConfiguration } from '../../utils/add-handler-to-configuration';
 import { appendFragment } from '../../utils/append-fragment';
 import { toTerraformName } from '../../utils/to-terraform-name';
 import { getVersions } from '../../utils/versions';
@@ -43,13 +42,6 @@ export async function handlerGenerator(
       'main.tf'
     ),
     appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf'),
-  });
-
-  addHandlerToConfiguration({
-    name: options.handlerName,
-    main: joinPathFragments(projectRoot, 'src', `${options.handlerName}.ts`),
-    projectName,
-    tree,
   });
 
   if (!options.skipFormat) {
