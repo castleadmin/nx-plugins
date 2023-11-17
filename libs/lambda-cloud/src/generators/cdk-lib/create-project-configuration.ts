@@ -1,12 +1,12 @@
-import { joinPathFragments, ProjectConfiguration } from '@nx/devkit';
-import { toTerraformName } from '../../utils/to-terraform-name';
-import { ServiceGeneratorSchema } from './schema';
+import { joinPathFragments, names, ProjectConfiguration } from '@nx/devkit';
+import { CdkLibSchema } from './schema';
 
 export const createProjectConfiguration = (
   projectRoot: string,
-  options: ServiceGeneratorSchema,
+  options: CdkLibSchema,
 ): ProjectConfiguration => {
-  const serviceNameTf = toTerraformName(options.serviceName);
+  const appName = names(options.libName).fileName;
+  const serviceNameTf = options.libName;
   const terraformDirectoryPath = joinPathFragments(projectRoot, 'terraform');
   const samConfigurationPath = joinPathFragments(projectRoot, 'samconfig.toml');
   const eventsDirectoryPath = joinPathFragments(projectRoot, 'events');
@@ -245,6 +245,6 @@ export const createProjectConfiguration = (
         },
       },
     },
-    tags: [`app:${options.serviceName}`, 'lambda-cloud:service'],
+    tags: [`app:${appName}`, 'lambda-cloud:service'],
   };
 };

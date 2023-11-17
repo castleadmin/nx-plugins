@@ -72,8 +72,8 @@ const addJest = async (
 };
 
 const addE2ETestsProject = async (
+  tree: Tree,
   options: CdkAppSchema,
-  projectRoot: string,
 ): Promise<GeneratorCallback> => {
   return await e2eProjectGenerator(tree, {
     project: options.appName,
@@ -87,7 +87,7 @@ export const cdkAppGenerator = async (
 ): Promise<GeneratorCallback> => {
   const appsDir = getWorkspaceLayout(tree).appsDir;
   const versions = getVersions();
-  const projectName = names(options.serviceName).fileName;
+  const projectName = names(options.appName).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
   const isLambdaApp = options.appType === AppType.lambda;
 
@@ -111,6 +111,7 @@ export const cdkAppGenerator = async (
       ...options,
       offset: offsetFromRoot(projectRoot),
       rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+      tmpl: ''
     },
   );
 
@@ -122,7 +123,7 @@ export const cdkAppGenerator = async (
 
   tasks.push(await addESLint(tree, options, projectRoot));
   tasks.push(await addJest(tree, options));
-  tasks.push(await addE2ETestsProject(options, projectRoot));
+  tasks.push(await addE2ETestsProject(tree, options));
 
   if (!options.skipFormat) {
     await formatFiles(tree);

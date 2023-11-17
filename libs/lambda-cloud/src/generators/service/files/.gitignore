@@ -1,8 +1,0 @@
-# Terraform
-.terraform
-*.tfstate
-*.tfstate.*
-tfplan
-
-# AWS SAM
-.aws-sam-iacs

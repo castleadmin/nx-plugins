@@ -37,14 +37,14 @@ export async function initGenerator(
   const tasks: GeneratorCallback[] = [];
   tasks.push(
     await jsInitGenerator(tree, {
-      ...schema,
+      ...options,
       tsConfigName: 'tsconfig.base.json',
       skipFormat: true,
     }),
   );
 
   tasks.push(
-    await jestInitGenerator(tree, { ...schema, testEnvironment: 'node' }),
+    await jestInitGenerator(tree, { ...options, testEnvironment: 'node' }),
   );
 
   tasks.push(updateDependencies(tree));

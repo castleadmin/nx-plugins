@@ -11,53 +11,21 @@ import {
   Tree,
 } from '@nx/devkit';
 import { Linter, lintProjectGenerator } from '@nx/eslint';
-import { jestInitGenerator, jestProjectGenerator } from '@nx/jest';
-import {
-  getRelativePathToRootTsConfig,
-  initGenerator as jsInitGenerator,
-} from '@nx/js';
+import { configurationGenerator } from '@nx/jest';
+import { getRelativePathToRootTsConfig } from '@nx/js';
 import { resolve } from 'node:path';
-import { toTerraformName } from '../../utils/to-terraform-name';
-import { getVersions, Versions } from '../../utils/versions';
+import initGenerator from '../init/init';
 import { createProjectConfiguration } from './create-project-configuration';
-import {
-  addPluginRuntimeDependencies,
-  addTsDependencies,
-} from './dependencies';
-import { ServiceGeneratorSchema } from './schema';
-
-const addInitTasks = async (
-  tree: Tree,
-  options: ServiceGeneratorSchema,
-  versions: Versions,
-): Promise<GeneratorCallback> => {
-  const initTasks: GeneratorCallback[] = [];
-  initTasks.push(
-    await jsInitGenerator(tree, {
-      js: false,
-      skipFormat: false,
-      skipPackageJson: false,
-      tsConfigName: 'tsconfig.base.json',
-    }),
-  );
-  initTasks.push(await jestInitGenerator(tree, { testEnvironment: 'node' }));
-  initTasks.push(addTsDependencies(tree, versions));
-
-  if (!options.skipFormat) {
-    await formatFiles(tree);
-  }
-
-  return runTasksInSerial(...initTasks);
-};
+import { CdkLibSchema } from './schema';
 
 const addESLint = async (
   tree: Tree,
-  options: ServiceGeneratorSchema,
+  options: CdkLibSchema,
   projectRoot: string,
 ): Promise<GeneratorCallback> => {
   return await lintProjectGenerator(tree, {
     linter: Linter.EsLint,
-    project: options.serviceName,
+    project: options.libName,
     tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.app.json')],
     eslintFilePatterns: [`${projectRoot}/**/*.ts`],
     unitTestRunner: 'jest',
@@ -69,11 +37,11 @@ const addESLint = async (
 
 const addJest = async (
   tree: Tree,
-  options: ServiceGeneratorSchema,
+  options: CdkLibSchema,
 ): Promise<GeneratorCallback> => {
-  return await jestProjectGenerator(tree, {
+  return await configurationGenerator(tree, {
     ...options,
-    project: options.serviceName,
+    project: options.libName,
     setupFile: 'none',
     skipSerializers: true,
     supportTsx: false,
@@ -83,34 +51,32 @@ const addJest = async (
   });
 };
 
-export const serviceGenerator = async (
+export const cdkLibGenerator = async (
   tree: Tree,
-  options: ServiceGeneratorSchema,
+  options: CdkLibSchema,
 ): Promise<GeneratorCallback> => {
-  const appsDir = getWorkspaceLayout(tree).appsDir;
-  const versions = getVersions();
-  const projectName = names(options.serviceName).fileName;
-  const projectRoot = joinPathFragments(appsDir, projectName);
+  const libsDir = getWorkspaceLayout(tree).libsDir;
+  const projectName = names(options.libName).fileName;
+  const projectRoot = joinPathFragments(libsDir, projectName);
 
   const tasks: GeneratorCallback[] = [];
 
-  tasks.push(await addInitTasks(tree, options, versions));
-  tasks.push(await addPluginRuntimeDependencies(tree, versions));
+  const initTask = await initGenerator(tree, {
+    skipFormat: true,
+  });
 
-  const terraformOptions = {
-    serviceNameTf: toTerraformName(options.serviceName),
-  };
+  tasks.push(initTask);
 
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
-    ...terraformOptions,
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: ''
   });
 
   addProjectConfiguration(
     tree,
-    options.serviceName,
+    options.libName,
     createProjectConfiguration(projectRoot, options),
   );
 
@@ -124,4 +90,4 @@ export const serviceGenerator = async (
   return runTasksInSerial(...tasks);
 };
 
-export default serviceGenerator;
+export default cdkLibGenerator;

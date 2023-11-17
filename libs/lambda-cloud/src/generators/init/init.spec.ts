@@ -27,7 +27,7 @@ describe('init', () => {
         [existing]: existingVersion,
       },
     );
-    await initGenerator(tree, {});
+    await initGenerator(tree, {skipFormat: true});
 
     const packageJson = readJson(tree, 'package.json');
 
@@ -42,8 +42,8 @@ describe('init', () => {
   });
 
   test('Should add jest config.', async () => {
-    await initGenerator(tree, {});
-    expect(tree.exists('jest.config.js')).toEqual(true);
+    await initGenerator(tree, {skipFormat: true});
+    expect(tree.exists('jest.config.ts')).toEqual(true);
   });
 
   test('Should not fail when dependencies is missing from package.json and no other init generators are invoked.', async () => {
@@ -52,6 +52,6 @@ describe('init', () => {
       return json;
     });
 
-    await expect(initGenerator(tree, {})).resolves.toBeTruthy();
+    await expect(initGenerator(tree, {skipFormat: true})).resolves.toBeTruthy();
   });
 });

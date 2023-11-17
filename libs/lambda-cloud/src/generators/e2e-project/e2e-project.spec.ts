@@ -15,9 +15,11 @@ describe('e2eProjectGenerator', () => {
     await cdkAppGenerator(tree, {
       appName: 'test',
       appType: AppType.generic,
+      skipFormat: true
     });
     await e2eProjectGenerator(tree, {
       project: 'test',
+      skipFormat: true
     });
 
     expect(tree.exists(`test-e2e/src/api/api.spec.ts`)).toBeTruthy();
@@ -27,9 +29,11 @@ describe('e2eProjectGenerator', () => {
     await cdkAppGenerator(tree, {
       appName: 'test',
       appType: AppType.lambda,
+      skipFormat: true
     });
     await e2eProjectGenerator(tree, {
       project: 'test',
+      skipFormat: true
     });
 
     expect(tree.exists(`test-e2e/src/api/api.spec.ts`)).toBeTruthy();

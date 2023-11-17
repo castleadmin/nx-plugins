@@ -3,8 +3,9 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "types": ["jest", "node"],
-    "esModuleInterop": true
+    "target": "es2022",
+    "lib": ["ES2022"],
+    "types": ["jest", "node"]
   },
   "include": [
     "jest.config.ts",

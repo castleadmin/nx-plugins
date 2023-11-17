@@ -14,6 +14,8 @@ describe('getVersions', () => {
       'aws-cdk-lib': expect.stringMatching(semanticVersionMinorUpgrade),
       constructs: expect.stringMatching(semanticVersionMinorUpgrade),
       esbuild: expect.stringMatching(semanticVersionMinorUpgrade),
+      // E2E
+      axios: expect.stringMatching(semanticVersionMinorUpgrade),
     });
   });
 });
