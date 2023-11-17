@@ -27,7 +27,7 @@ describe('init', () => {
         [existing]: existingVersion,
       },
     );
-    await initGenerator(tree, {skipFormat: true});
+    await initGenerator(tree, { skipFormat: true });
 
     const packageJson = readJson(tree, 'package.json');
 
@@ -42,7 +42,7 @@ describe('init', () => {
   });
 
   test('Should add jest config.', async () => {
-    await initGenerator(tree, {skipFormat: true});
+    await initGenerator(tree, { skipFormat: true });
     expect(tree.exists('jest.config.ts')).toEqual(true);
   });
 
@@ -52,6 +52,14 @@ describe('init', () => {
       return json;
     });
 
-    await expect(initGenerator(tree, {skipFormat: true})).resolves.toBeTruthy();
+    const generator = await initGenerator(tree, { skipFormat: true });
+
+    expect(generator).toBeTruthy();
+  });
+
+  test('Should format the project files and run successful.', async () => {
+    const generator = await initGenerator(tree, { skipFormat: false });
+
+    expect(generator).toBeTruthy();
   });
 });

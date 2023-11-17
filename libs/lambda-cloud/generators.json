@@ -1,24 +1,28 @@
 {
   "generators": {
-    "handler": {
-      "factory": "./src/generators/handler/generator",
-      "schema": "./src/generators/handler/schema.json",
-      "description": "handler generator"
+    "cdk-app": {
+      "factory": "./src/generators/cdk-app/generator",
+      "schema": "./src/generators/cdk-app/schema.json",
+      "description": "Creates an AWS CDK application.",
+      "x-type": "application"
     },
-    "s3-upload": {
-      "factory": "./src/generators/s3-upload/generator",
-      "schema": "./src/generators/s3-upload/schema.json",
-      "description": "s3-upload generator"
+    "cdk-lib": {
+      "factory": "./src/generators/cdk-lib/generator",
+      "schema": "./src/generators/cdk-lib/schema.json",
+      "description": "Creates an AWS CDK constructs library.",
+      "x-type": "library"
     },
-    "service": {
-      "factory": "./src/generators/service/generator",
-      "schema": "./src/generators/service/schema.json",
-      "description": "service generator"
+    "init": {
+      "factory": "./src/generators/init/init",
+      "schema": "./src/generators/init/schema.json",
+      "description": "Initialize the plugin.",
+      "hidden": true
     },
-    "shared": {
-      "factory": "./src/generators/shared/generator",
-      "schema": "./src/generators/shared/schema.json",
-      "description": "shared generator"
+    "e2e-project": {
+      "factory": "./src/generators/e2e-project/e2e-project",
+      "schema": "./src/generators/e2e-project/schema.json",
+      "description": "Creates an e2e project for an application.",
+      "hidden": true
     }
   }
 }

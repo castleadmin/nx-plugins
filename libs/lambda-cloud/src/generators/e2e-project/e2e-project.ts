@@ -68,11 +68,11 @@ export async function e2eProjectGenerator(
     },
   });
 
-  generateFiles(tree, resolve(__dirname, 'files/server/common'), projectRoot, {
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
     ...names(options.project),
     projectName,
-    offset: offsetFromRoot(projectRoot),
+    offsetFromRoot: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
   });

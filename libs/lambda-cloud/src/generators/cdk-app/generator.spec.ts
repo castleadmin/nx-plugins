@@ -1,4 +1,5 @@
-import {Tree} from '@nx/devkit';
+import { faker } from '@faker-js/faker';
+import { Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { AppType } from './app-type';
 import cdkAppGenerator from './generator';
@@ -9,26 +10,44 @@ describe('cdk-app generator', () => {
 
   beforeEach(() => {
     tree = createTreeWithEmptyWorkspace();
+    tree.write(
+      'nx.json',
+      JSON.stringify(
+        {
+          $schema: './node_modules/nx/schemas/nx-schema.json',
+          workspaceLayout: {
+            appsDir: 'apps',
+            libsDir: 'libs',
+          },
+        },
+        null,
+        2,
+      ),
+    );
   });
 
   describe('Given an app generator of type generic,', () => {
     let options: CdkAppSchema;
 
     beforeEach(() => {
-      options = { appName: 'test', appType: AppType.generic, skipFormat: true };
+      options = {
+        appName: faker.lorem.word().toLowerCase(),
+        appType: AppType.generic,
+        skipFormat: true,
+      };
     });
 
     test('should generate a cdk directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists('cdk')).toBe(true);
-      expect(tree.isFile('cdk')).toBe(false);
+      expect(tree.exists(`apps/${options.appName}/cdk`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/cdk`)).toBe(false);
     });
 
     test('should not generate a src directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists('src')).toBe(false);
+      expect(tree.exists(`apps/${options.appName}/src`)).toBe(false);
     });
   });
 
@@ -36,21 +55,33 @@ describe('cdk-app generator', () => {
     let options: CdkAppSchema;
 
     beforeEach(() => {
-      options = { appName: 'test', appType: AppType.lambda, skipFormat: true };
+      options = {
+        appName: faker.lorem.word().toLowerCase(),
+        appType: AppType.lambda,
+        skipFormat: true,
+      };
     });
 
     test('should generate a cdk directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists('cdk')).toBe(true);
-      expect(tree.isFile('cdk')).toBe(false);
+      expect(tree.exists(`apps/${options.appName}/cdk`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/cdk`)).toBe(false);
     });
 
     test('should generate a src directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists('src')).toBe(true);
-      expect(tree.isFile('src')).toBe(false);
+      expect(tree.exists(`apps/${options.appName}/src`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/src`)).toBe(false);
+    });
+
+    test('should format the project files and run successful.', async () => {
+      options.skipFormat = false;
+
+      const generator = await cdkAppGenerator(tree, options);
+
+      expect(generator).toBeTruthy();
     });
   });
 });

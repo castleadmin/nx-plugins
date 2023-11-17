@@ -1,7 +1,6 @@
+import { faker } from '@faker-js/faker';
 import { Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
-import { AppType } from '../cdk-app/app-type';
-import cdkAppGenerator from '../cdk-app/generator';
 import { e2eProjectGenerator } from './e2e-project';
 
 describe('e2eProjectGenerator', () => {
@@ -9,33 +8,42 @@ describe('e2eProjectGenerator', () => {
 
   beforeEach(async () => {
     tree = createTreeWithEmptyWorkspace();
+    tree.write(
+      'nx.json',
+      JSON.stringify(
+        {
+          $schema: './node_modules/nx/schemas/nx-schema.json',
+          workspaceLayout: {
+            appsDir: 'apps',
+            libsDir: 'libs',
+          },
+        },
+        null,
+        2,
+      ),
+    );
   });
 
-  test('Should generate default spec for a generic app.', async () => {
-    await cdkAppGenerator(tree, {
-      appName: 'test',
-      appType: AppType.generic,
-      skipFormat: true
-    });
+  test('Should generate the example spec.', async () => {
+    const project = faker.lorem.word().toLowerCase();
     await e2eProjectGenerator(tree, {
-      project: 'test',
-      skipFormat: true
+      project,
+      skipFormat: true,
     });
 
-    expect(tree.exists(`test-e2e/src/api/api.spec.ts`)).toBeTruthy();
+    expect(
+      tree.exists(`apps/${project}-e2e/src/${project}/${project}.spec.ts`),
+    ).toBeTruthy();
   });
 
-  test('Should generate default spec for a lambda app.', async () => {
-    await cdkAppGenerator(tree, {
-      appName: 'test',
-      appType: AppType.lambda,
-      skipFormat: true
-    });
-    await e2eProjectGenerator(tree, {
-      project: 'test',
-      skipFormat: true
+  test('Should format the project files and run successful.', async () => {
+    const project = faker.lorem.word().toLowerCase();
+
+    const generator = await e2eProjectGenerator(tree, {
+      project,
+      skipFormat: false,
     });
 
-    expect(tree.exists(`test-e2e/src/api/api.spec.ts`)).toBeTruthy();
+    expect(generator).toBeTruthy();
   });
 });

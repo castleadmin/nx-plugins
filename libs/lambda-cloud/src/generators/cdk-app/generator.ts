@@ -111,7 +111,7 @@ export const cdkAppGenerator = async (
       ...options,
       offset: offsetFromRoot(projectRoot),
       rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
-      tmpl: ''
+      tmpl: '',
     },
   );
 

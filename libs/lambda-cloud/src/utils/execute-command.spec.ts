@@ -31,7 +31,7 @@ describe('executeCommand', () => {
       () =>
         ({
           on,
-        }) as unknown as ChildProcess,
+        } as unknown as ChildProcess),
     );
     command = faker.word.words();
     cwd = faker.system.directoryPath();
