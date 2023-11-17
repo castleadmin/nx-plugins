@@ -14,7 +14,7 @@ import { SharedGeneratorSchema } from './schema';
 
 export const sharedGenerator = async (
   tree: Tree,
-  options: SharedGeneratorSchema
+  options: SharedGeneratorSchema,
 ): Promise<void> => {
   const appsDir = getWorkspaceLayout(tree).appsDir;
   const projectName = names(options.sharedResourcesName).fileName;
@@ -32,7 +32,7 @@ export const sharedGenerator = async (
   addProjectConfiguration(
     tree,
     options.sharedResourcesName,
-    createProjectConfiguration(projectRoot, options)
+    createProjectConfiguration(projectRoot, options),
   );
 
   if (!options.skipFormat) {

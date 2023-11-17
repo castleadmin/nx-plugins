@@ -7,7 +7,7 @@ import { EventExecutorSchema } from './schema';
 
 const createEventFile = async (
   fileResolved: string,
-  data: string
+  data: string,
 ): Promise<void> => {
   await mkdir(dirname(fileResolved), { recursive: true });
   await writeFile(fileResolved, data, {
@@ -17,7 +17,7 @@ const createEventFile = async (
 
 export const runExecutor = async (
   options: EventExecutorSchema,
-  context: ExecutorContext
+  context: ExecutorContext,
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
 

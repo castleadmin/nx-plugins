@@ -6,7 +6,7 @@ import { InvokeExecutorSchema } from './schema';
 
 export const runExecutor = async (
   options: InvokeExecutorSchema,
-  context: ExecutorContext
+  context: ExecutorContext,
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
 
@@ -16,12 +16,12 @@ export const runExecutor = async (
 
   const workingDirectoryResolved = join(
     contextRootResolved,
-    terraformDirectory
+    terraformDirectory,
   );
 
   const samConfigurationRelative = relative(
     workingDirectoryResolved,
-    join(contextRootResolved, samConfiguration)
+    join(contextRootResolved, samConfiguration),
   );
 
   const invokeCommand = `sam local invoke --config-file "${samConfigurationRelative}"${

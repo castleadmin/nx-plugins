@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "cdk-lib",
+  "title": "lambda-cloud cdk lib generator",
+  "type": "object",
+  "properties": {
+    "libName": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
+      "description": "Constructs library name",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use for the newly generated constructs library?"
+    },
+    "skipFormat": {
+      "description": "Skip formatting files.",
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["libName"],
+  "additionalProperties": false
+}

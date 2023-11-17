@@ -5,7 +5,7 @@ import { InitExecutorSchema } from './schema';
 
 export const runExecutor = async (
   options: InitExecutorSchema,
-  context: ExecutorContext
+  context: ExecutorContext,
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
   const {

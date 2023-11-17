@@ -31,20 +31,20 @@ jest.mock('node:path', () => {
 
 export const useUnixPath = () => {
   (basename as jest.MockedFunction<typeof basename>).mockImplementation(
-    posix.basename
+    posix.basename,
   );
   (dirname as jest.MockedFunction<typeof dirname>).mockImplementation(
-    posix.dirname
+    posix.dirname,
   );
   (join as jest.MockedFunction<typeof join>).mockImplementation(posix.join);
   (normalize as jest.MockedFunction<typeof normalize>).mockImplementation(
-    posix.normalize
+    posix.normalize,
   );
   (relative as jest.MockedFunction<typeof relative>).mockImplementation(
-    posix.relative
+    posix.relative,
   );
   (resolve as jest.MockedFunction<typeof resolve>).mockImplementation(
-    posix.resolve
+    posix.resolve,
   );
   (
     Object.getOwnPropertyDescriptor(nodePath, 'sep')
@@ -53,20 +53,20 @@ export const useUnixPath = () => {
 };
 export const useWindowsPath = () => {
   (basename as jest.MockedFunction<typeof basename>).mockImplementation(
-    win32.basename
+    win32.basename,
   );
   (dirname as jest.MockedFunction<typeof dirname>).mockImplementation(
-    win32.dirname
+    win32.dirname,
   );
   (join as jest.MockedFunction<typeof join>).mockImplementation(win32.join);
   (normalize as jest.MockedFunction<typeof normalize>).mockImplementation(
-    win32.normalize
+    win32.normalize,
   );
   (relative as jest.MockedFunction<typeof relative>).mockImplementation(
-    win32.relative
+    win32.relative,
   );
   (resolve as jest.MockedFunction<typeof resolve>).mockImplementation(
-    win32.resolve
+    win32.resolve,
   );
   (
     Object.getOwnPropertyDescriptor(nodePath, 'sep')

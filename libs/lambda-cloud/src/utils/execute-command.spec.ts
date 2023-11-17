@@ -31,7 +31,7 @@ describe('executeCommand', () => {
       () =>
         ({
           on,
-        } as unknown as ChildProcess)
+        }) as unknown as ChildProcess,
     );
     command = faker.word.words();
     cwd = faker.system.directoryPath();
@@ -141,7 +141,7 @@ describe('executeCommandBufferResults', () => {
     expect(execMocked).toHaveBeenCalledWith(
       command,
       { cwd, shell: undefined },
-      expect.anything()
+      expect.anything(),
     );
     expect(stdout).toBe(commandStdout);
     expect(stderr).toBe(commandStderr);
@@ -163,7 +163,7 @@ describe('executeCommandBufferResults', () => {
     expect(execMocked).toHaveBeenCalledWith(
       command,
       { cwd, shell: '/bin/bash' },
-      expect.anything()
+      expect.anything(),
     );
     expect(stdout).toBe(commandStdout);
     expect(stderr).toBe(commandStderr);
@@ -177,9 +177,9 @@ describe('executeCommandBufferResults', () => {
             cb(
               new Error('Test error') as ExecException,
               commandStdout,
-              commandStderr
+              commandStderr,
             ),
-          0
+          0,
         );
 
       return undefined as unknown as ChildProcess;
@@ -189,14 +189,14 @@ describe('executeCommandBufferResults', () => {
       executeCommandBufferResults(command, {
         cwd,
         shell: undefined,
-      })
+      }),
     ).rejects.toBeInstanceOf(Error);
 
     expect(execMocked).toHaveBeenCalledTimes(1);
     expect(execMocked).toHaveBeenCalledWith(
       command,
       { cwd, shell: undefined },
-      expect.anything()
+      expect.anything(),
     );
   });
 });

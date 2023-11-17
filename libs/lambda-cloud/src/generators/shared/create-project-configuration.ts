@@ -4,7 +4,7 @@ import { SharedGeneratorSchema } from './schema';
 
 export const createProjectConfiguration = (
   projectRoot: string,
-  options: SharedGeneratorSchema
+  options: SharedGeneratorSchema,
 ): ProjectConfiguration => {
   const sharedResourcesNameTf = toTerraformName(options.sharedResourcesName);
   const terraformDirectoryPath = joinPathFragments(projectRoot, 'terraform');

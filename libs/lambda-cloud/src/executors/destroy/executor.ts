@@ -5,7 +5,7 @@ import { DestroyExecutorSchema } from './schema';
 
 export const runExecutor = async (
   options: DestroyExecutorSchema,
-  context: ExecutorContext
+  context: ExecutorContext,
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
   const { workspace, interactive, args, terraformDirectory, shell } = options;

@@ -11,7 +11,7 @@ export const appendFragment = async <T, U>(
   paths: {
     appendFilePath: string;
     fragmentPathResolved: string;
-  }
+  },
 ): Promise<void> => {
   const fragmentTemplate = await readFile(paths.fragmentPathResolved, {
     encoding: 'utf8',
@@ -30,6 +30,6 @@ export const appendFragment = async <T, U>(
   const appendFileContent = tree.read(paths.appendFilePath, 'utf8');
   tree.write(
     paths.appendFilePath,
-    appendFileContent ? `${appendFileContent}\r\n${fragment}` : fragment
+    appendFileContent ? `${appendFileContent}\r\n${fragment}` : fragment,
   );
 };

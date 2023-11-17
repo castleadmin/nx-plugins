@@ -32,20 +32,20 @@ describe('appendFragment', () => {
     } as unknown as Tree;
     originalContent = faker.lorem.lines(10);
     fragmentContent = `${faker.lorem.lines(
-      1
+      1,
     )} <%= testVariable1 %> ${faker.lorem.lines(
-      3
+      3,
     )} <%= testVariable2 %> ${faker.lorem.lines(2)}`;
     console.log('originalContent', originalContent);
 
     (readFile as jest.MockedFunction<typeof readFile>).mockImplementation(() =>
-      Promise.resolve(fragmentContent)
+      Promise.resolve(fragmentContent),
     );
     (tree.exists as jest.MockedFunction<typeof tree.exists>).mockImplementation(
-      () => true
+      () => true,
     );
     (tree.read as jest.MockedFunction<typeof tree.read>).mockImplementation(
-      () => originalContent
+      () => originalContent,
     );
 
     testVariable1 = faker.word.sample();
@@ -67,7 +67,7 @@ describe('appendFragment', () => {
       {
         appendFilePath: appendPath,
         fragmentPathResolved: fragmentPath,
-      }
+      },
     );
 
     expect(tree.write).toHaveBeenCalledTimes(1);
@@ -75,13 +75,13 @@ describe('appendFragment', () => {
       appendPath,
       `${originalContent}\r\n${fragmentContent
         .replace('<%= testVariable1 %>', testVariable1)
-        .replace('<%= testVariable2 %>', testVariable2)}`
+        .replace('<%= testVariable2 %>', testVariable2)}`,
     );
   });
 
   test('Should only write the fragment content, if the original content is empty.', async () => {
     (tree.read as jest.MockedFunction<typeof tree.read>).mockImplementationOnce(
-      () => ''
+      () => '',
     );
 
     await appendFragment(
@@ -97,7 +97,7 @@ describe('appendFragment', () => {
       {
         appendFilePath: appendPath,
         fragmentPathResolved: fragmentPath,
-      }
+      },
     );
 
     expect(tree.write).toHaveBeenCalledTimes(1);
@@ -105,7 +105,7 @@ describe('appendFragment', () => {
       appendPath,
       `${fragmentContent
         .replace('<%= testVariable1 %>', testVariable1)
-        .replace('<%= testVariable2 %>', testVariable2)}`
+        .replace('<%= testVariable2 %>', testVariable2)}`,
     );
   });
 
@@ -128,8 +128,8 @@ describe('appendFragment', () => {
         {
           appendFilePath: appendPath,
           fragmentPathResolved: fragmentPath,
-        }
-      )
+        },
+      ),
     ).rejects.toBeInstanceOf(Error);
 
     expect(tree.write).toHaveBeenCalledTimes(0);

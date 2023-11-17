@@ -10,5 +10,11 @@
     "importHelpers": true
   },
   "include": ["cdk/**/*.ts", "src/**/*.ts"],
-  "exclude": ["jest.config.ts", "cdk/**/*.spec.ts", "cdk/**/*.test.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": [
+    "jest.config.ts",
+    "cdk/**/*.spec.ts",
+    "cdk/**/*.test.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }

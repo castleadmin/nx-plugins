@@ -14,7 +14,7 @@ import { S3UploadGeneratorSchema } from './schema';
 
 export async function s3UploadGenerator(
   tree: Tree,
-  options: S3UploadGeneratorSchema
+  options: S3UploadGeneratorSchema,
 ): Promise<void> {
   const appsDir = getWorkspaceLayout(tree).appsDir;
   const versions = getVersions();
@@ -37,7 +37,7 @@ export async function s3UploadGenerator(
       __dirname,
       'append-fragments',
       'terraform',
-      'main.tf'
+      'main.tf',
     ),
     appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf'),
   });
@@ -47,7 +47,7 @@ export async function s3UploadGenerator(
       __dirname,
       'append-fragments',
       'terraform',
-      'outputs.tf'
+      'outputs.tf',
     ),
     appendFilePath: joinPathFragments(projectRoot, 'terraform', 'outputs.tf'),
   });

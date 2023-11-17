@@ -37,7 +37,7 @@ describe('Event Executor', () => {
       Promise.resolve({
         stdout: JSON.stringify({ test: 'event' }, null, 2),
         stderr: '',
-      })
+      }),
     );
   });
 
@@ -73,7 +73,7 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -91,7 +91,7 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -115,7 +115,7 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -137,7 +137,7 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -157,12 +157,12 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(1);
         expect(mkdir).toHaveBeenCalledWith(
           '/home/castleadmin/projects/awesome/apps/test/events/abc/def',
-          { recursive: true }
+          { recursive: true },
         );
         expect(writeFile).toHaveBeenCalledTimes(1);
         expect(writeFile).toHaveBeenCalledWith(
@@ -170,7 +170,7 @@ describe('Event Executor', () => {
           JSON.stringify({ test: 'event' }, null, 2),
           {
             encoding: 'utf8',
-          }
+          },
         );
       });
 
@@ -186,7 +186,7 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -206,7 +206,7 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: '/bin/bash',
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -224,7 +224,7 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -247,7 +247,7 @@ describe('Event Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -287,7 +287,7 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -305,7 +305,7 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -329,7 +329,7 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -351,7 +351,7 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -371,12 +371,12 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(1);
         expect(mkdir).toHaveBeenCalledWith(
           'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events\\abc\\def',
-          { recursive: true }
+          { recursive: true },
         );
         expect(writeFile).toHaveBeenCalledTimes(1);
         expect(writeFile).toHaveBeenCalledWith(
@@ -384,7 +384,7 @@ describe('Event Executor', () => {
           JSON.stringify({ test: 'event' }, null, 2),
           {
             encoding: 'utf8',
-          }
+          },
         );
       });
 
@@ -400,7 +400,7 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -420,7 +420,7 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: 'powershell.exe',
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -438,7 +438,7 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);
@@ -461,7 +461,7 @@ describe('Event Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\events',
             shell: undefined,
-          }
+          },
         );
         expect(mkdir).toHaveBeenCalledTimes(0);
         expect(writeFile).toHaveBeenCalledTimes(0);

@@ -3,7 +3,7 @@ import { additionalArgsToString } from './additional-args-to-string';
 describe('additionalArgsToString', () => {
   test('Should join positional arguments', () => {
     expect(additionalArgsToString(['ab', 'c12', '34-Bv'], {})).toBe(
-      'ab c12 34-Bv'
+      'ab c12 34-Bv',
     );
   });
 
@@ -13,7 +13,7 @@ describe('additionalArgsToString', () => {
         ab: 'de5456',
         L45: 34,
         c: true,
-      })
+      }),
     ).toBe('--ab "de5456" --L45 34 -c');
   });
 
@@ -23,7 +23,7 @@ describe('additionalArgsToString', () => {
         ab: 'de5456',
         L45: 34,
         c: true,
-      })
+      }),
     ).toBe('ab c12 34-Bv --ab "de5456" --L45 34 -c');
   });
 
@@ -37,7 +37,7 @@ describe('additionalArgsToString', () => {
         t: 'test',
         L: 34,
         c: true,
-      })
+      }),
     ).toBe('-t "test" -L 34 -c');
   });
 
@@ -47,7 +47,7 @@ describe('additionalArgsToString', () => {
         tea: 'test',
         Long: 34,
         channel: true,
-      })
+      }),
     ).toBe('--tea "test" --Long 34 --channel');
   });
 
@@ -58,7 +58,7 @@ describe('additionalArgsToString', () => {
         b: false,
         cake: true,
         direction: false,
-      })
+      }),
     ).toBe('-a -b false --cake --no-direction');
   });
 
@@ -67,7 +67,7 @@ describe('additionalArgsToString', () => {
       additionalArgsToString(undefined, {
         a: 'a34',
         cake: 'cake 45',
-      })
+      }),
     ).toBe('-a "a34" --cake "cake 45"');
   });
 
@@ -76,7 +76,7 @@ describe('additionalArgsToString', () => {
       additionalArgsToString(undefined, {
         a: 3,
         cake: 56046,
-      })
+      }),
     ).toBe('-a 3 --cake 56046');
   });
 });

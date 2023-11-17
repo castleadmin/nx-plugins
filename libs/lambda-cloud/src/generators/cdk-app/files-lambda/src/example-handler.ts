@@ -7,7 +7,7 @@ import { ExampleResult } from './example-result';
  */
 export const exampleHandler = async (
   event: ExampleEvent,
-  context: Context
+  context: Context,
 ): Promise<ExampleResult> => {
   console.log('event', '\n', JSON.stringify(event));
   console.log('context', '\n', JSON.stringify(context));

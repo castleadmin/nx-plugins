@@ -62,7 +62,7 @@ describe('Format Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -78,7 +78,7 @@ describe('Format Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -96,7 +96,7 @@ describe('Format Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: '/bin/bash',
-          }
+          },
         );
       });
 
@@ -112,7 +112,7 @@ describe('Format Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -131,7 +131,7 @@ describe('Format Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -168,7 +168,7 @@ describe('Format Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -184,7 +184,7 @@ describe('Format Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -202,7 +202,7 @@ describe('Format Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: 'powershell.exe',
-          }
+          },
         );
       });
 
@@ -218,7 +218,7 @@ describe('Format Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -237,7 +237,7 @@ describe('Format Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });

@@ -14,7 +14,7 @@ import { HandlerGeneratorSchema } from './schema';
 
 export async function handlerGenerator(
   tree: Tree,
-  options: HandlerGeneratorSchema
+  options: HandlerGeneratorSchema,
 ): Promise<void> {
   const appsDir = getWorkspaceLayout(tree).appsDir;
   const versions = getVersions();
@@ -39,7 +39,7 @@ export async function handlerGenerator(
       __dirname,
       'append-fragments',
       'terraform',
-      'main.tf'
+      'main.tf',
     ),
     appendFilePath: joinPathFragments(projectRoot, 'terraform', 'main.tf'),
   });

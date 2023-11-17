@@ -63,7 +63,7 @@ describe('Invoke Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -79,7 +79,7 @@ describe('Invoke Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -99,7 +99,7 @@ describe('Invoke Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -118,7 +118,7 @@ describe('Invoke Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -136,7 +136,7 @@ describe('Invoke Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: '/bin/bash',
-          }
+          },
         );
       });
 
@@ -152,7 +152,7 @@ describe('Invoke Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -171,7 +171,7 @@ describe('Invoke Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -209,7 +209,7 @@ describe('Invoke Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -225,7 +225,7 @@ describe('Invoke Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -245,7 +245,7 @@ describe('Invoke Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -264,7 +264,7 @@ describe('Invoke Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -282,7 +282,7 @@ describe('Invoke Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: 'powershell.exe',
-          }
+          },
         );
       });
 
@@ -298,7 +298,7 @@ describe('Invoke Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -317,7 +317,7 @@ describe('Invoke Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });

@@ -64,7 +64,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -80,7 +80,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -98,7 +98,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -114,7 +114,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -132,7 +132,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -148,7 +148,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -166,7 +166,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: '/bin/bash',
-          }
+          },
         );
       });
 
@@ -182,7 +182,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -201,7 +201,7 @@ describe('Destroy Executor', () => {
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test/terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -240,7 +240,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -256,7 +256,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -274,7 +274,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -290,7 +290,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -308,7 +308,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
 
@@ -324,7 +324,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -342,7 +342,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: 'powershell.exe',
-          }
+          },
         );
       });
 
@@ -358,7 +358,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });
@@ -377,7 +377,7 @@ describe('Destroy Executor', () => {
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test\\terraform',
             shell: undefined,
-          }
+          },
         );
       });
     });

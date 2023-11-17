@@ -10,10 +10,10 @@ describe('getVersions', () => {
       '@types/aws-lambda': expect.stringMatching(semanticVersionMinorUpgrade),
       '@types/node': expect.stringMatching(semanticVersionMinorUpgrade),
       // CDK
-      'aws-cdk':  expect.stringMatching(semanticVersionMinorUpgrade),
-      'aws-cdk-lib':  expect.stringMatching(semanticVersionMinorUpgrade),
-      constructs:  expect.stringMatching(semanticVersionMinorUpgrade),
-      esbuild:  expect.stringMatching(semanticVersionMinorUpgrade),
+      'aws-cdk': expect.stringMatching(semanticVersionMinorUpgrade),
+      'aws-cdk-lib': expect.stringMatching(semanticVersionMinorUpgrade),
+      constructs: expect.stringMatching(semanticVersionMinorUpgrade),
+      esbuild: expect.stringMatching(semanticVersionMinorUpgrade),
     });
   });
 });

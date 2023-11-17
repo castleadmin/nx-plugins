@@ -5,7 +5,7 @@ export const executeCommand = (
   options: {
     cwd: string;
     shell: string | undefined;
-  }
+  },
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     const { cwd, shell } = options;
@@ -20,8 +20,8 @@ export const executeCommand = (
       if (code !== 0) {
         reject(
           new Error(
-            `Command process exited with error code '${code?.toString()}'.`
-          )
+            `Command process exited with error code '${code?.toString()}'.`,
+          ),
         );
         return;
       }
@@ -40,7 +40,7 @@ export const executeCommandBufferResults = (
   options: {
     cwd: string;
     shell: string | undefined;
-  }
+  },
 ): Promise<{ stdout: string; stderr: string }> => {
   return new Promise((resolve, reject) => {
     const { cwd, shell } = options;
@@ -61,7 +61,7 @@ export const executeCommandBufferResults = (
         }
 
         resolve({ stdout, stderr });
-      }
+      },
     );
   });
 };

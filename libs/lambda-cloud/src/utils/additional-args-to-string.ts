@@ -1,6 +1,6 @@
 export const additionalArgsToString = (
   positionalArgs: string[] | undefined,
-  additionalArgs: { [key: string]: unknown }
+  additionalArgs: { [key: string]: unknown },
 ) => {
   const positionalArgsString = positionalArgs ? positionalArgs.join(' ') : '';
   const additionalArgsString = Object.keys(additionalArgs)
@@ -20,7 +20,7 @@ export const additionalArgsToString = (
 
 const argToString = (
   key: string,
-  additionalArgs: { [key: string]: unknown }
+  additionalArgs: { [key: string]: unknown },
 ): string => {
   let argNameString = key.length === 1 ? `-${key}` : `--${key}`;
   const argValue = additionalArgs[key];

@@ -6,7 +6,7 @@ import { ServeExecutorSchema } from './schema';
 
 export const runExecutor = async (
   options: ServeExecutorSchema,
-  context: ExecutorContext
+  context: ExecutorContext,
 ): Promise<{ success: boolean }> => {
   const contextRootResolved = resolve(context.root);
 
@@ -16,12 +16,12 @@ export const runExecutor = async (
 
   const workingDirectoryResolved = join(
     contextRootResolved,
-    terraformDirectory
+    terraformDirectory,
   );
 
   const samConfigurationRelative = relative(
     workingDirectoryResolved,
-    join(context.root, samConfiguration)
+    join(context.root, samConfiguration),
   );
 
   const samCommand = api ? 'sam local start-api' : 'sam local start-lambda';
