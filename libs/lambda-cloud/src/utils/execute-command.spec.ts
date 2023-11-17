@@ -37,7 +37,7 @@ describe('executeCommand', () => {
     cwd = faker.system.directoryPath();
   });
 
-  it('Should execute the command successfully.', async () => {
+  test('Should execute the command successfully.', async () => {
     const promise = executeCommand(command, {
       cwd,
       shell: undefined,
@@ -55,7 +55,7 @@ describe('executeCommand', () => {
     });
   });
 
-  it('Should use the defined shell.', async () => {
+  test('Should use the defined shell.', async () => {
     const promise = executeCommand(command, {
       cwd,
       shell: '/bin/bash',
@@ -73,7 +73,7 @@ describe('executeCommand', () => {
     });
   });
 
-  it("Should reject if the process exit code isn't 0.", async () => {
+  test("Should reject if the process exit code isn't 0.", async () => {
     const promise = executeCommand(command, {
       cwd,
       shell: undefined,
@@ -91,7 +91,7 @@ describe('executeCommand', () => {
     });
   });
 
-  it('Should reject if an error is thrown.', async () => {
+  test('Should reject if an error is thrown.', async () => {
     const promise = executeCommand(command, {
       cwd,
       shell: undefined,
@@ -125,7 +125,7 @@ describe('executeCommandBufferResults', () => {
     commandStderr = faker.lorem.lines(3);
   });
 
-  it('Should return the stdout and stderr of the command.', async () => {
+  test('Should return the stdout and stderr of the command.', async () => {
     execMocked.mockImplementationOnce((_command, _options, cb) => {
       cb && setTimeout(() => cb(null, commandStdout, commandStderr), 0);
 
@@ -147,7 +147,7 @@ describe('executeCommandBufferResults', () => {
     expect(stderr).toBe(commandStderr);
   });
 
-  it('Should use the defined shell.', async () => {
+  test('Should use the defined shell.', async () => {
     execMocked.mockImplementationOnce((_command, _options, cb) => {
       cb && setTimeout(() => cb(null, commandStdout, commandStderr), 0);
 
@@ -169,7 +169,7 @@ describe('executeCommandBufferResults', () => {
     expect(stderr).toBe(commandStderr);
   });
 
-  it('Should reject if an error occurs.', async () => {
+  test('Should reject if an error occurs.', async () => {
     execMocked.mockImplementationOnce((_command, _options, cb) => {
       cb &&
         setTimeout(

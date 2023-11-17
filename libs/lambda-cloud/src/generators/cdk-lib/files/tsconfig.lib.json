@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "<%= offset %>dist/out-tsc",
+    "module": "es2022",
+    "target": "es2022",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "esModuleInterop": true,
+    "importHelpers": true
+  },
+  "include": ["cdk/**/*.ts"],
+  "exclude": ["jest.config.ts", "cdk/**/*.spec.ts", "cdk/**/*.test.ts"]
+}

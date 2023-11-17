@@ -80,31 +80,31 @@ describe('path.mock', () => {
       useUnixPath();
     });
 
-    it('basename', () => {
+    test('basename', () => {
       expect(basename(normalize('a/b/c/test.json'))).toBe('test.json');
     });
 
-    it('dirname', () => {
+    test('dirname', () => {
       expect(dirname(normalize('a/b/c/test.json'))).toBe('a/b/c');
     });
 
-    it('join', () => {
+    test('join', () => {
       expect(join('a/b/c', 'd/e')).toBe('a/b/c/d/e');
     });
 
-    it('normalize', () => {
+    test('normalize', () => {
       expect(normalize('a/b/c/./d/e')).toBe('a/b/c/d/e');
     });
 
-    it('relative', () => {
+    test('relative', () => {
       expect(relative('/a/b/d/e', '/a/b/c')).toBe('../../c');
     });
 
-    it('resolve', () => {
+    test('resolve', () => {
       expect(resolve('/', 'a/b/c', 'd/e')).toBe('/a/b/c/d/e');
     });
 
-    it('sep', () => {
+    test('sep', () => {
       expect(sep).toBe('/');
     });
   });
@@ -114,31 +114,31 @@ describe('path.mock', () => {
       useWindowsPath();
     });
 
-    it('basename', () => {
+    test('basename', () => {
       expect(basename(normalize('a/b\\c/test.json'))).toBe('test.json');
     });
 
-    it('dirname', () => {
+    test('dirname', () => {
       expect(dirname(normalize('a/b\\c/test.json'))).toBe('a\\b\\c');
     });
 
-    it('join', () => {
+    test('join', () => {
       expect(join('a/b/c', 'd\\e')).toBe('a\\b\\c\\d\\e');
     });
 
-    it('normalize', () => {
+    test('normalize', () => {
       expect(normalize('a/b/c\\.\\d\\e')).toBe('a\\b\\c\\d\\e');
     });
 
-    it('relative', () => {
+    test('relative', () => {
       expect(relative('C:\\a/b\\d/e', 'C:\\a\\b/c')).toBe('..\\..\\c');
     });
 
-    it('resolve', () => {
+    test('resolve', () => {
       expect(resolve('C:\\', 'a/b/c', 'd\\e')).toBe('C:\\a\\b\\c\\d\\e');
     });
 
-    it('sep', () => {
+    test('sep', () => {
       expect(sep).toBe('\\');
     });
   });

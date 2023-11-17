@@ -53,7 +53,7 @@ describe('appendFragment', () => {
     testVariable2 = faker.word.sample();
   });
 
-  it('Should concatenate the original content with the fragment content.', async () => {
+  test('Should concatenate the original content with the fragment content.', async () => {
     await appendFragment(
       tree,
       {
@@ -79,7 +79,7 @@ describe('appendFragment', () => {
     );
   });
 
-  it('Should only write the fragment content, if the original content is empty.', async () => {
+  test('Should only write the fragment content, if the original content is empty.', async () => {
     (tree.read as jest.MockedFunction<typeof tree.read>).mockImplementationOnce(
       () => ''
     );
@@ -109,7 +109,7 @@ describe('appendFragment', () => {
     );
   });
 
-  it("Should throw an error, if the append file doesn't exist.", async () => {
+  test("Should throw an error, if the append file doesn't exist.", async () => {
     (
       tree.exists as jest.MockedFunction<typeof tree.exists>
     ).mockImplementationOnce(() => false);

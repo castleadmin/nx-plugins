@@ -8,7 +8,7 @@ import {
 } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
-import {resolve} from "node:path";
+import { resolve } from 'node:path';
 
 export interface ExampleStackProps extends StackProps {
   // Define stack properties here

@@ -1,13 +1,13 @@
 import { additionalArgsToString } from './additional-args-to-string';
 
 describe('additionalArgsToString', () => {
-  it('Should join positional arguments', () => {
+  test('Should join positional arguments', () => {
     expect(additionalArgsToString(['ab', 'c12', '34-Bv'], {})).toBe(
       'ab c12 34-Bv'
     );
   });
 
-  it('Should join additional arguments', () => {
+  test('Should join additional arguments', () => {
     expect(
       additionalArgsToString(undefined, {
         ab: 'de5456',
@@ -17,7 +17,7 @@ describe('additionalArgsToString', () => {
     ).toBe('--ab "de5456" --L45 34 -c');
   });
 
-  it('Should join positional and additional arguments', () => {
+  test('Should join positional and additional arguments', () => {
     expect(
       additionalArgsToString(['ab', 'c12', '34-Bv'], {
         ab: 'de5456',
@@ -27,11 +27,11 @@ describe('additionalArgsToString', () => {
     ).toBe('ab c12 34-Bv --ab "de5456" --L45 34 -c');
   });
 
-  it('Should return the empty string if there are no arguments', () => {
+  test('Should return the empty string if there are no arguments', () => {
     expect(additionalArgsToString(undefined, {})).toBe('');
   });
 
-  it('Should convert single-character additional arguments to alias options', () => {
+  test('Should convert single-character additional arguments to alias options', () => {
     expect(
       additionalArgsToString(undefined, {
         t: 'test',
@@ -41,7 +41,7 @@ describe('additionalArgsToString', () => {
     ).toBe('-t "test" -L 34 -c');
   });
 
-  it('Should convert multi-character additional arguments to options', () => {
+  test('Should convert multi-character additional arguments to options', () => {
     expect(
       additionalArgsToString(undefined, {
         tea: 'test',
@@ -51,7 +51,7 @@ describe('additionalArgsToString', () => {
     ).toBe('--tea "test" --Long 34 --channel');
   });
 
-  it('Should convert boolean options', () => {
+  test('Should convert boolean options', () => {
     expect(
       additionalArgsToString(undefined, {
         a: true,
@@ -62,7 +62,7 @@ describe('additionalArgsToString', () => {
     ).toBe('-a -b false --cake --no-direction');
   });
 
-  it('Should convert string options', () => {
+  test('Should convert string options', () => {
     expect(
       additionalArgsToString(undefined, {
         a: 'a34',
@@ -71,7 +71,7 @@ describe('additionalArgsToString', () => {
     ).toBe('-a "a34" --cake "cake 45"');
   });
 
-  it('Should convert number options', () => {
+  test('Should convert number options', () => {
     expect(
       additionalArgsToString(undefined, {
         a: 3,

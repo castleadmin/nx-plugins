@@ -25,26 +25,26 @@ describe('getProjectSourceRoot', () => {
     } as ExecutorContext;
   });
 
-  it('Should retrieve the project source root.', () => {
+  test('Should retrieve the project source root.', () => {
     expect(getProjectSourceRoot(context)).toBe(path);
   });
 
-  it("Should throw an error if the project name isn't defined.", () => {
+  test("Should throw an error if the project name isn't defined.", () => {
     delete context.projectName;
     expect(() => getProjectSourceRoot(context)).toThrow(Error);
   });
 
-  it('Should throw an error if there is no project configurations array', () => {
+  test('Should throw an error if there is no project configurations array', () => {
     delete context.projectsConfigurations;
     expect(() => getProjectSourceRoot(context)).toThrow(Error);
   });
 
-  it('Should throw an error if there is no project configuration for the project name.', () => {
+  test('Should throw an error if there is no project configuration for the project name.', () => {
     context.projectName = context.projectName + 'abc';
     expect(() => getProjectSourceRoot(context)).toThrow(Error);
   });
 
-  it("Should throw an error if the project source root doesn't exist.", () => {
+  test("Should throw an error if the project source root doesn't exist.", () => {
     delete (
       (context.projectsConfigurations as ProjectsConfigurations).projects[
         projectName
