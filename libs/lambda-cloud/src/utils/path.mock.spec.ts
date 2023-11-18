@@ -75,70 +75,70 @@ export const useWindowsPath = () => {
 };
 
 describe('path.mock', () => {
-  describe('useUnixPath', () => {
+  describe('Given a node:path Unix mock,', () => {
     beforeEach(() => {
       useUnixPath();
     });
 
-    test('basename', () => {
+    test('basename should return the OS specific result.', () => {
       expect(basename(normalize('a/b/c/test.json'))).toBe('test.json');
     });
 
-    test('dirname', () => {
+    test('dirname should return the OS specific result.', () => {
       expect(dirname(normalize('a/b/c/test.json'))).toBe('a/b/c');
     });
 
-    test('join', () => {
+    test('join should return the OS specific result.', () => {
       expect(join('a/b/c', 'd/e')).toBe('a/b/c/d/e');
     });
 
-    test('normalize', () => {
+    test('normalize should return the OS specific result.', () => {
       expect(normalize('a/b/c/./d/e')).toBe('a/b/c/d/e');
     });
 
-    test('relative', () => {
+    test('relative should return the OS specific result.', () => {
       expect(relative('/a/b/d/e', '/a/b/c')).toBe('../../c');
     });
 
-    test('resolve', () => {
+    test('resolve should return the OS specific result.', () => {
       expect(resolve('/', 'a/b/c', 'd/e')).toBe('/a/b/c/d/e');
     });
 
-    test('sep', () => {
+    test('sep should return the OS specific result.', () => {
       expect(sep).toBe('/');
     });
   });
 
-  describe('useWindowsPath', () => {
+  describe('Given a node:path Windows mock,', () => {
     beforeEach(() => {
       useWindowsPath();
     });
 
-    test('basename', () => {
+    test('basename should return the OS specific result.', () => {
       expect(basename(normalize('a/b\\c/test.json'))).toBe('test.json');
     });
 
-    test('dirname', () => {
+    test('dirname should return the OS specific result.', () => {
       expect(dirname(normalize('a/b\\c/test.json'))).toBe('a\\b\\c');
     });
 
-    test('join', () => {
+    test('join should return the OS specific result.', () => {
       expect(join('a/b/c', 'd\\e')).toBe('a\\b\\c\\d\\e');
     });
 
-    test('normalize', () => {
+    test('normalize should return the OS specific result.', () => {
       expect(normalize('a/b/c\\.\\d\\e')).toBe('a\\b\\c\\d\\e');
     });
 
-    test('relative', () => {
+    test('relative should return the OS specific result.', () => {
       expect(relative('C:\\a/b\\d/e', 'C:\\a\\b/c')).toBe('..\\..\\c');
     });
 
-    test('resolve', () => {
+    test('resolve should return the OS specific result.', () => {
       expect(resolve('C:\\', 'a/b/c', 'd\\e')).toBe('C:\\a\\b\\c\\d\\e');
     });
 
-    test('sep', () => {
+    test('sep should return the OS specific result.', () => {
       expect(sep).toBe('\\');
     });
   });

@@ -1,19 +1,21 @@
 import { getVersions } from './versions';
 
-describe('getVersions', () => {
-  test('All versions should be defined', () => {
-    const semanticVersionMinorUpgrade = /^\^\d+\.\d+\.\d+$/;
+describe('versions', () => {
+  describe('getVersions', () => {
+    test('Each dependency should be defined and should have the correct update identifier.', () => {
+      const minorUpdate = /^\^\d+\.\d+\.\d+$/;
 
-    expect(getVersions()).toEqual({
-      // TypeScript
-      tslib: expect.stringMatching(semanticVersionMinorUpgrade),
-      '@types/aws-lambda': expect.stringMatching(semanticVersionMinorUpgrade),
-      '@types/node': expect.stringMatching(semanticVersionMinorUpgrade),
-      // CDK
-      'aws-cdk': expect.stringMatching(semanticVersionMinorUpgrade),
-      'aws-cdk-lib': expect.stringMatching(semanticVersionMinorUpgrade),
-      constructs: expect.stringMatching(semanticVersionMinorUpgrade),
-      esbuild: expect.stringMatching(semanticVersionMinorUpgrade),
+      expect(getVersions()).toEqual({
+        // TypeScript
+        tslib: expect.stringMatching(minorUpdate),
+        '@types/aws-lambda': expect.stringMatching(minorUpdate),
+        '@types/node': expect.stringMatching(minorUpdate),
+        // CDK
+        'aws-cdk': expect.stringMatching(minorUpdate),
+        'aws-cdk-lib': expect.stringMatching(minorUpdate),
+        constructs: expect.stringMatching(minorUpdate),
+        esbuild: expect.stringMatching(minorUpdate),
+      });
     });
   });
 });
