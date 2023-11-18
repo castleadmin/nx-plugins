@@ -1,6 +1,6 @@
 import { readJson, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
-import { initGenerator } from './init';
+import { initGenerator } from './generator';
 import { InitSchema } from './schema';
 
 describe('init', () => {

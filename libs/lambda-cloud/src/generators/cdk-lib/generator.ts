@@ -14,7 +14,7 @@ import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
 import { getRelativePathToRootTsConfig } from '@nx/js';
 import { resolve } from 'node:path';
-import initGenerator from '../init/init';
+import initGenerator from '../init/generator';
 import { createProjectConfiguration } from './create-project-configuration';
 import { CdkLibSchema } from './schema';
 

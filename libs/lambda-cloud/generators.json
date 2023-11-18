@@ -13,13 +13,13 @@
       "x-type": "library"
     },
     "e2e-project": {
-      "factory": "./src/generators/e2e-project/e2e-project",
+      "factory": "./src/generators/e2e-project/generator",
       "schema": "./src/generators/e2e-project/schema.json",
       "description": "Creates an E2E project for a lambda-cloud application.",
       "hidden": true
     },
     "init": {
-      "factory": "./src/generators/init/init",
+      "factory": "./src/generators/init/generator",
       "schema": "./src/generators/init/schema.json",
       "description": "Initializes the lambda-cloud plugin.",
       "hidden": true

@@ -37,17 +37,11 @@ describe('cdk-app', () => {
       };
     });
 
-    test('should add init dependencies.', async () => {
+    test('should generate the workspace tsconfig file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      const packageJson = readJson(tree, 'package.json');
-
-      expect(packageJson.dependencies['tslib']).toBeTruthy();
-
-      expect(packageJson.devDependencies['@types/node']).toBeTruthy();
-      expect(packageJson.devDependencies['aws-cdk']).toBeTruthy();
-      expect(packageJson.devDependencies['aws-cdk-lib']).toBeTruthy();
-      expect(packageJson.devDependencies['constructs']).toBeTruthy();
+      expect(tree.exists(`tsconfig.base.json`)).toBe(true);
+      expect(tree.isFile(`tsconfig.base.json`)).toBe(true);
     });
 
     test('should not add lambda dependencies.', async () => {
@@ -93,12 +87,11 @@ describe('cdk-app', () => {
       expect(tree.isFile(`apps/${options.appName}/jest.config.ts`)).toBe(true);
     });
 
-    test('should add E2E dependencies.', async () => {
+    test('should generate the e2e project.', async () => {
       await cdkAppGenerator(tree, options);
 
-      const packageJson = readJson(tree, 'package.json');
-
-      expect(packageJson.dependencies['axios']).toBeTruthy();
+      expect(tree.exists(`apps/${options.appName}-e2e`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}-e2e`)).toBe(false);
     });
 
     test('should format the project files and run successful.', async () => {
@@ -121,17 +114,11 @@ describe('cdk-app', () => {
       };
     });
 
-    test('should add init dependencies.', async () => {
+    test('should generate the workspace tsconfig file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      const packageJson = readJson(tree, 'package.json');
-
-      expect(packageJson.dependencies['tslib']).toBeTruthy();
-
-      expect(packageJson.devDependencies['@types/node']).toBeTruthy();
-      expect(packageJson.devDependencies['aws-cdk']).toBeTruthy();
-      expect(packageJson.devDependencies['aws-cdk-lib']).toBeTruthy();
-      expect(packageJson.devDependencies['constructs']).toBeTruthy();
+      expect(tree.exists(`tsconfig.base.json`)).toBe(true);
+      expect(tree.isFile(`tsconfig.base.json`)).toBe(true);
     });
 
     test('should add lambda dependencies.', async () => {
@@ -178,12 +165,11 @@ describe('cdk-app', () => {
       expect(tree.isFile(`apps/${options.appName}/jest.config.ts`)).toBe(true);
     });
 
-    test('should add E2E dependencies.', async () => {
+    test('should generate the e2e project.', async () => {
       await cdkAppGenerator(tree, options);
 
-      const packageJson = readJson(tree, 'package.json');
-
-      expect(packageJson.dependencies['axios']).toBeTruthy();
+      expect(tree.exists(`apps/${options.appName}-e2e`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}-e2e`)).toBe(false);
     });
 
     test('should format the project files and run successful.', async () => {

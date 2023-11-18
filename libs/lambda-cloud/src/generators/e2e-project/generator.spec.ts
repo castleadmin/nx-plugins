@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { readJson, Tree } from '@nx/devkit';
+import { Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
-import { e2eProjectGenerator } from './e2e-project';
+import { e2eProjectGenerator } from './generator';
 import { E2ESchema } from './schema';
 
 describe('e2e-project', () => {
@@ -35,14 +35,6 @@ describe('e2e-project', () => {
         project,
         skipFormat: true,
       };
-    });
-
-    test('should add E2E dependencies.', async () => {
-      await e2eProjectGenerator(tree, options);
-
-      const packageJson = readJson(tree, 'package.json');
-
-      expect(packageJson.dependencies['axios']).toBeTruthy();
     });
 
     test('should generate the example spec.', async () => {

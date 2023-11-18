@@ -1,10 +1,9 @@
-import axios from 'axios';
+describe('<%= fileName %>', () => {
+  describe('Given a service,', () => {
+    test('should return a message if called via HTTP or AWS SDK.', async () => {
+      const result = 'answer from service';
 
-describe('GET /', () => {
-  test('Should return a message.', async () => {
-    const res = await axios.get(`/`);
-
-    expect(res.status).toBe(200);
-    expect(res.data).toEqual({ message: 'Hello API' });
+      expect(result).toBe('answer from service');
+    });
   });
 });

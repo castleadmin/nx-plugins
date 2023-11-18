@@ -8,8 +8,6 @@ export interface Versions {
   'aws-cdk-lib': string;
   constructs: string;
   esbuild: string;
-  // E2E
-  axios: string;
 }
 
 export const getVersions = (): Versions => {
@@ -22,8 +20,6 @@ export const getVersions = (): Versions => {
   const awsCdkLib = '^2.110.0';
   const constructs = '^10.3.0';
   const esbuild = '^0.19.5';
-  // E2E
-  const axios = '^1.6.2';
 
   return {
     // TypeScript
@@ -35,7 +31,5 @@ export const getVersions = (): Versions => {
     'aws-cdk-lib': awsCdkLib,
     constructs,
     esbuild,
-    // E2E
-    axios,
   };
 };

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { readJson, Tree } from '@nx/devkit';
+import { Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import cdkLibGenerator from './generator';
 import { CdkLibSchema } from './schema';
@@ -35,17 +35,11 @@ describe('cdk-lib', () => {
       };
     });
 
-    test('should add init dependencies.', async () => {
+    test('should generate the workspace tsconfig file.', async () => {
       await cdkLibGenerator(tree, options);
 
-      const packageJson = readJson(tree, 'package.json');
-
-      expect(packageJson.dependencies['tslib']).toBeTruthy();
-
-      expect(packageJson.devDependencies['@types/node']).toBeTruthy();
-      expect(packageJson.devDependencies['aws-cdk']).toBeTruthy();
-      expect(packageJson.devDependencies['aws-cdk-lib']).toBeTruthy();
-      expect(packageJson.devDependencies['constructs']).toBeTruthy();
+      expect(tree.exists(`tsconfig.base.json`)).toBe(true);
+      expect(tree.isFile(`tsconfig.base.json`)).toBe(true);
     });
 
     test('should generate a cdk directory.', async () => {

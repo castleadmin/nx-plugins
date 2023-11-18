@@ -1,5 +1,4 @@
 import {
-  addDependenciesToPackageJson,
   addProjectConfiguration,
   formatFiles,
   generateFiles,
@@ -14,15 +13,7 @@ import {
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { getRelativePathToRootTsConfig } from '@nx/js';
 import { resolve } from 'node:path';
-import { getVersions, Versions } from '../../utils/versions';
 import { E2ESchema } from './schema';
-
-const addE2EDependencies = (
-  tree: Tree,
-  versions: Versions,
-): GeneratorCallback => {
-  return addDependenciesToPackageJson(tree, { axios: versions.axios }, {});
-};
 
 const addEslint = async (
   tree: Tree,
@@ -46,13 +37,10 @@ export const e2eProjectGenerator = async (
   options: E2ESchema,
 ): Promise<GeneratorCallback> => {
   const appsDir = getWorkspaceLayout(tree).appsDir;
-  const versions = getVersions();
   const projectName = names(`${options.project}-e2e`).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
 
   const tasks: GeneratorCallback[] = [];
-
-  tasks.push(addE2EDependencies(tree, versions));
 
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
