@@ -77,7 +77,7 @@ export const cdkLibGenerator = async (
   addProjectConfiguration(
     tree,
     options.libName,
-    createProjectConfiguration(projectRoot, options),
+    createProjectConfiguration(projectRoot),
   );
 
   tasks.push(await addESLint(tree, options, projectRoot));
