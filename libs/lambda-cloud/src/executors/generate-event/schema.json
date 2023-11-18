@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/schema",
   "version": 2,
-  "title": "sam local invoke",
-  "description": "Wrapper around the 'sam local invoke' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)",
+  "title": "sam local generate-event",
+  "description": "Wrapper around the 'sam local generate-event' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)",
   "type": "object",
   "properties": {
     "__unparsed__": {

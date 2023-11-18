@@ -1,9 +1,8 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "cli": "nx",
-  "$id": "LambdaCloudE2EProject",
-  "title": "lambda-cloud E2E Project Generator",
-  "description": "Generate an E2E project for a lambda-cloud application.",
+  "$id": "E2E",
+  "title": "E2E",
+  "description": "Creates an E2E project for a lambda-cloud application.",
   "type": "object",
   "properties": {
     "project": {

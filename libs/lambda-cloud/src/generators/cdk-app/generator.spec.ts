@@ -31,7 +31,7 @@ describe('cdk-app generator', () => {
 
     beforeEach(() => {
       options = {
-        appName: faker.lorem.word().toLowerCase(),
+        appName: faker.word.sample().toLowerCase(),
         appType: AppType.generic,
         skipFormat: true,
       };
@@ -56,7 +56,7 @@ describe('cdk-app generator', () => {
 
     beforeEach(() => {
       options = {
-        appName: faker.lorem.word().toLowerCase(),
+        appName: faker.word.sample().toLowerCase(),
         appType: AppType.lambda,
         skipFormat: true,
       };

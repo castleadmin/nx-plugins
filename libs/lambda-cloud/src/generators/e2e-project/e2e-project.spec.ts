@@ -25,7 +25,7 @@ describe('e2eProjectGenerator', () => {
   });
 
   test('Should generate the example spec.', async () => {
-    const project = faker.lorem.word().toLowerCase();
+    const project = faker.word.sample().toLowerCase();
     await e2eProjectGenerator(tree, {
       project,
       skipFormat: true,
@@ -37,7 +37,7 @@ describe('e2eProjectGenerator', () => {
   });
 
   test('Should format the project files and run successful.', async () => {
-    const project = faker.lorem.word().toLowerCase();
+    const project = faker.word.sample().toLowerCase();
 
     const generator = await e2eProjectGenerator(tree, {
       project,

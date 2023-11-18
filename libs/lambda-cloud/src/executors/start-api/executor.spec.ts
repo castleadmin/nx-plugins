@@ -2,7 +2,7 @@ import { ExecutorContext } from '@nx/devkit';
 import { executeCommand } from '../../utils/execute-command';
 import { useUnixPath, useWindowsPath } from '../../utils/path.mock.spec';
 import executor from './executor';
-import { InvokeExecutorSchema } from './schema';
+import { StartApiExecutorSchema } from './schema';
 
 jest.mock('node:path', () => {
   const originalModule = jest.requireActual('node:path');
@@ -24,7 +24,7 @@ jest.mock('node:path', () => {
 
 jest.mock('../../utils/execute-command');
 
-describe('invoke', () => {
+describe('start-api', () => {
   beforeEach(() => {
     (
       executeCommand as jest.MockedFunction<typeof executeCommand>
@@ -54,11 +54,11 @@ describe('invoke', () => {
     });
 
     describe('Given a command with 2 arguments,', () => {
-      let options: InvokeExecutorSchema;
+      let options: StartApiExecutorSchema;
 
       beforeEach(() => {
         options = {
-          __unparsed__: ['--debug', '--profile="test"'],
+          __unparsed__: ['--debug', '--host="127.0.0.1"'],
         };
       });
 
@@ -68,7 +68,7 @@ describe('invoke', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke',
+          'sam local start-api',
           options.__unparsed__,
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
@@ -85,7 +85,7 @@ describe('invoke', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke',
+          'sam local start-api',
           options.__unparsed__,
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
@@ -118,11 +118,11 @@ describe('invoke', () => {
     });
 
     describe('Given a command with 2 arguments,', () => {
-      let options: InvokeExecutorSchema;
+      let options: StartApiExecutorSchema;
 
       beforeEach(() => {
         options = {
-          __unparsed__: ['--debug', '--profile="test"'],
+          __unparsed__: ['--debug', '--host="127.0.0.1"'],
         };
       });
 
@@ -132,7 +132,7 @@ describe('invoke', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke',
+          'sam local start-api',
           options.__unparsed__,
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
@@ -149,7 +149,7 @@ describe('invoke', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke',
+          'sam local start-api',
           options.__unparsed__,
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',

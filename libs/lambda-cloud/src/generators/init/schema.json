@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "cli": "nx",
-  "$id": "LambdaCloudInit",
-  "title": "Initialize lambda-cloud plugin.",
+  "$id": "Init",
+  "title": "Init",
+  "description": "Initializes the lambda-cloud plugin.",
   "type": "object",
   "properties": {
     "skipFormat": {

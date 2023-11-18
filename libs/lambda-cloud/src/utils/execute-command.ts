@@ -1,19 +1,19 @@
-import { exec, spawn } from 'node:child_process';
+import { spawn } from 'node:child_process';
 
 export const executeCommand = (
   command: string,
+  args: string[],
   options: {
     cwd: string;
-    shell: string | undefined;
   },
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const { cwd, shell } = options;
+    const { cwd } = options;
 
-    const commandProcess = spawn(command, [], {
+    const commandProcess = spawn(command, args, {
       cwd,
       stdio: 'inherit',
-      shell: shell ? shell : true,
+      shell: true,
     });
 
     commandProcess.on('close', (code: number | null) => {
@@ -23,6 +23,7 @@ export const executeCommand = (
             `Command process exited with error code '${code?.toString()}'.`,
           ),
         );
+
         return;
       }
 
@@ -32,36 +33,5 @@ export const executeCommand = (
     commandProcess.on('error', (error: Error) => {
       reject(error);
     });
-  });
-};
-
-export const executeCommandBufferResults = (
-  command: string,
-  options: {
-    cwd: string;
-    shell: string | undefined;
-  },
-): Promise<{ stdout: string; stderr: string }> => {
-  return new Promise((resolve, reject) => {
-    const { cwd, shell } = options;
-
-    exec(
-      command,
-      {
-        cwd,
-        shell: shell ? shell : undefined,
-      },
-      (error, stdout, stderr) => {
-        console.log(stdout);
-        console.error(stderr);
-
-        if (error) {
-          reject(error);
-          return;
-        }
-
-        resolve({ stdout, stderr });
-      },
-    );
   });
 };

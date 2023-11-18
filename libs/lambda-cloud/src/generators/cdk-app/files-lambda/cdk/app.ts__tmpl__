@@ -1,6 +1,6 @@
-#!/usr/bin/env node
 import { App } from 'aws-cdk-lib';
 import { SourceMapMode } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { resolve } from 'node:path';
 import 'source-map-support/register';
 import { ExampleStack } from './example-stack';
 
@@ -25,7 +25,7 @@ const createDevEnvironmentStacks = (app: App) => {
     build: {
       minify: false,
       sourceMapMode: SourceMapMode.DEFAULT,
-      tsconfig: '../tsconfig.app.json',
+      tsconfig: resolve(__dirname, '../tsconfig.app.json'),
     },
   });
 };
@@ -41,7 +41,7 @@ const createStageEnvironmentStacks = (app: App) => {
     build: {
       minify: true,
       sourceMapMode: SourceMapMode.EXTERNAL,
-      tsconfig: '../tsconfig.app.json',
+      tsconfig: resolve(__dirname, '../tsconfig.app.json'),
     },
   });
 };
@@ -57,7 +57,7 @@ const createProdEnvironmentStacks = (app: App) => {
     build: {
       minify: true,
       sourceMapMode: SourceMapMode.EXTERNAL,
-      tsconfig: '../tsconfig.app.json',
+      tsconfig: resolve(__dirname, '../tsconfig.app.json'),
     },
   });
 };

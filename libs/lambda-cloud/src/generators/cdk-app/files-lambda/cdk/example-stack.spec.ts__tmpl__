@@ -1,6 +1,7 @@
 import { App } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { SourceMapMode } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { resolve } from 'node:path';
 import { ExampleStack } from './example-stack';
 
 describe('ExampleStack', () => {
@@ -18,7 +19,7 @@ describe('ExampleStack', () => {
         build: {
           minify: true,
           sourceMapMode: SourceMapMode.EXTERNAL,
-          tsconfig: '../tsconfig.app.json',
+          tsconfig: resolve(__dirname, '../tsconfig.app.json'),
         },
       });
     });

@@ -12,16 +12,16 @@
       "description": "Creates an AWS CDK constructs library.",
       "x-type": "library"
     },
-    "init": {
-      "factory": "./src/generators/init/init",
-      "schema": "./src/generators/init/schema.json",
-      "description": "Initialize the plugin.",
-      "hidden": true
-    },
     "e2e-project": {
       "factory": "./src/generators/e2e-project/e2e-project",
       "schema": "./src/generators/e2e-project/schema.json",
-      "description": "Creates an e2e project for an application.",
+      "description": "Creates an E2E project for a lambda-cloud application.",
+      "hidden": true
+    },
+    "init": {
+      "factory": "./src/generators/init/init",
+      "schema": "./src/generators/init/schema.json",
+      "description": "Initializes the lambda-cloud plugin.",
       "hidden": true
     }
   }

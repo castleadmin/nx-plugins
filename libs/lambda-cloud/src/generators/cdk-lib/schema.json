@@ -1,7 +1,8 @@
 {
   "$schema": "http://json-schema.org/schema",
   "$id": "cdk-lib",
-  "title": "lambda-cloud cdk lib generator",
+  "title": "cdk-lib",
+  "description": "Creates an AWS CDK constructs library.",
   "type": "object",
   "properties": {
     "libName": {

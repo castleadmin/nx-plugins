@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "cli": "nx",
   "$id": "cdk-app",
-  "title": "lambda-cloud cdk app generator",
+  "title": "cdk-app",
+  "description": "Creates an AWS CDK application.",
   "type": "object",
   "properties": {
     "appName": {

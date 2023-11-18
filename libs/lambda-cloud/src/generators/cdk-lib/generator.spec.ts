@@ -29,7 +29,10 @@ describe('cdk-lib generator', () => {
     let options: CdkLibSchema;
 
     beforeEach(() => {
-      options = { libName: faker.lorem.word().toLowerCase(), skipFormat: true };
+      options = {
+        libName: faker.word.sample().toLowerCase(),
+        skipFormat: true,
+      };
     });
 
     test('should generate a cdk directory.', async () => {
