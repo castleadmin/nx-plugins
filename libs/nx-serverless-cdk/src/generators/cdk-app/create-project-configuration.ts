@@ -16,7 +16,7 @@ export const createProjectConfiguration = (
     implicitDependencies: [],
     targets: {
       cdk: {
-        executor: 'lambda-cloud:cdk',
+        executor: 'nx-serverless-cdk:cdk',
         options: {},
       },
     },
@@ -27,19 +27,19 @@ export const createProjectConfiguration = (
     projectConfiguration.targets = {
       ...projectConfiguration.targets,
       'generate-event': {
-        executor: 'lambda-cloud:generate-event',
+        executor: 'nx-serverless-cdk:generate-event',
         options: {},
       },
       invoke: {
-        executor: 'lambda-cloud:invoke',
+        executor: 'nx-serverless-cdk:invoke',
         options: {},
       },
       'start-api': {
-        executor: 'lambda-cloud:start-api',
+        executor: 'nx-serverless-cdk:start-api',
         options: {},
       },
       'start-lambda': {
-        executor: 'lambda-cloud:start-lambda',
+        executor: 'nx-serverless-cdk:start-lambda',
         options: {},
       },
     };

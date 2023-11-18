@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "$id": "E2E",
   "title": "E2E",
-  "description": "Creates an E2E project for a lambda-cloud application.",
+  "description": "Creates an E2E project for a nx-serverless-cdk application.",
   "type": "object",
   "properties": {
     "project": {

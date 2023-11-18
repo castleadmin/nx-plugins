@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "$id": "Init",
   "title": "Init",
-  "description": "Initializes the lambda-cloud plugin.",
+  "description": "Initializes the nx-serverless-cdk plugin.",
   "type": "object",
   "properties": {
     "skipFormat": {

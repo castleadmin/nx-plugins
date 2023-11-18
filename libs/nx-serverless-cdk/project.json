@@ -1,35 +1,35 @@
 {
-  "name": "lambda-cloud",
+  "name": "nx-serverless-cdk",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/lambda-cloud/src",
+  "sourceRoot": "libs/nx-serverless-cdk/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/lambda-cloud",
-        "main": "libs/lambda-cloud/src/index.ts",
-        "tsConfig": "libs/lambda-cloud/tsconfig.lib.json",
+        "outputPath": "dist/libs/nx-serverless-cdk",
+        "main": "libs/nx-serverless-cdk/src/index.ts",
+        "tsConfig": "libs/nx-serverless-cdk/tsconfig.lib.json",
         "assets": [
-          "libs/lambda-cloud/*.md",
+          "libs/nx-serverless-cdk/*.md",
           {
-            "input": "./libs/lambda-cloud/src",
+            "input": "./libs/nx-serverless-cdk/src",
             "glob": "**/!(*.ts)",
             "output": "./src"
           },
           {
-            "input": "./libs/lambda-cloud/src",
+            "input": "./libs/nx-serverless-cdk/src",
             "glob": "**/*.d.ts",
             "output": "./src"
           },
           {
-            "input": "./libs/lambda-cloud",
+            "input": "./libs/nx-serverless-cdk",
             "glob": "generators.json",
             "output": "."
           },
           {
-            "input": "./libs/lambda-cloud",
+            "input": "./libs/nx-serverless-cdk",
             "glob": "executors.json",
             "output": "."
           }
@@ -37,7 +37,7 @@
       }
     },
     "publish": {
-      "command": "node tools/scripts/publish.mjs lambda-cloud {args.ver} {args.tag}",
+      "command": "node tools/scripts/publish.mjs nx-serverless-cdk {args.ver} {args.tag}",
       "dependsOn": ["build"]
     },
     "lint": {
@@ -45,10 +45,10 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "libs/lambda-cloud/**/*.ts",
-          "libs/lambda-cloud/package.json",
-          "libs/lambda-cloud/generators.json",
-          "libs/lambda-cloud/executors.json"
+          "libs/nx-serverless-cdk/**/*.ts",
+          "libs/nx-serverless-cdk/package.json",
+          "libs/nx-serverless-cdk/generators.json",
+          "libs/nx-serverless-cdk/executors.json"
         ]
       }
     },
@@ -56,7 +56,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/lambda-cloud/jest.config.ts"
+        "jestConfig": "libs/nx-serverless-cdk/jest.config.ts"
       }
     }
   },

@@ -33,7 +33,7 @@ describe('create-project-configuration', () => {
 
         expect(configuration.targets).toEqual({
           cdk: {
-            executor: 'lambda-cloud:cdk',
+            executor: 'nx-serverless-cdk:cdk',
             options: {},
           },
         });

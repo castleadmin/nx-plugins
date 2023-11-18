@@ -11,7 +11,7 @@ export const createProjectConfiguration = (
     implicitDependencies: [],
     targets: {
       cdk: {
-        executor: 'lambda-cloud:cdk',
+        executor: 'nx-serverless-cdk:cdk',
         options: {},
       },
     },
