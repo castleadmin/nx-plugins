@@ -1,11 +1,7 @@
-import {
-  addDependenciesToPackageJson,
-  readJson,
-  Tree,
-  updateJson,
-} from '@nx/devkit';
+import { readJson, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { initGenerator } from './init';
+import { InitSchema } from './schema';
 
 describe('init', () => {
   let tree: Tree;
@@ -14,52 +10,48 @@ describe('init', () => {
     tree = createTreeWithEmptyWorkspace();
   });
 
-  test('Should add dependencies.', async () => {
-    const existing = 'existing';
-    const existingVersion = '1.0.0';
+  describe('Given an init generator,', () => {
+    let options: InitSchema;
 
-    addDependenciesToPackageJson(
-      tree,
-      {
-        [existing]: existingVersion,
-      },
-      {
-        [existing]: existingVersion,
-      },
-    );
-    await initGenerator(tree, { skipFormat: true });
-
-    const packageJson = readJson(tree, 'package.json');
-
-    expect(packageJson.dependencies['tslib']).toBeDefined();
-    expect(packageJson.dependencies[existing]).toBeDefined();
-
-    expect(packageJson.devDependencies['@types/node']).toBeDefined();
-    expect(packageJson.devDependencies['aws-cdk']).toBeDefined();
-    expect(packageJson.devDependencies['aws-cdk-lib']).toBeDefined();
-    expect(packageJson.devDependencies['constructs']).toBeDefined();
-    expect(packageJson.devDependencies[existing]).toBeDefined();
-  });
-
-  test('Should add jest config.', async () => {
-    await initGenerator(tree, { skipFormat: true });
-    expect(tree.exists('jest.config.ts')).toEqual(true);
-  });
-
-  test('Should not fail when dependencies is missing from package.json and no other init generators are invoked.', async () => {
-    updateJson(tree, 'package.json', (json) => {
-      delete json.dependencies;
-      return json;
+    beforeEach(() => {
+      options = {
+        skipFormat: true,
+      };
     });
 
-    const generator = await initGenerator(tree, { skipFormat: true });
+    test('should generate the workspace tsconfig file.', async () => {
+      await initGenerator(tree, options);
 
-    expect(generator).toBeTruthy();
-  });
+      expect(tree.exists(`tsconfig.base.json`)).toBe(true);
+      expect(tree.isFile(`tsconfig.base.json`)).toBe(true);
+    });
 
-  test('Should format the project files and run successful.', async () => {
-    const generator = await initGenerator(tree, { skipFormat: false });
+    test('should generate the workspace jest preset file.', async () => {
+      await initGenerator(tree, options);
 
-    expect(generator).toBeTruthy();
+      expect(tree.exists(`jest.preset.js`)).toBe(true);
+      expect(tree.isFile(`jest.preset.js`)).toBe(true);
+    });
+
+    test('should add init dependencies.', async () => {
+      await initGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
+      expect(packageJson.dependencies['tslib']).toBeTruthy();
+
+      expect(packageJson.devDependencies['@types/node']).toBeTruthy();
+      expect(packageJson.devDependencies['aws-cdk']).toBeTruthy();
+      expect(packageJson.devDependencies['aws-cdk-lib']).toBeTruthy();
+      expect(packageJson.devDependencies['constructs']).toBeTruthy();
+    });
+
+    test('should format the project files and run successful.', async () => {
+      options.skipFormat = false;
+
+      const generator = await initGenerator(tree, options);
+
+      expect(generator).toBeTruthy();
+    });
   });
 });

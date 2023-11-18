@@ -7,12 +7,10 @@ import {
 } from '@nx/devkit';
 import { jestInitGenerator } from '@nx/jest';
 import { initGenerator as jsInitGenerator } from '@nx/js';
-import { getVersions } from '../../utils/versions';
+import { getVersions, Versions } from '../../utils/versions';
 import { InitSchema } from './schema';
 
-function updateDependencies(tree: Tree) {
-  const versions = getVersions();
-
+const addInitDependencies = (tree: Tree, versions: Versions) => {
   return addDependenciesToPackageJson(
     tree,
     {
@@ -28,13 +26,16 @@ function updateDependencies(tree: Tree) {
       constructs: versions['constructs'],
     },
   );
-}
+};
 
-export async function initGenerator(
+export const initGenerator = async (
   tree: Tree,
   options: InitSchema,
-): Promise<GeneratorCallback> {
+): Promise<GeneratorCallback> => {
+  const versions = getVersions();
+
   const tasks: GeneratorCallback[] = [];
+
   tasks.push(
     await jsInitGenerator(tree, {
       ...options,
@@ -47,13 +48,13 @@ export async function initGenerator(
     await jestInitGenerator(tree, { ...options, testEnvironment: 'node' }),
   );
 
-  tasks.push(updateDependencies(tree));
+  tasks.push(addInitDependencies(tree, versions));
 
   if (!options.skipFormat) {
     await formatFiles(tree);
   }
 
   return runTasksInSerial(...tasks);
-}
+};
 
 export default initGenerator;

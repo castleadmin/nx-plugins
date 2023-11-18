@@ -1,9 +1,10 @@
 import { faker } from '@faker-js/faker';
-import { Tree } from '@nx/devkit';
+import { readJson, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { e2eProjectGenerator } from './e2e-project';
+import { E2ESchema } from './schema';
 
-describe('e2eProjectGenerator', () => {
+describe('e2e-project', () => {
   let tree: Tree;
 
   beforeEach(async () => {
@@ -24,26 +25,54 @@ describe('e2eProjectGenerator', () => {
     );
   });
 
-  test('Should generate the example spec.', async () => {
-    const project = faker.word.sample().toLowerCase();
-    await e2eProjectGenerator(tree, {
-      project,
-      skipFormat: true,
+  describe('Given an e2e project generator,', () => {
+    let project: string;
+    let options: E2ESchema;
+
+    beforeEach(() => {
+      project = faker.word.sample().toLowerCase();
+      options = {
+        project,
+        skipFormat: true,
+      };
     });
 
-    expect(
-      tree.exists(`apps/${project}-e2e/src/${project}/${project}.spec.ts`),
-    ).toBeTruthy();
-  });
+    test('should add E2E dependencies.', async () => {
+      await e2eProjectGenerator(tree, options);
 
-  test('Should format the project files and run successful.', async () => {
-    const project = faker.word.sample().toLowerCase();
+      const packageJson = readJson(tree, 'package.json');
 
-    const generator = await e2eProjectGenerator(tree, {
-      project,
-      skipFormat: false,
+      expect(packageJson.dependencies['axios']).toBeTruthy();
     });
 
-    expect(generator).toBeTruthy();
+    test('should generate the example spec.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      expect(
+        tree.exists(`apps/${project}-e2e/src/${project}/${project}.spec.ts`),
+      ).toBeTruthy();
+    });
+
+    test('should generate the project configuration file.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      expect(tree.exists(`apps/${project}-e2e/project.json`)).toBe(true);
+      expect(tree.isFile(`apps/${project}-e2e/project.json`)).toBe(true);
+    });
+
+    test('should generate the eslint configuration file.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      expect(tree.exists(`apps/${project}-e2e/.eslintrc.json`)).toBe(true);
+      expect(tree.isFile(`apps/${project}-e2e/.eslintrc.json`)).toBe(true);
+    });
+
+    test('should format the project files and run successful.', async () => {
+      options.skipFormat = false;
+
+      const result = await e2eProjectGenerator(tree, options);
+
+      expect(result).toBeTruthy();
+    });
   });
 });

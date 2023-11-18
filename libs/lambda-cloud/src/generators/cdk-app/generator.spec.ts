@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { Tree } from '@nx/devkit';
+import { readJson, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { AppType } from './app-type';
 import cdkAppGenerator from './generator';
 import { CdkAppSchema } from './schema';
 
-describe('cdk-app generator', () => {
+describe('cdk-app', () => {
   let tree: Tree;
 
   beforeEach(() => {
@@ -37,6 +37,28 @@ describe('cdk-app generator', () => {
       };
     });
 
+    test('should add init dependencies.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
+      expect(packageJson.dependencies['tslib']).toBeTruthy();
+
+      expect(packageJson.devDependencies['@types/node']).toBeTruthy();
+      expect(packageJson.devDependencies['aws-cdk']).toBeTruthy();
+      expect(packageJson.devDependencies['aws-cdk-lib']).toBeTruthy();
+      expect(packageJson.devDependencies['constructs']).toBeTruthy();
+    });
+
+    test('should not add lambda dependencies.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
+      expect(packageJson.devDependencies['@types/aws-lambda']).toBeFalsy();
+      expect(packageJson.devDependencies['esbuild']).toBeFalsy();
+    });
+
     test('should generate a cdk directory.', async () => {
       await cdkAppGenerator(tree, options);
 
@@ -48,6 +70,43 @@ describe('cdk-app generator', () => {
       await cdkAppGenerator(tree, options);
 
       expect(tree.exists(`apps/${options.appName}/src`)).toBe(false);
+    });
+
+    test('should generate the project configuration file.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.exists(`apps/${options.appName}/project.json`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/project.json`)).toBe(true);
+    });
+
+    test('should generate the eslint configuration file.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.exists(`apps/${options.appName}/.eslintrc.json`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/.eslintrc.json`)).toBe(true);
+    });
+
+    test('should generate the jest configuration file.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.exists(`apps/${options.appName}/jest.config.ts`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/jest.config.ts`)).toBe(true);
+    });
+
+    test('should add E2E dependencies.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
+      expect(packageJson.dependencies['axios']).toBeTruthy();
+    });
+
+    test('should format the project files and run successful.', async () => {
+      options.skipFormat = false;
+
+      const generator = await cdkAppGenerator(tree, options);
+
+      expect(generator).toBeTruthy();
     });
   });
 
@@ -62,6 +121,28 @@ describe('cdk-app generator', () => {
       };
     });
 
+    test('should add init dependencies.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
+      expect(packageJson.dependencies['tslib']).toBeTruthy();
+
+      expect(packageJson.devDependencies['@types/node']).toBeTruthy();
+      expect(packageJson.devDependencies['aws-cdk']).toBeTruthy();
+      expect(packageJson.devDependencies['aws-cdk-lib']).toBeTruthy();
+      expect(packageJson.devDependencies['constructs']).toBeTruthy();
+    });
+
+    test('should add lambda dependencies.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
+      expect(packageJson.devDependencies['@types/aws-lambda']).toBeTruthy();
+      expect(packageJson.devDependencies['esbuild']).toBeTruthy();
+    });
+
     test('should generate a cdk directory.', async () => {
       await cdkAppGenerator(tree, options);
 
@@ -74,6 +155,35 @@ describe('cdk-app generator', () => {
 
       expect(tree.exists(`apps/${options.appName}/src`)).toBe(true);
       expect(tree.isFile(`apps/${options.appName}/src`)).toBe(false);
+    });
+
+    test('should generate the project configuration file.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.exists(`apps/${options.appName}/project.json`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/project.json`)).toBe(true);
+    });
+
+    test('should generate the eslint configuration file.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.exists(`apps/${options.appName}/.eslintrc.json`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/.eslintrc.json`)).toBe(true);
+    });
+
+    test('should generate the jest configuration file.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.exists(`apps/${options.appName}/jest.config.ts`)).toBe(true);
+      expect(tree.isFile(`apps/${options.appName}/jest.config.ts`)).toBe(true);
+    });
+
+    test('should add E2E dependencies.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
+      expect(packageJson.dependencies['axios']).toBeTruthy();
     });
 
     test('should format the project files and run successful.', async () => {

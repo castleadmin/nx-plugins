@@ -14,8 +14,15 @@ import {
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { getRelativePathToRootTsConfig } from '@nx/js';
 import { resolve } from 'node:path';
-import { getVersions } from '../../utils/versions';
+import { getVersions, Versions } from '../../utils/versions';
 import { E2ESchema } from './schema';
+
+const addE2EDependencies = (
+  tree: Tree,
+  versions: Versions,
+): GeneratorCallback => {
+  return addDependenciesToPackageJson(tree, { axios: versions.axios }, {});
+};
 
 const addEslint = async (
   tree: Tree,
@@ -33,10 +40,11 @@ const addEslint = async (
     rootProject: false,
   });
 };
-export async function e2eProjectGenerator(
+
+export const e2eProjectGenerator = async (
   tree: Tree,
   options: E2ESchema,
-): Promise<GeneratorCallback> {
+): Promise<GeneratorCallback> => {
   const appsDir = getWorkspaceLayout(tree).appsDir;
   const versions = getVersions();
   const projectName = names(`${options.project}-e2e`).fileName;
@@ -44,13 +52,16 @@ export async function e2eProjectGenerator(
 
   const tasks: GeneratorCallback[] = [];
 
-  // axios is more than likely used in the application code, so install it as a regular dependency.
-  const installTask = addDependenciesToPackageJson(
-    tree,
-    { axios: versions.axios },
-    {},
-  );
-  tasks.push(installTask);
+  tasks.push(addE2EDependencies(tree, versions));
+
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
+    ...options,
+    ...names(options.project),
+    projectName,
+    offsetFromRoot: offsetFromRoot(projectRoot),
+    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: '',
+  });
 
   addProjectConfiguration(tree, projectName, {
     root: projectRoot,
@@ -68,15 +79,6 @@ export async function e2eProjectGenerator(
     },
   });
 
-  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    ...options,
-    ...names(options.project),
-    projectName,
-    offsetFromRoot: offsetFromRoot(projectRoot),
-    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
-    tmpl: '',
-  });
-
   tasks.push(await addEslint(tree, projectName, projectRoot));
 
   if (!options.skipFormat) {
@@ -84,6 +86,6 @@ export async function e2eProjectGenerator(
   }
 
   return runTasksInSerial(...tasks);
-}
+};
 
 export default e2eProjectGenerator;
