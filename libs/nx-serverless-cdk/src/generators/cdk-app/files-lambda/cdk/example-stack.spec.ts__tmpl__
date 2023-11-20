@@ -28,7 +28,7 @@ describe('ExampleStack', () => {
       const template = Template.fromStack(stack);
 
       template.hasResourceProperties('AWS::Lambda::Function', {
-        Handler: 'example-handler.exampleHandler',
+        Handler: 'index.exampleHandler',
       });
     });
   });

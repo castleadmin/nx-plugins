@@ -23,11 +23,12 @@ const addEslint = async (
   return await lintProjectGenerator(tree, {
     project: projectName,
     linter: Linter.EsLint,
+    eslintFilePatterns: [`${projectRoot}/**/*.ts`],
+    tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.spec.json')],
     skipFormat: true,
-    tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.json')],
-    eslintFilePatterns: [`${projectRoot}/**/*.{js,ts}`],
     setParserOptionsProject: false,
     skipPackageJson: false,
+    unitTestRunner: 'jest',
     rootProject: false,
   });
 };
@@ -46,7 +47,7 @@ export const e2eProjectGenerator = async (
     ...options,
     ...names(options.project),
     projectName,
-    offsetFromRoot: offsetFromRoot(projectRoot),
+    offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
   });

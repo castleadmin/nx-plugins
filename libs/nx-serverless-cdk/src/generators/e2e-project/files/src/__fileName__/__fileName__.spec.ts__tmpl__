@@ -1,5 +1,7 @@
 describe('<%= fileName %>', () => {
+
   describe('Given a service,', () => {
+
     test('should return a message if called via HTTP or AWS SDK.', async () => {
       const result = 'answer from service';
 

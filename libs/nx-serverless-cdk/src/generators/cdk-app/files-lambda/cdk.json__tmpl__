@@ -11,6 +11,8 @@
       "**/*.spec.ts",
       "**/*.test.ts",
       "**/*.js",
+      "**/*.cjs",
+      "**/*.mjs",
       "tsconfig*.json",
       "package*.json",
       "yarn.lock",

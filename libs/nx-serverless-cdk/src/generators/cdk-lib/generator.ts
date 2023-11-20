@@ -24,13 +24,14 @@ const addESLint = async (
   projectRoot: string,
 ): Promise<GeneratorCallback> => {
   return await lintProjectGenerator(tree, {
-    linter: Linter.EsLint,
     project: options.libName,
-    tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.app.json')],
+    linter: Linter.EsLint,
     eslintFilePatterns: [`${projectRoot}/**/*.ts`],
-    unitTestRunner: 'jest',
+    tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.lib.json')],
     skipFormat: true,
     setParserOptionsProject: false,
+    skipPackageJson: false,
+    unitTestRunner: 'jest',
     rootProject: false,
   });
 };
@@ -42,12 +43,14 @@ const addJest = async (
   return await configurationGenerator(tree, {
     ...options,
     project: options.libName,
+    supportTsx: false,
     setupFile: 'none',
     skipSerializers: true,
-    supportTsx: false,
     testEnvironment: 'node',
-    compiler: 'tsc',
     skipFormat: true,
+    compiler: 'tsc',
+    skipPackageJson: false,
+    js: false,
   });
 };
 
