@@ -9,11 +9,13 @@
     "esModuleInterop": true,
     "importHelpers": true
   },
-  "include": ["cdk/**/*.ts", "src/**/*.ts"],
+  "include": ["shared/**/*.ts", "src/**/*.ts"],
   "exclude": [
+    "cdk",
+    "cdk.out",
     "jest.config.ts",
-    "cdk/**/*.spec.ts",
-    "cdk/**/*.test.ts",
+    "shared/**/*.spec.ts",
+    "shared/**/*.test.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts"
   ]

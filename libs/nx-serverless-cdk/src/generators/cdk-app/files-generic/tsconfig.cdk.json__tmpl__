@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "<%= offset %>dist/out-tsc",
-    "module": "es2022",
+    "module": "commonjs",
     "target": "es2022",
     "lib": ["ES2022"],
     "types": ["node"],
@@ -10,5 +10,10 @@
     "importHelpers": true
   },
   "include": ["cdk/**/*.ts"],
-  "exclude": ["jest.config.ts", "cdk/**/*.spec.ts", "cdk/**/*.test.ts"]
+  "exclude": [
+    "cdk.out",
+    "jest.config.ts",
+    "cdk/**/*.spec.ts",
+    "cdk/**/*.test.ts"
+  ]
 }

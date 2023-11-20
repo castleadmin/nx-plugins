@@ -2,14 +2,16 @@ import { App } from 'aws-cdk-lib';
 import { SourceMapMode } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { resolve } from 'node:path';
 import 'source-map-support/register';
+import { Environment } from '../shared/environment';
 import { ExampleStack } from './example-stack';
 
 export const createApp = (): App => {
   const app = new App();
+  const serviceName = '<%= appName %>';
 
-  createDevEnvironmentStacks(app);
-  createStageEnvironmentStacks(app);
-  createProdEnvironmentStacks(app);
+  createDevEnvironmentStacks(app, serviceName);
+  createStageEnvironmentStacks(app, serviceName);
+  createProdEnvironmentStacks(app, serviceName);
 
   return app;
 };
@@ -17,10 +19,11 @@ export const createApp = (): App => {
 /**
  * Create and configure the stacks of the development environment.
  */
-const createDevEnvironmentStacks = (app: App) => {
-  new ExampleStack(app, 'DevExampleStack', {
+const createDevEnvironmentStacks = (app: App, serviceName: string) => {
+  const devStack = new ExampleStack(app, 'DevExampleStack', {
     env: {
-      region: 'eu-central-1',
+      account: process.env['CDK_DEV_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'],
+      region: process.env['CDK_DEV_REGION'] ?? process.env['CDK_DEFAULT_REGION'],
     },
     build: {
       minify: false,
@@ -28,15 +31,19 @@ const createDevEnvironmentStacks = (app: App) => {
       tsconfig: resolve(__dirname, '../tsconfig.app.json'),
     },
   });
+
+  Tags.of(devStack).add('Environment', Environment.Dev);
+  Tags.of(devStack).add('App', serviceName);
 };
 
 /**
- * Create and configure the stacks of the staging environment.
+ * Create and configure the stacks of the stage environment.
  */
-const createStageEnvironmentStacks = (app: App) => {
-  new ExampleStack(app, 'StageExampleStack', {
+const createStageEnvironmentStacks = (app: App, serviceName: string) => {
+  const stageStack = new ExampleStack(app, 'StageExampleStack', {
     env: {
-      region: 'eu-central-1',
+      account: process.env['CDK_STAGE_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'],
+      region: process.env['CDK_STAGE_REGION'] ?? process.env['CDK_DEFAULT_REGION'],
     },
     build: {
       minify: true,
@@ -44,15 +51,19 @@ const createStageEnvironmentStacks = (app: App) => {
       tsconfig: resolve(__dirname, '../tsconfig.app.json'),
     },
   });
+
+  Tags.of(stageStack).add('Environment', Environment.Stage);
+  Tags.of(stageStack).add('App', serviceName);
 };
 
 /**
  * Create and configure the stacks of the production environment.
  */
-const createProdEnvironmentStacks = (app: App) => {
-  new ExampleStack(app, 'ProdExampleStack', {
+const createProdEnvironmentStacks = (app: App, serviceName: string) => {
+  const prodStack = new ExampleStack(app, 'ProdExampleStack', {
     env: {
-      region: 'eu-central-1',
+      account: process.env['CDK_PROD_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'],
+      region: process.env['CDK_PROD_REGION'] ?? process.env['CDK_DEFAULT_REGION'],
     },
     build: {
       minify: true,
@@ -60,6 +71,9 @@ const createProdEnvironmentStacks = (app: App) => {
       tsconfig: resolve(__dirname, '../tsconfig.app.json'),
     },
   });
+
+  Tags.of(prodStack).add('Environment', Environment.Prod);
+  Tags.of(prodStack).add('App', serviceName);
 };
 
 createApp();
