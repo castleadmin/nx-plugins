@@ -28,7 +28,11 @@ const addLambdaDependencies = (
 ): GeneratorCallback => {
   return addDependenciesToPackageJson(
     tree,
-    {},
+    {
+      // TypeScript
+      '@aws-lambda-powertools/logger':
+        versions['@aws-lambda-powertools/logger'],
+    },
     {
       // TypeScript
       '@types/aws-lambda': versions['@types/aws-lambda'],

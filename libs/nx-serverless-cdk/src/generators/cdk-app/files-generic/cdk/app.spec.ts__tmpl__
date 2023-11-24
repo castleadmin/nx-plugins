@@ -9,13 +9,13 @@ describe('App', () => {
       app = createApp();
     });
 
-    test('the app should contain all stacks of all environments.', () => {
+    test('the app should contain all environments.', () => {
       const children = app.node.children;
 
       expect(children.map((stack) => stack.node.id)).toEqual([
-        'DevExampleStack',
-        'StageExampleStack',
-        'ProdExampleStack',
+        'Dev',
+        'Stage',
+        'Prod',
       ]);
     });
   });

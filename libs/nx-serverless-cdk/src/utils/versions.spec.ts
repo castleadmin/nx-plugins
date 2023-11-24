@@ -7,6 +7,7 @@ describe('versions', () => {
 
       expect(getVersions()).toEqual({
         // TypeScript
+        '@aws-lambda-powertools/logger': expect.stringMatching(minorUpdate),
         tslib: expect.stringMatching(minorUpdate),
         '@types/aws-lambda': expect.stringMatching(minorUpdate),
         '@types/node': expect.stringMatching(minorUpdate),

@@ -1,5 +1,6 @@
 export interface Versions {
   // TypeScript
+  '@aws-lambda-powertools/logger': string;
   tslib: string;
   '@types/aws-lambda': string;
   '@types/node': string;
@@ -12,6 +13,7 @@ export interface Versions {
 
 export const getVersions = (): Versions => {
   // TypeScript
+  const powertoolsLogger = '^1.16.0';
   const tslib = '^2.6.2';
   const typesAwsLambda = '^8.10.126';
   const typesNode = '^20.9.1';
@@ -23,6 +25,7 @@ export const getVersions = (): Versions => {
 
   return {
     // TypeScript
+    '@aws-lambda-powertools/logger': powertoolsLogger,
     tslib,
     '@types/aws-lambda': typesAwsLambda,
     '@types/node': typesNode,

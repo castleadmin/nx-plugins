@@ -9,10 +9,13 @@ import {
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import { resolve } from 'node:path';
+import { Environment } from '../shared/environment';
 
 export interface ExampleStackProps extends StackProps {
   // Define stack properties here
 
+  environment: Environment;
+  serviceName: string;
   build: {
     minify: boolean;
     sourceMapMode: SourceMapMode;
@@ -24,6 +27,7 @@ export class ExampleStack extends Stack {
   constructor(scope: Construct, id: string, props: ExampleStackProps) {
     super(scope, id, props);
 
+    const { environment, serviceName } = props;
     const { minify, sourceMapMode, tsconfig } = props.build;
 
     // The code that defines your stack goes here
@@ -41,7 +45,8 @@ export class ExampleStack extends Stack {
       description: 'An example Lambda function.',
       entry: resolve(__dirname, '../src/example-handler.ts'),
       environment: {
-        EXAMPLE_VARIABLE: 'example value',
+        ENVIRONMENT: environment,
+        POWERTOOLS_SERVICE_NAME: serviceName,
       },
       handler: 'exampleHandler',
       logFormat: LogFormat.JSON,
