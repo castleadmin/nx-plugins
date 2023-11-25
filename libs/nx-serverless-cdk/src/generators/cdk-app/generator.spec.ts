@@ -49,6 +49,9 @@ describe('cdk-app', () => {
 
       const packageJson = readJson(tree, 'package.json');
 
+      expect(
+        packageJson.dependencies['@aws-lambda-powertools/logger'],
+      ).toBeFalsy();
       expect(packageJson.devDependencies['@types/aws-lambda']).toBeFalsy();
       expect(packageJson.devDependencies['esbuild']).toBeFalsy();
     });
@@ -126,6 +129,9 @@ describe('cdk-app', () => {
 
       const packageJson = readJson(tree, 'package.json');
 
+      expect(
+        packageJson.dependencies['@aws-lambda-powertools/logger'],
+      ).toBeTruthy();
       expect(packageJson.devDependencies['@types/aws-lambda']).toBeTruthy();
       expect(packageJson.devDependencies['esbuild']).toBeTruthy();
     });

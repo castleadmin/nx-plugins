@@ -38,12 +38,14 @@ describe('init', () => {
 
       const packageJson = readJson(tree, 'package.json');
 
+      expect(packageJson.dependencies['aws-cdk-lib']).toBeTruthy();
+      expect(packageJson.dependencies['constructs']).toBeTruthy();
+      expect(packageJson.dependencies['source-map-support']).toBeTruthy();
       expect(packageJson.dependencies['tslib']).toBeTruthy();
 
-      expect(packageJson.devDependencies['@types/node']).toBeTruthy();
       expect(packageJson.devDependencies['aws-cdk']).toBeTruthy();
-      expect(packageJson.devDependencies['aws-cdk-lib']).toBeTruthy();
-      expect(packageJson.devDependencies['constructs']).toBeTruthy();
+      expect(packageJson.devDependencies['ts-node']).toBeTruthy();
+      expect(packageJson.devDependencies['@types/node']).toBeTruthy();
     });
 
     test('should format the project files and run successful.', async () => {

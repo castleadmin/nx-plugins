@@ -10,9 +10,9 @@ export interface ExampleStackProps extends StackProps {
 
 export class ExampleStack extends Stack {
   constructor(scope: Construct, id: string, props: ExampleStackProps = {}) {
-    super(scope, id, props);
+    const { queueVisibilityTimeout, ...stackProps } = props;
 
-    const { queueVisibilityTimeout } = props;
+    super(scope, id, stackProps);
 
     // The code that defines your stack goes here
 

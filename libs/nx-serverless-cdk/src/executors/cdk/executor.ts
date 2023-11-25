@@ -12,7 +12,7 @@ export const runExecutor = async (
 
   const { __unparsed__ } = options;
 
-  const command = `npx cdk`;
+  const command = `npx aws-cdk`;
   console.log('Executing command:', command, __unparsed__.join(' '));
 
   await executeCommand(command, __unparsed__, {

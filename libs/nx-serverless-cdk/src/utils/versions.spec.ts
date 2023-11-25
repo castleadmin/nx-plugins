@@ -6,16 +6,22 @@ describe('versions', () => {
       const minorUpdate = /^\^\d+\.\d+\.\d+$/;
 
       expect(getVersions()).toEqual({
-        // TypeScript
-        '@aws-lambda-powertools/logger': expect.stringMatching(minorUpdate),
-        tslib: expect.stringMatching(minorUpdate),
-        '@types/aws-lambda': expect.stringMatching(minorUpdate),
-        '@types/node': expect.stringMatching(minorUpdate),
-        // CDK
-        'aws-cdk': expect.stringMatching(minorUpdate),
+        // CDK dependencies
         'aws-cdk-lib': expect.stringMatching(minorUpdate),
         constructs: expect.stringMatching(minorUpdate),
+        'source-map-support': expect.stringMatching(minorUpdate),
+        // CDK development dependencies
+        'aws-cdk': expect.stringMatching(minorUpdate),
+        'ts-node': expect.stringMatching(minorUpdate),
+        // Lambda dependencies
+        '@aws-lambda-powertools/logger': expect.stringMatching(minorUpdate),
+        // Lambda development dependencies
+        '@types/aws-lambda': expect.stringMatching(minorUpdate),
         esbuild: expect.stringMatching(minorUpdate),
+        // TypeScript dependencies
+        tslib: expect.stringMatching(minorUpdate),
+        // TypeScript development dependencies
+        '@types/node': expect.stringMatching(minorUpdate),
       });
     });
   });

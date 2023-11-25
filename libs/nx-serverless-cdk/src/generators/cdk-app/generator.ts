@@ -29,14 +29,13 @@ const addLambdaDependencies = (
   return addDependenciesToPackageJson(
     tree,
     {
-      // TypeScript
+      // Lambda dependencies
       '@aws-lambda-powertools/logger':
         versions['@aws-lambda-powertools/logger'],
     },
     {
-      // TypeScript
+      // Lambda development dependencies
       '@types/aws-lambda': versions['@types/aws-lambda'],
-      // CDK
       esbuild: versions['esbuild'],
     },
   );

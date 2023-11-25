@@ -14,16 +14,19 @@ const addInitDependencies = (tree: Tree, versions: Versions) => {
   return addDependenciesToPackageJson(
     tree,
     {
-      // TypeScript
+      // CDK dependencies
+      'aws-cdk-lib': versions['aws-cdk-lib'],
+      constructs: versions['constructs'],
+      'source-map-support': versions['source-map-support'],
+      // TypeScript dependencies
       tslib: versions.tslib,
     },
     {
-      // TypeScript
-      '@types/node': versions['@types/node'],
-      // CDK
+      // CDK development dependencies
       'aws-cdk': versions['aws-cdk'],
-      'aws-cdk-lib': versions['aws-cdk-lib'],
-      constructs: versions['constructs'],
+      'ts-node': versions['ts-node'],
+      // TypeScript development dependencies
+      '@types/node': versions['@types/node'],
     },
   );
 };

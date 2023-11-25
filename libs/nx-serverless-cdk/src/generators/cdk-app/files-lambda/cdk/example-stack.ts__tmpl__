@@ -25,10 +25,10 @@ export interface ExampleStackProps extends StackProps {
 
 export class ExampleStack extends Stack {
   constructor(scope: Construct, id: string, props: ExampleStackProps) {
-    super(scope, id, props);
+    const { environment, serviceName, build, ...stackProps } = props;
+    const { minify, sourceMapMode, tsconfig } = build;
 
-    const { environment, serviceName } = props;
-    const { minify, sourceMapMode, tsconfig } = props.build;
+    super(scope, id, stackProps);
 
     // The code that defines your stack goes here
 
@@ -41,6 +41,8 @@ export class ExampleStack extends Stack {
         sourceMap: true,
         sourceMapMode,
         tsconfig,
+        // TODO Should be bundled once v2 with ESM support is released. Alternatively, the pre-built Lambda layer could be used.
+        nodeModules: ['@aws-lambda-powertools/logger']
       },
       description: 'An example Lambda function.',
       entry: resolve(__dirname, '../src/example-handler.ts'),

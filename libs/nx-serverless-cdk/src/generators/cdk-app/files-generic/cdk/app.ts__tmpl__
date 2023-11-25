@@ -63,11 +63,14 @@ export interface EnvironmentStacksProps extends ExampleStackProps {
 
 export class EnvironmentStacks extends Construct {
   constructor(scope: Construct, id: string, props: EnvironmentStacksProps) {
+    const { environment, serviceName, ...stackProps } = props;
+
     super(scope, id);
 
-    const exampleStack = new ExampleStack(this, 'ExampleStack', props);
-    Tags.of(exampleStack).add('Environment', props.environment);
-    Tags.of(exampleStack).add('App', props.serviceName);
+    const exampleStack = new ExampleStack(this, 'ExampleStack', stackProps);
+
+    Tags.of(exampleStack).add('Environment', environment);
+    Tags.of(exampleStack).add('App', serviceName);
   }
 }
 
