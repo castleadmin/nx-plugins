@@ -24,6 +24,7 @@ const addInitDependencies = (tree: Tree, versions: Versions) => {
     {
       // CDK development dependencies
       'aws-cdk': versions['aws-cdk'],
+      'tsconfig-paths': versions['tsconfig-paths'],
       'ts-node': versions['ts-node'],
       // TypeScript development dependencies
       '@types/node': versions['@types/node'],

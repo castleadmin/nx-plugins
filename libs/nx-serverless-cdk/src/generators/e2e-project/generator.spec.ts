@@ -26,37 +26,39 @@ describe('e2e-project', () => {
   });
 
   describe('Given an e2e project generator,', () => {
-    let project: string;
     let options: E2ESchema;
+    let projectName: string;
 
     beforeEach(() => {
-      project = faker.word.sample().toLowerCase();
       options = {
-        project,
+        project: faker.word.sample().toUpperCase(),
         skipFormat: true,
       };
+      projectName = options.project.toLowerCase();
     });
 
     test('should generate the example spec.', async () => {
       await e2eProjectGenerator(tree, options);
 
       expect(
-        tree.exists(`apps/${project}-e2e/src/${project}/${project}.spec.ts`),
+        tree.exists(
+          `apps/${projectName}-e2e/src/${projectName}/${projectName}.spec.ts`,
+        ),
       ).toBeTruthy();
     });
 
     test('should generate the project configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${project}-e2e/project.json`)).toBe(true);
-      expect(tree.isFile(`apps/${project}-e2e/project.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}-e2e/project.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}-e2e/project.json`)).toBe(true);
     });
 
     test('should generate the eslint configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${project}-e2e/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`apps/${project}-e2e/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}-e2e/.eslintrc.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}-e2e/.eslintrc.json`)).toBe(true);
     });
 
     test('should format the project files and run successful.', async () => {

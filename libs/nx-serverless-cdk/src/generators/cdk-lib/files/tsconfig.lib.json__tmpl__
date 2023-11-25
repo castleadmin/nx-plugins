@@ -6,6 +6,10 @@
     "target": "es2022",
     "lib": ["ES2022"],
     "types": ["node"],
+    "declaration": true,
+    "sourceMap": false,
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "esModuleInterop": true,
     "importHelpers": true
   },

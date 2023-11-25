@@ -28,13 +28,15 @@ describe('cdk-app', () => {
 
   describe('Given an app generator of type generic,', () => {
     let options: CdkAppSchema;
+    let projectName: string;
 
     beforeEach(() => {
       options = {
-        appName: faker.word.sample().toLowerCase(),
+        appName: faker.word.sample().toUpperCase(),
         appType: AppType.generic,
         skipFormat: true,
       };
+      projectName = options.appName.toLowerCase();
     });
 
     test('should generate the workspace tsconfig file.', async () => {
@@ -59,42 +61,42 @@ describe('cdk-app', () => {
     test('should generate a cdk directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/cdk`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/cdk`)).toBe(false);
+      expect(tree.exists(`apps/${projectName}/cdk`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/cdk`)).toBe(false);
     });
 
     test('should not generate a src directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/src`)).toBe(false);
+      expect(tree.exists(`apps/${projectName}/src`)).toBe(false);
     });
 
     test('should generate the project configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/project.json`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/project.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/project.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/project.json`)).toBe(true);
     });
 
     test('should generate the eslint configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
     });
 
     test('should generate the jest configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/jest.config.ts`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/jest.config.ts`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/jest.config.ts`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/jest.config.ts`)).toBe(true);
     });
 
     test('should generate the e2e project.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}-e2e`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}-e2e`)).toBe(false);
+      expect(tree.exists(`apps/${projectName}-e2e`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}-e2e`)).toBe(false);
     });
 
     test('should format the project files and run successful.', async () => {
@@ -108,13 +110,15 @@ describe('cdk-app', () => {
 
   describe('Given an app generator of type lambda,', () => {
     let options: CdkAppSchema;
+    let projectName: string;
 
     beforeEach(() => {
       options = {
-        appName: faker.word.sample().toLowerCase(),
+        appName: faker.word.sample().toUpperCase(),
         appType: AppType.lambda,
         skipFormat: true,
       };
+      projectName = options.appName.toLowerCase();
     });
 
     test('should generate the workspace tsconfig file.', async () => {
@@ -139,43 +143,43 @@ describe('cdk-app', () => {
     test('should generate a cdk directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/cdk`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/cdk`)).toBe(false);
+      expect(tree.exists(`apps/${projectName}/cdk`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/cdk`)).toBe(false);
     });
 
     test('should generate a src directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/src`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/src`)).toBe(false);
+      expect(tree.exists(`apps/${projectName}/src`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/src`)).toBe(false);
     });
 
     test('should generate the project configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/project.json`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/project.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/project.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/project.json`)).toBe(true);
     });
 
     test('should generate the eslint configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
     });
 
     test('should generate the jest configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}/jest.config.ts`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}/jest.config.ts`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/jest.config.ts`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/jest.config.ts`)).toBe(true);
     });
 
     test('should generate the e2e project.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${options.appName}-e2e`)).toBe(true);
-      expect(tree.isFile(`apps/${options.appName}-e2e`)).toBe(false);
+      expect(tree.exists(`apps/${projectName}-e2e`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}-e2e`)).toBe(false);
     });
 
     test('should format the project files and run successful.', async () => {

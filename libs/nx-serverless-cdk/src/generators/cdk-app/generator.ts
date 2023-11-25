@@ -91,19 +91,19 @@ export const cdkAppGenerator = async (
   tree: Tree,
   options: CdkAppSchema,
 ): Promise<GeneratorCallback> => {
-  const appsDir = getWorkspaceLayout(tree).appsDir;
   const versions = getVersions();
+  const appsDir = getWorkspaceLayout(tree).appsDir;
   const projectName = names(options.appName).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
   const isLambdaApp = options.appType === AppType.lambda;
 
   const tasks: GeneratorCallback[] = [];
 
-  const initTask = await initGenerator(tree, {
-    skipFormat: true,
-  });
-
-  tasks.push(initTask);
+  tasks.push(
+    await initGenerator(tree, {
+      skipFormat: true,
+    }),
+  );
 
   if (isLambdaApp) {
     tasks.push(addLambdaDependencies(tree, versions));

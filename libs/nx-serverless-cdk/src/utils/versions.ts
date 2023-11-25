@@ -5,6 +5,7 @@ export interface Versions {
   'source-map-support': string;
   // CDK development dependencies
   'aws-cdk': string;
+  'tsconfig-paths': string;
   'ts-node': string;
   // Lambda dependencies
   '@aws-lambda-powertools/logger': string;
@@ -24,6 +25,7 @@ export const getVersions = (): Versions => {
   const sourceMapSupport = '^0.5.21';
   // CDK development dependencies
   const awsCdk = '^2.110.0';
+  const tsconfigPaths = '^4.2.0';
   const tsNode = '^10.9.1';
   // Lambda dependencies
   const powertoolsLogger = '^1.16.0';
@@ -42,6 +44,7 @@ export const getVersions = (): Versions => {
     'source-map-support': sourceMapSupport,
     // CDK development dependencies
     'aws-cdk': awsCdk,
+    'tsconfig-paths': tsconfigPaths,
     'ts-node': tsNode,
     // Lambda dependencies
     '@aws-lambda-powertools/logger': powertoolsLogger,

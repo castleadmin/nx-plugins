@@ -5,6 +5,7 @@ module.exports = {
   collectCoverageFrom: [
     '**/*.ts',
     '!**/jest.config.ts',
+    '!**/cdk/index.ts',
     '!**/cdk.out/**',
     '!**/node_modules/**',
   ],

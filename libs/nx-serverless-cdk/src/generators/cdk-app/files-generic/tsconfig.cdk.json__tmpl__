@@ -6,6 +6,9 @@
     "target": "es2022",
     "lib": ["ES2022"],
     "types": ["node"],
+    "sourceMap": false,
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "esModuleInterop": true,
     "importHelpers": true
   },
@@ -15,5 +18,9 @@
     "jest.config.ts",
     "cdk/**/*.spec.ts",
     "cdk/**/*.test.ts"
-  ]
+  ],
+  "ts-node": {
+    "preferTsExts": true,
+    "require": ["tsconfig-paths/register"]
+  }
 }

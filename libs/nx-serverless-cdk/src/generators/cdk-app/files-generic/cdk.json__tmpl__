@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts --project tsconfig.cdk.json cdk/app.ts",
+  "app": "TS_NODE_PROJECT='tsconfig.cdk.json' node --require ts-node/register cdk/app.ts",
   "watch": {
     "include": [
       "**"

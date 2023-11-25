@@ -12,6 +12,7 @@ describe('versions', () => {
         'source-map-support': expect.stringMatching(minorUpdate),
         // CDK development dependencies
         'aws-cdk': expect.stringMatching(minorUpdate),
+        'tsconfig-paths': expect.stringMatching(minorUpdate),
         'ts-node': expect.stringMatching(minorUpdate),
         // Lambda dependencies
         '@aws-lambda-powertools/logger': expect.stringMatching(minorUpdate),

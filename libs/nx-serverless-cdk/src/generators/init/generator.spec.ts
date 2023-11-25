@@ -44,6 +44,7 @@ describe('init', () => {
       expect(packageJson.dependencies['tslib']).toBeTruthy();
 
       expect(packageJson.devDependencies['aws-cdk']).toBeTruthy();
+      expect(packageJson.devDependencies['tsconfig-paths']).toBeTruthy();
       expect(packageJson.devDependencies['ts-node']).toBeTruthy();
       expect(packageJson.devDependencies['@types/node']).toBeTruthy();
     });

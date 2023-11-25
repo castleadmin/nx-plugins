@@ -1,5 +1,4 @@
 import {
-  addProjectConfiguration,
   formatFiles,
   generateFiles,
   GeneratorCallback,
@@ -7,84 +6,134 @@ import {
   joinPathFragments,
   names,
   offsetFromRoot,
+  readJson,
+  readProjectConfiguration,
   runTasksInSerial,
   Tree,
+  updateProjectConfiguration,
+  writeJson,
 } from '@nx/devkit';
-import { Linter, lintProjectGenerator } from '@nx/eslint';
-import { configurationGenerator } from '@nx/jest';
-import { getRelativePathToRootTsConfig } from '@nx/js';
+import { Linter } from '@nx/eslint';
+import { getRelativePathToRootTsConfig, libraryGenerator } from '@nx/js';
 import { resolve } from 'node:path';
+import { getVersions } from '../../utils/versions';
 import initGenerator from '../init/generator';
-import { createProjectConfiguration } from './create-project-configuration';
 import { CdkLibSchema } from './schema';
 
-const addESLint = async (
+const addJsLibrary = async (
   tree: Tree,
   options: CdkLibSchema,
-  projectRoot: string,
+  packageName: string,
 ): Promise<GeneratorCallback> => {
-  return await lintProjectGenerator(tree, {
-    project: options.libName,
-    linter: Linter.EsLint,
-    eslintFilePatterns: [`${projectRoot}/**/*.ts`],
-    tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.lib.json')],
+  const libOptions: Parameters<typeof libraryGenerator>[1] = {
+    name: options.libName,
+    projectNameAndRootFormat: 'derived',
     skipFormat: true,
-    setParserOptionsProject: false,
+    tags: 'cdk-lib',
+    skipTsConfig: false,
     skipPackageJson: false,
+    includeBabelRc: false,
     unitTestRunner: 'jest',
+    linter: Linter.EsLint,
+    testEnvironment: 'node',
+    importPath: packageName,
+    js: false,
+    pascalCaseFiles: false,
+    strict: false,
+    buildable: true,
+    setParserOptionsProject: false,
+    config: 'project',
+    compiler: 'tsc',
+    bundler: 'tsc',
+    skipTypeCheck: false,
+    minimal: false,
     rootProject: false,
-  });
+    simpleName: false,
+  };
+
+  if (options.publishable) {
+    libOptions.publishable = options.publishable;
+  }
+
+  return await libraryGenerator(tree, libOptions);
 };
 
-const addJest = async (
+const changeProjectConfiguration = (
   tree: Tree,
-  options: CdkLibSchema,
-): Promise<GeneratorCallback> => {
-  return await configurationGenerator(tree, {
-    ...options,
-    project: options.libName,
-    supportTsx: false,
-    setupFile: 'none',
-    skipSerializers: true,
-    testEnvironment: 'node',
-    skipFormat: true,
-    compiler: 'tsc',
-    skipPackageJson: false,
-    js: false,
-  });
+  projectName: string,
+  projectRoot: string,
+): void => {
+  const config = readProjectConfiguration(tree, projectName);
+
+  (config.targets as NonNullable<typeof config.targets>)['build'] = {
+    executor: `@nx/js:tsc`,
+    outputs: ['{options.outputPath}'],
+    options: {
+      outputPath: joinPathFragments('dist', projectRoot),
+      tsConfig: `${projectRoot}/tsconfig.lib.json`,
+      packageJson: `${projectRoot}/package.json`,
+      main: `${projectRoot}/cdk/index.ts`,
+      assets: [`${projectRoot}/*.md`],
+    },
+  };
+
+  updateProjectConfiguration(tree, projectName, config);
+};
+
+const changeSrcDirectory = (
+  tree: Tree,
+  projectRoot: string,
+  packageName: string,
+): void => {
+  tree.delete(joinPathFragments(projectRoot, 'src'));
+
+  const tsConfigBaseFilePath = 'tsconfig.base.json';
+  const tsConfigBase = readJson(tree, tsConfigBaseFilePath);
+  tsConfigBase.compilerOptions.paths[packageName] = [
+    joinPathFragments(projectRoot, 'cdk', 'index.ts'),
+  ];
+  writeJson(tree, tsConfigBaseFilePath, tsConfigBase);
 };
 
 export const cdkLibGenerator = async (
   tree: Tree,
   options: CdkLibSchema,
 ): Promise<GeneratorCallback> => {
+  if (options.publishable && !options.importPath) {
+    throw new Error(
+      `The '--importPath' parameter has to be provided for publishable libraries. It must be a valid npm package name (e.g. 'example-lib' or '@example-org/example-lib').`,
+    );
+  }
+
+  const versions = getVersions();
   const libsDir = getWorkspaceLayout(tree).libsDir;
   const projectName = names(options.libName).fileName;
   const projectRoot = joinPathFragments(libsDir, projectName);
+  const packageName = options.importPath ?? projectName;
 
   const tasks: GeneratorCallback[] = [];
 
-  const initTask = await initGenerator(tree, {
-    skipFormat: true,
-  });
+  tasks.push(
+    await initGenerator(tree, {
+      skipFormat: true,
+    }),
+  );
 
-  tasks.push(initTask);
+  tasks.push(await addJsLibrary(tree, options, packageName));
 
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
+    projectName,
+    packageName,
+    versions,
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
   });
 
-  addProjectConfiguration(
-    tree,
-    options.libName,
-    createProjectConfiguration(projectRoot),
-  );
+  changeProjectConfiguration(tree, projectName, projectRoot);
 
-  tasks.push(await addESLint(tree, options, projectRoot));
-  tasks.push(await addJest(tree, options));
+  changeSrcDirectory(tree, projectRoot, packageName);
 
   if (!options.skipFormat) {
     await formatFiles(tree);
