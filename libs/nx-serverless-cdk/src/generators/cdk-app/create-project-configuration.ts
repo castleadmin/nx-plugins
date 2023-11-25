@@ -19,6 +19,17 @@ export const createProjectConfiguration = (
         executor: 'nx-serverless-cdk:cdk',
         options: {},
       },
+      'cdk-ci': {
+        executor: 'nx-serverless-cdk:cdk',
+        options: {},
+        dependsOn: [
+          {
+            dependencies: true,
+            target: 'cdk-ci',
+            params: 'forward',
+          },
+        ],
+      },
     },
     tags: ['cdk-app'],
   };

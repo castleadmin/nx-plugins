@@ -40,6 +40,17 @@ describe('create-project-configuration', () => {
             executor: 'nx-serverless-cdk:cdk',
             options: {},
           },
+          'cdk-ci': {
+            executor: 'nx-serverless-cdk:cdk',
+            options: {},
+            dependsOn: [
+              {
+                dependencies: true,
+                target: 'cdk-ci',
+                params: 'forward',
+              },
+            ],
+          },
         });
       });
 
@@ -84,6 +95,17 @@ describe('create-project-configuration', () => {
           cdk: {
             executor: 'nx-serverless-cdk:cdk',
             options: {},
+          },
+          'cdk-ci': {
+            executor: 'nx-serverless-cdk:cdk',
+            options: {},
+            dependsOn: [
+              {
+                dependencies: true,
+                target: 'cdk-ci',
+                params: 'forward',
+              },
+            ],
           },
           'generate-event': {
             executor: 'nx-serverless-cdk:generate-event',
