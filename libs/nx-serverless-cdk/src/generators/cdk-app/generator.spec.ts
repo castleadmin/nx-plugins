@@ -78,6 +78,20 @@ describe('cdk-app', () => {
       expect(tree.isFile(`apps/${projectName}/project.json`)).toBe(true);
     });
 
+    test('should generate a tsconfig file with correct references.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      const tsconfig = readJson(tree, `apps/${projectName}/tsconfig.json`);
+      expect(tsconfig.references).toEqual([
+        {
+          path: './tsconfig.cdk.json',
+        },
+        {
+          path: './tsconfig.spec.json',
+        },
+      ]);
+    });
+
     test('should generate the eslint configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
@@ -190,6 +204,23 @@ export default {
 
       expect(tree.exists(`apps/${projectName}/project.json`)).toBe(true);
       expect(tree.isFile(`apps/${projectName}/project.json`)).toBe(true);
+    });
+
+    test('should generate a tsconfig file with correct references.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      const tsconfig = readJson(tree, `apps/${projectName}/tsconfig.json`);
+      expect(tsconfig.references).toEqual([
+        {
+          path: './tsconfig.app.json',
+        },
+        {
+          path: './tsconfig.cdk.json',
+        },
+        {
+          path: './tsconfig.spec.json',
+        },
+      ]);
     });
 
     test('should generate the eslint configuration file.', async () => {

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { readProjectConfiguration, Tree } from '@nx/devkit';
+import { readJson, readProjectConfiguration, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { e2eProjectGenerator } from './generator';
 import { E2ESchema } from './schema';
@@ -56,6 +56,20 @@ describe('e2e-project', () => {
       expect(tree.isFile(`apps/${projectFileName}-e2e/project.json`)).toBe(
         true,
       );
+    });
+
+    test('should generate a tsconfig file with correct references.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const tsconfig = readJson(
+        tree,
+        `apps/${projectFileName}-e2e/tsconfig.json`,
+      );
+      expect(tsconfig.references).toEqual([
+        {
+          path: './tsconfig.spec.json',
+        },
+      ]);
     });
 
     test('should generate the eslint configuration file.', async () => {

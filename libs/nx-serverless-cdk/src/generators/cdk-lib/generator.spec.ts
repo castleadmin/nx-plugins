@@ -140,6 +140,20 @@ export default {
       expect(config.targets?.['publish']).toBeFalsy();
     });
 
+    test('should generate a tsconfig file with correct references.', async () => {
+      await cdkLibGenerator(tree, options);
+
+      const tsconfig = readJson(tree, `libs/${projectName}/tsconfig.json`);
+      expect(tsconfig.references).toEqual([
+        {
+          path: './tsconfig.lib.json',
+        },
+        {
+          path: './tsconfig.spec.json',
+        },
+      ]);
+    });
+
     test('should use the project name as package.json name.', async () => {
       await cdkLibGenerator(tree, options);
 
