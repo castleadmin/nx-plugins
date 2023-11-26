@@ -23,11 +23,13 @@ import { CdkLibSchema } from './schema';
 const addJsLibrary = async (
   tree: Tree,
   options: CdkLibSchema,
+  projectRoot: string,
   packageName: string,
 ): Promise<GeneratorCallback> => {
   const libOptions: Parameters<typeof libraryGenerator>[1] = {
     name: options.libName,
-    projectNameAndRootFormat: 'derived',
+    directory: projectRoot,
+    projectNameAndRootFormat: 'as-provided',
     skipFormat: true,
     tags: 'cdk-lib',
     skipTsConfig: false,
@@ -60,10 +62,12 @@ const addJsLibrary = async (
 
 const changeProjectConfiguration = (
   tree: Tree,
-  projectName: string,
+  options: CdkLibSchema,
   projectRoot: string,
 ): void => {
-  const config = readProjectConfiguration(tree, projectName);
+  const config = readProjectConfiguration(tree, options.libName);
+
+  config.sourceRoot = joinPathFragments(projectRoot, 'cdk');
 
   (config.targets as NonNullable<typeof config.targets>)['build'] = {
     executor: `@nx/js:tsc`,
@@ -77,7 +81,7 @@ const changeProjectConfiguration = (
     },
   };
 
-  updateProjectConfiguration(tree, projectName, config);
+  updateProjectConfiguration(tree, options.libName, config);
 };
 
 const changeSrcDirectory = (
@@ -93,6 +97,41 @@ const changeSrcDirectory = (
     joinPathFragments(projectRoot, 'cdk', 'index.ts'),
   ];
   writeJson(tree, tsConfigBaseFilePath, tsConfigBase);
+};
+
+const jestConfigSnippet = `,
+  collectCoverageFrom: [
+    'cdk/**/*.ts',
+    '!jest.config.ts',
+    '!cdk/index.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  coverageReporters: ['lcov', 'text'],
+  resetMocks: true,
+};
+`;
+
+const changeJestConfig = (
+  tree: Tree,
+  projectRoot: string,
+): void => {
+  const jestConfig = tree.read(
+    `${projectRoot}/jest.config.ts`,
+    'utf-8',
+  ) as string;
+  const lines = jestConfig.split('\n');
+  lines.pop();
+  lines.pop();
+  const extendedJestConfig =
+    lines.join('\n') + jestConfigSnippet;
+  tree.write(`${projectRoot}/jest.config.ts`, extendedJestConfig);
 };
 
 export const cdkLibGenerator = async (
@@ -119,7 +158,7 @@ export const cdkLibGenerator = async (
     }),
   );
 
-  tasks.push(await addJsLibrary(tree, options, packageName));
+  tasks.push(await addJsLibrary(tree, options, projectRoot, packageName));
 
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
@@ -131,9 +170,11 @@ export const cdkLibGenerator = async (
     tmpl: '',
   });
 
-  changeProjectConfiguration(tree, projectName, projectRoot);
+  changeProjectConfiguration(tree, options, projectRoot);
 
   changeSrcDirectory(tree, projectRoot, packageName);
+
+  changeJestConfig(tree, projectRoot);
 
   if (!options.skipFormat) {
     await formatFiles(tree);

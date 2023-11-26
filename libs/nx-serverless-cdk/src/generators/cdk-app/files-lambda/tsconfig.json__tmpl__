@@ -8,6 +8,9 @@
     },
     {
       "path": "./tsconfig.cdk.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
     }
   ],
   "compilerOptions": {

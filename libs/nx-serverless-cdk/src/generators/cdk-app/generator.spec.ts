@@ -92,6 +92,37 @@ describe('cdk-app', () => {
       expect(tree.isFile(`apps/${projectName}/jest.config.ts`)).toBe(true);
     });
 
+    test('should modify the jest configuration file.', async () => {
+      options.skipFormat = false;
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
+        `/* eslint-disable */
+export default {
+  displayName: '${options.appName}',
+  preset: '../../jest.preset.js',
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  coverageDirectory: '../../coverage/apps/${projectName}',
+  collectCoverageFrom: ['cdk/**/*.ts', '!cdk.out/**/*', '!jest.config.ts'],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  coverageReporters: ['lcov', 'text'],
+  resetMocks: true,
+};
+`,
+      );
+    });
+
     test('should generate the e2e project.', async () => {
       await cdkAppGenerator(tree, options);
 
@@ -173,6 +204,43 @@ describe('cdk-app', () => {
 
       expect(tree.exists(`apps/${projectName}/jest.config.ts`)).toBe(true);
       expect(tree.isFile(`apps/${projectName}/jest.config.ts`)).toBe(true);
+    });
+
+    test('should modify the jest configuration file.', async () => {
+      options.skipFormat = false;
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
+        `/* eslint-disable */
+export default {
+  displayName: '${options.appName}',
+  preset: '../../jest.preset.js',
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  coverageDirectory: '../../coverage/apps/${projectName}',
+  collectCoverageFrom: [
+    'cdk/**/*.ts',
+    'shared/**/*.ts',
+    'src/**/*.ts',
+    '!cdk.out/**/*',
+    '!jest.config.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  coverageReporters: ['lcov', 'text'],
+  resetMocks: true,
+};
+`,
+      );
     });
 
     test('should generate the e2e project.', async () => {

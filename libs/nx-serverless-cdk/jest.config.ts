@@ -7,4 +7,15 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/libs/nx-serverless-cdk',
+  collectCoverageFrom: ['src/**/*.ts', '!jest.config.ts'],
+  coverageThreshold: {
+    global: {
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: 90,
+    },
+  },
+  coverageReporters: ['lcov', 'text'],
+  resetMocks: true,
 };

@@ -59,12 +59,53 @@ const addESLint = async (
   });
 };
 
+const jestConfigGenericSnippet = `,
+  collectCoverageFrom: [
+    'cdk/**/*.ts',
+    '!cdk.out/**/*',
+    '!jest.config.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  coverageReporters: ['lcov', 'text'],
+  resetMocks: true,
+};
+`;
+
+const jestConfigLambdaSnippet = `,
+  collectCoverageFrom: [
+    'cdk/**/*.ts',
+    'shared/**/*.ts',
+    'src/**/*.ts',
+    '!cdk.out/**/*',
+    '!jest.config.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  coverageReporters: ['lcov', 'text'],
+  resetMocks: true,
+};
+`;
+
 const addJest = async (
   tree: Tree,
   options: CdkAppSchema,
+  projectRoot: string,
+  isLambdaApp: boolean,
 ): Promise<GeneratorCallback> => {
-  return await configurationGenerator(tree, {
-    ...options,
+  const callback = await configurationGenerator(tree, {
     project: options.appName,
     supportTsx: false,
     setupFile: 'none',
@@ -75,6 +116,20 @@ const addJest = async (
     skipPackageJson: false,
     js: false,
   });
+
+  const jestConfig = tree.read(
+    `${projectRoot}/jest.config.ts`,
+    'utf-8',
+  ) as string;
+  const lines = jestConfig.split('\n');
+  lines.pop();
+  lines.pop();
+  const extendedJestConfig =
+    lines.join('\n') +
+    (isLambdaApp ? jestConfigLambdaSnippet : jestConfigGenericSnippet);
+  tree.write(`${projectRoot}/jest.config.ts`, extendedJestConfig);
+
+  return callback;
 };
 
 const addE2ETestsProject = async (
@@ -128,7 +183,7 @@ export const cdkAppGenerator = async (
   );
 
   tasks.push(await addESLint(tree, options, projectRoot));
-  tasks.push(await addJest(tree, options));
+  tasks.push(await addJest(tree, options, projectRoot, isLambdaApp));
   tasks.push(await addE2ETestsProject(tree, options));
 
   if (!options.skipFormat) {

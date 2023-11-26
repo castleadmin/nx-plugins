@@ -65,6 +65,37 @@ describe('cdk-lib', () => {
       expect(tree.isFile(`libs/${projectName}/jest.config.ts`)).toBe(true);
     });
 
+    test('should modify the jest configuration file.', async () => {
+      options.skipFormat = false;
+      await cdkLibGenerator(tree, options);
+
+      expect(tree.read(`libs/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
+        `/* eslint-disable */
+export default {
+  displayName: '${options.libName}',
+  preset: '../../jest.preset.js',
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  coverageDirectory: '../../coverage/libs/${projectName}',
+  collectCoverageFrom: ['cdk/**/*.ts', '!jest.config.ts', '!cdk/index.ts'],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  coverageReporters: ['lcov', 'text'],
+  resetMocks: true,
+};
+`,
+      );
+    });
+
     test('should generate a cdk directory.', async () => {
       await cdkLibGenerator(tree, options);
 
@@ -78,10 +109,17 @@ describe('cdk-lib', () => {
       expect(tree.exists(`libs/${projectName}/src`)).toBe(false);
     });
 
+    test("should change the project configuration's source root.", async () => {
+      await cdkLibGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, options.libName);
+      expect(config.sourceRoot).toBe(`libs/${projectName}/cdk`);
+    });
+
     test('should add a build target to the project configuration.', async () => {
       await cdkLibGenerator(tree, options);
 
-      const config = readProjectConfiguration(tree, projectName);
+      const config = readProjectConfiguration(tree, options.libName);
       expect(config.targets?.['build']).toEqual({
         executor: `@nx/js:tsc`,
         outputs: ['{options.outputPath}'],
@@ -98,7 +136,7 @@ describe('cdk-lib', () => {
     test('should not add a publish target to the project configuration.', async () => {
       await cdkLibGenerator(tree, options);
 
-      const config = readProjectConfiguration(tree, projectName);
+      const config = readProjectConfiguration(tree, options.libName);
       expect(config.targets?.['publish']).toBeFalsy();
     });
 
@@ -144,7 +182,7 @@ describe('cdk-lib', () => {
     test('should add a publish target to the project configuration.', async () => {
       await cdkLibGenerator(tree, options);
 
-      const config = readProjectConfiguration(tree, projectName);
+      const config = readProjectConfiguration(tree, options.libName);
       expect(config.targets?.['publish']).toBeTruthy();
     });
 

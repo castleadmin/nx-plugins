@@ -2,21 +2,13 @@
   "app": "TS_NODE_PROJECT='tsconfig.cdk.json' node --require ts-node/register cdk/app.ts",
   "watch": {
     "include": [
-      "**"
+      "cdk/**/*"
     ],
     "exclude": [
-      "README.md",
-      "cdk*.json",
-      "**/*.d.ts",
-      "**/*.spec.ts",
-      "**/*.test.ts",
-      "**/*.js",
-      "**/*.cjs",
-      "**/*.mjs",
-      "tsconfig*.json",
-      "package*.json",
-      "yarn.lock",
-      "node_modules"
+      "cdk.out",
+      "jest.config.ts",
+      "cdk/**/*.spec.ts",
+      "cdk/**/*.test.ts"
     ]
   },
   "context": {
