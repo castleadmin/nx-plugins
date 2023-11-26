@@ -23,6 +23,10 @@ describe('versions', () => {
         tslib: expect.stringMatching(minorUpdate),
         // TypeScript development dependencies
         '@types/node': expect.stringMatching(minorUpdate),
+        // E2E generic dependencies
+        '@aws-sdk/client-sqs': expect.stringMatching(minorUpdate),
+        // E2E lambda dependencies
+        '@aws-sdk/client-lambda': expect.stringMatching(minorUpdate),
       });
     });
   });

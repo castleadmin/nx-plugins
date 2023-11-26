@@ -16,6 +16,10 @@ export interface Versions {
   tslib: string;
   // TypeScript development dependencies
   '@types/node': string;
+  // E2E generic dependencies
+  '@aws-sdk/client-sqs': string;
+  // E2E lambda dependencies
+  '@aws-sdk/client-lambda': string;
 }
 
 export const getVersions = (): Versions => {
@@ -36,6 +40,10 @@ export const getVersions = (): Versions => {
   const tslib = '^2.6.2';
   // TypeScript development dependencies
   const typesNode = '^20.9.1';
+  // E2E generic dependencies
+  const awsSdkClientSqs = '^3.454.0';
+  // E2E lambda dependencies
+  const awsSdkClientLambda = '^3.454.0';
 
   return {
     // CDK dependencies
@@ -55,5 +63,9 @@ export const getVersions = (): Versions => {
     tslib,
     // TypeScript development dependencies
     '@types/node': typesNode,
+    // E2E generic dependencies
+    '@aws-sdk/client-sqs': awsSdkClientSqs,
+    // E2E lambda dependencies
+    '@aws-sdk/client-lambda': awsSdkClientLambda,
   };
 };

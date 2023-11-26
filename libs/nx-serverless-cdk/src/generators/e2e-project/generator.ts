@@ -1,4 +1,5 @@
 import {
+  addDependenciesToPackageJson,
   addProjectConfiguration,
   formatFiles,
   generateFiles,
@@ -16,8 +17,37 @@ import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
 import { getRelativePathToRootTsConfig } from '@nx/js';
 import { resolve } from 'node:path';
+import { getVersions, Versions } from '../../utils/versions';
 import { AppType } from '../cdk-app/app-type';
 import { E2ESchema } from './schema';
+
+const addGenericDependencies = (
+  tree: Tree,
+  versions: Versions,
+): GeneratorCallback => {
+  return addDependenciesToPackageJson(
+    tree,
+    {
+      // E2E generic dependencies
+      '@aws-sdk/client-sqs': versions['@aws-sdk/client-sqs'],
+    },
+    {},
+  );
+};
+
+const addLambdaDependencies = (
+  tree: Tree,
+  versions: Versions,
+): GeneratorCallback => {
+  return addDependenciesToPackageJson(
+    tree,
+    {
+      // E2E lambda dependencies
+      '@aws-sdk/client-lambda': versions['@aws-sdk/client-lambda'],
+    },
+    {},
+  );
+};
 
 const addEslint = async (
   tree: Tree,
@@ -93,6 +123,7 @@ export const e2eProjectGenerator = async (
   tree: Tree,
   options: E2ESchema,
 ): Promise<GeneratorCallback> => {
+  const versions = getVersions();
   const appsDir = getWorkspaceLayout(tree).appsDir;
   const appName = `${options.project}-e2e`;
   const projectName = names(appName).fileName;
@@ -100,9 +131,14 @@ export const e2eProjectGenerator = async (
 
   const tasks: GeneratorCallback[] = [];
 
+  if (options.appType === AppType.generic) {
+    tasks.push(addGenericDependencies(tree, versions));
+  } else {
+    tasks.push(addLambdaDependencies(tree, versions));
+  }
+
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     ...options,
-    testFileName: names(options.project).fileName,
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
@@ -111,11 +147,13 @@ export const e2eProjectGenerator = async (
   if (options.appType === AppType.generic) {
     generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
       ...options,
+      testFileName: names(options.project).fileName,
       tmpl: '',
     });
   } else {
     generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
       ...options,
+      testFileName: names(options.project).fileName,
       tmpl: '',
     });
   }
