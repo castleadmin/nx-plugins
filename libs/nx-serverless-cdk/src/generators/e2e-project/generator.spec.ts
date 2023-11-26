@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Tree } from '@nx/devkit';
+import { readProjectConfiguration, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { e2eProjectGenerator } from './generator';
 import { E2ESchema } from './schema';
@@ -27,14 +27,14 @@ describe('e2e-project', () => {
 
   describe('Given an e2e project generator,', () => {
     let options: E2ESchema;
-    let projectName: string;
+    let projectFileName: string;
 
     beforeEach(() => {
       options = {
         project: faker.word.sample().toUpperCase(),
         skipFormat: true,
       };
-      projectName = options.project.toLowerCase();
+      projectFileName = options.project.toLowerCase();
     });
 
     test('should generate the example spec.', async () => {
@@ -42,7 +42,7 @@ describe('e2e-project', () => {
 
       expect(
         tree.exists(
-          `apps/${projectName}-e2e/src/${projectName}/${projectName}.spec.ts`,
+          `apps/${projectFileName}-e2e/src/${projectFileName}.spec.ts`,
         ),
       ).toBeTruthy();
     });
@@ -50,15 +50,74 @@ describe('e2e-project', () => {
     test('should generate the project configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectName}-e2e/project.json`)).toBe(true);
-      expect(tree.isFile(`apps/${projectName}-e2e/project.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectFileName}-e2e/project.json`)).toBe(
+        true,
+      );
+      expect(tree.isFile(`apps/${projectFileName}-e2e/project.json`)).toBe(
+        true,
+      );
     });
 
     test('should generate the eslint configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectName}-e2e/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`apps/${projectName}-e2e/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectFileName}-e2e/.eslintrc.json`)).toBe(
+        true,
+      );
+      expect(tree.isFile(`apps/${projectFileName}-e2e/.eslintrc.json`)).toBe(
+        true,
+      );
+    });
+
+    test('should generate the jest configuration file.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      expect(tree.exists(`apps/${projectFileName}-e2e/jest.config.ts`)).toBe(
+        true,
+      );
+      expect(tree.isFile(`apps/${projectFileName}-e2e/jest.config.ts`)).toBe(
+        true,
+      );
+    });
+
+    test('should modify the jest configuration file.', async () => {
+      options.skipFormat = false;
+      await e2eProjectGenerator(tree, options);
+
+      expect(
+        tree.read(`apps/${projectFileName}-e2e/jest.config.ts`, 'utf-8'),
+      ).toEqual(
+        `/* eslint-disable */
+export default {
+  displayName: '${options.project}-e2e',
+  preset: '../../jest.preset.js',
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  coverageDirectory: '../../coverage/apps/${projectFileName}-e2e',
+  collectCoverageFrom: ['src/**/*.ts', '!jest.config.ts'],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  coverageReporters: ['lcov', 'text'],
+  resetMocks: true,
+};
+`,
+      );
+    });
+
+    test('should not add a test target to the project configuration.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
+      expect(config.targets?.['test']).toBeFalsy();
     });
 
     test('should format the project files and run successful.', async () => {

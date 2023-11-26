@@ -118,10 +118,7 @@ const jestConfigSnippet = `,
 };
 `;
 
-const changeJestConfig = (
-  tree: Tree,
-  projectRoot: string,
-): void => {
+const changeJestConfig = (tree: Tree, projectRoot: string): void => {
   const jestConfig = tree.read(
     `${projectRoot}/jest.config.ts`,
     'utf-8',
@@ -129,8 +126,7 @@ const changeJestConfig = (
   const lines = jestConfig.split('\n');
   lines.pop();
   lines.pop();
-  const extendedJestConfig =
-    lines.join('\n') + jestConfigSnippet;
+  const extendedJestConfig = lines.join('\n') + jestConfigSnippet;
   tree.write(`${projectRoot}/jest.config.ts`, extendedJestConfig);
 };
 

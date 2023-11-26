@@ -1,4 +1,4 @@
-describe('<%= fileName %>', () => {
+describe('<%= project %>', () => {
 
   describe('Given a service,', () => {
 

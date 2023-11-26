@@ -3,12 +3,20 @@
   "compilerOptions": {
     "outDir": "<%= offset %>dist/out-tsc",
     "module": "commonjs",
+    "target": "es2022",
+    "lib": ["ES2022"],
     "types": ["jest", "node"],
+    "sourceMap": false,
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "esModuleInterop": true,
     "importHelpers": true
   },
   "include": [
     "jest.config.ts",
-    "src/**/*.ts"
-  ]
+    "src/**/*.d.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ],
+  "exclude": []
 }
