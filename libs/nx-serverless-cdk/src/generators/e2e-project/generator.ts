@@ -16,6 +16,7 @@ import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
 import { getRelativePathToRootTsConfig } from '@nx/js';
 import { resolve } from 'node:path';
+import { AppType } from '../cdk-app/app-type';
 import { E2ESchema } from './schema';
 
 const addEslint = async (
@@ -107,6 +108,18 @@ export const e2eProjectGenerator = async (
     tmpl: '',
   });
 
+  if (options.appType === AppType.generic) {
+    generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
+      ...options,
+      tmpl: '',
+    });
+  } else {
+    generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
+      ...options,
+      tmpl: '',
+    });
+  }
+
   addProjectConfiguration(tree, appName, {
     root: projectRoot,
     sourceRoot: joinPathFragments(projectRoot, 'src'),
@@ -120,6 +133,10 @@ export const e2eProjectGenerator = async (
           jestConfig: `${projectRoot}/jest.config.ts`,
           passWithNoTests: true,
         },
+      },
+      'generate-event': {
+        executor: 'nx-serverless-cdk:generate-event',
+        options: {},
       },
     },
   });

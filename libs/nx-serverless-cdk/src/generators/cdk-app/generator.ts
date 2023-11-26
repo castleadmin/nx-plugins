@@ -138,6 +138,7 @@ const addE2ETestsProject = async (
 ): Promise<GeneratorCallback> => {
   return await e2eProjectGenerator(tree, {
     project: options.appName,
+    appType: options.appType,
     skipFormat: true,
   });
 };
