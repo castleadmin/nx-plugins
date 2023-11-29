@@ -1,6 +1,6 @@
 import { Context } from 'aws-lambda';
-import { ExampleEvent } from './example-event';
 import { exampleHandler } from './example-handler';
+import { ExampleEvent } from './example-handler-types';
 
 describe('example-handler', () => {
   let context: Context;
@@ -15,7 +15,7 @@ describe('example-handler', () => {
     beforeEach(() => {
       event = {
         a: 4,
-        b: 5
+        b: 5,
       };
     });
 
@@ -23,7 +23,7 @@ describe('example-handler', () => {
       const result = await exampleHandler(event, context);
 
       expect(result).toEqual({
-        sum: 9
+        sum: 9,
       });
     });
   });

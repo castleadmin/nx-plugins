@@ -16,6 +16,9 @@ export interface Versions {
   tslib: string;
   // TypeScript development dependencies
   '@types/node': string;
+  // E2E common
+  '@aws-sdk/credential-providers': string;
+  '@aws-sdk/client-ssm': string;
   // E2E generic dependencies
   '@aws-sdk/client-sqs': string;
   // E2E lambda dependencies
@@ -40,10 +43,13 @@ export const getVersions = (): Versions => {
   const tslib = '^2.6.2';
   // TypeScript development dependencies
   const typesNode = '^20.9.1';
+  // E2E common
+  const awsSdkCredentialProviders = '^3.458.0';
+  const awsSdkClientSsm = '^3.458.0';
   // E2E generic dependencies
-  const awsSdkClientSqs = '^3.454.0';
+  const awsSdkClientSqs = '^3.458.0';
   // E2E lambda dependencies
-  const awsSdkClientLambda = '^3.454.0';
+  const awsSdkClientLambda = '^3.458.0';
 
   return {
     // CDK dependencies
@@ -63,6 +69,9 @@ export const getVersions = (): Versions => {
     tslib,
     // TypeScript development dependencies
     '@types/node': typesNode,
+    // E2E common
+    '@aws-sdk/credential-providers': awsSdkCredentialProviders,
+    '@aws-sdk/client-ssm': awsSdkClientSsm,
     // E2E generic dependencies
     '@aws-sdk/client-sqs': awsSdkClientSqs,
     // E2E lambda dependencies

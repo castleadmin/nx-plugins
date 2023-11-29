@@ -23,6 +23,9 @@ describe('versions', () => {
         tslib: expect.stringMatching(minorUpdate),
         // TypeScript development dependencies
         '@types/node': expect.stringMatching(minorUpdate),
+        // E2E common
+        '@aws-sdk/credential-providers': expect.stringMatching(minorUpdate),
+        '@aws-sdk/client-ssm': expect.stringMatching(minorUpdate),
         // E2E generic dependencies
         '@aws-sdk/client-sqs': expect.stringMatching(minorUpdate),
         // E2E lambda dependencies

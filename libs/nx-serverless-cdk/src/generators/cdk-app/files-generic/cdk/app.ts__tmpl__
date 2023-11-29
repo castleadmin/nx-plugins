@@ -5,51 +5,85 @@ import { Environment } from './environment';
 import { ExampleStack, ExampleStackProps } from './example-stack';
 
 export const createApp = (): App => {
+  /*
+    The AWS CDK team recommends to declare all stacks of all environments in the source code (Model all production stages in code - https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html#best-practices-apps).
+    This guide explains the approach in more detail (https://taimos.de/blog/deploying-your-cdk-app-to-different-stages-and-environments).
+    Environment variables are used to fixate the account and region at synthesis time (https://docs.aws.amazon.com/cdk/v2/guide/environments.html).
+    They can be set via the '.env.cdk' file or via the shell in use (Please note that the 'cdk' command is always executed in the 'sh' shell on Unix systems).
+  */
+
   const app = new App();
   const serviceName = '<%= appName %>';
 
-  new EnvironmentStacks(app, 'Dev', {
+  const devAccount =
+    process.env['CDK_DEV_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'];
+  if (!devAccount) {
+    throw new Error(
+      `The Dev account isn't defined. Please set it via the '.env.cdk' file in the project directory.`,
+    );
+  }
+  const devRegion =
+    process.env['CDK_DEV_REGION'] ?? process.env['CDK_DEFAULT_REGION'];
+  if (!devRegion) {
+    throw new Error(
+      `The Dev region isn't defined. Please set it via the '.env.cdk' file in the project directory.`,
+    );
+  }
+
+  new EnvironmentStacks(app, Environment.Dev, {
     environment: Environment.Dev,
     serviceName,
     env: {
-      account:
-        process.env['CDK_DEV_ACCOUNT'] ??
-        process.env['CDK_DEFAULT_ACCOUNT'] ??
-        'not-available',
-      region:
-        process.env['CDK_DEV_REGION'] ??
-        process.env['CDK_DEFAULT_REGION'] ??
-        'not-available',
+      account: devAccount,
+      region: devRegion,
     },
   });
 
-  new EnvironmentStacks(app, 'Stage', {
+  const stageAccount =
+    process.env['CDK_STAGE_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'];
+  if (!stageAccount) {
+    throw new Error(
+      `The Stage account isn't defined. Please set it via the '.env.cdk' file in the project directory.`,
+    );
+  }
+  const stageRegion =
+    process.env['CDK_STAGE_REGION'] ?? process.env['CDK_DEFAULT_REGION'];
+  if (!stageRegion) {
+    throw new Error(
+      `The Stage region isn't defined. Please set it via the '.env.cdk' file in the project directory.`,
+    );
+  }
+
+  new EnvironmentStacks(app, Environment.Stage, {
     environment: Environment.Stage,
     serviceName,
     env: {
-      account:
-        process.env['CDK_STAGE_ACCOUNT'] ??
-        process.env['CDK_DEFAULT_ACCOUNT'] ??
-        'not-available',
-      region:
-        process.env['CDK_STAGE_REGION'] ??
-        process.env['CDK_DEFAULT_REGION'] ??
-        'not-available',
+      account: stageAccount,
+      region: stageRegion,
     },
   });
 
-  new EnvironmentStacks(app, 'Prod', {
+  const prodAccount =
+    process.env['CDK_PROD_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'];
+  if (!prodAccount) {
+    throw new Error(
+      `The Prod account isn't defined. Please set it via the '.env.cdk' file in the project directory.`,
+    );
+  }
+  const prodRegion =
+    process.env['CDK_PROD_REGION'] ?? process.env['CDK_DEFAULT_REGION'];
+  if (!prodRegion) {
+    throw new Error(
+      `The Prod region isn't defined. Please set it via the '.env.cdk' file in the project directory.`,
+    );
+  }
+
+  new EnvironmentStacks(app, Environment.Prod, {
     environment: Environment.Prod,
     serviceName,
     env: {
-      account:
-        process.env['CDK_PROD_ACCOUNT'] ??
-        process.env['CDK_DEFAULT_ACCOUNT'] ??
-        'not-available',
-      region:
-        process.env['CDK_PROD_REGION'] ??
-        process.env['CDK_DEFAULT_REGION'] ??
-        'not-available',
+      account: prodAccount,
+      region: prodRegion,
     },
   });
 
@@ -67,11 +101,9 @@ export class EnvironmentStacks extends Construct {
 
     super(scope, id);
 
-    const exampleStack = new ExampleStack(this, 'ExampleStack', stackProps);
+    const exampleStack = new ExampleStack(this, serviceName, stackProps);
 
     Tags.of(exampleStack).add('Environment', environment);
     Tags.of(exampleStack).add('App', serviceName);
   }
 }
-
-createApp();

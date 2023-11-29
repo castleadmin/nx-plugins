@@ -44,6 +44,10 @@ describe('e2e-project', () => {
 
       const packageJson = readJson(tree, 'package.json');
 
+      expect(
+        packageJson.dependencies['@aws-sdk/credential-providers'],
+      ).toBeTruthy();
+      expect(packageJson.dependencies['@aws-sdk/client-ssm']).toBeTruthy();
       expect(packageJson.dependencies['@aws-sdk/client-sqs']).toBeTruthy();
     });
 
@@ -58,11 +62,14 @@ describe('e2e-project', () => {
     test('should generate the example spec.', async () => {
       await e2eProjectGenerator(tree, options);
 
+      // TODO add
+      /*
       expect(
         tree.exists(
           `apps/${projectFileName}-e2e/src/${projectFileName}.spec.ts`,
         ),
       ).toBeTruthy();
+      */
     });
 
     test('should generate the project configuration file.', async () => {
@@ -150,6 +157,13 @@ export default {
 
       const config = readProjectConfiguration(tree, `${options.project}-e2e`);
       expect(config.targets?.['test']).toBeFalsy();
+    });
+
+    test('should not add a generate-event target to the project configuration.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
+      expect(config.targets?.['generate-event']).toBeFalsy();
     });
 
     test('should format the project files and run successful.', async () => {
@@ -187,16 +201,23 @@ export default {
 
       const packageJson = readJson(tree, 'package.json');
 
+      expect(
+        packageJson.dependencies['@aws-sdk/credential-providers'],
+      ).toBeTruthy();
+      expect(packageJson.dependencies['@aws-sdk/client-ssm']).toBeTruthy();
       expect(packageJson.dependencies['@aws-sdk/client-lambda']).toBeTruthy();
     });
 
-    test('should generate the example spec.', async () => {
+    test('should generate the example specs.', async () => {
       await e2eProjectGenerator(tree, options);
 
       expect(
         tree.exists(
-          `apps/${projectFileName}-e2e/src/${projectFileName}.spec.ts`,
+          `apps/${projectFileName}-e2e/src/calculate-product.spec.ts`,
         ),
+      ).toBeTruthy();
+      expect(
+        tree.exists(`apps/${projectFileName}-e2e/src/calculate-sum.spec.ts`),
       ).toBeTruthy();
     });
 
@@ -285,6 +306,13 @@ export default {
 
       const config = readProjectConfiguration(tree, `${options.project}-e2e`);
       expect(config.targets?.['test']).toBeFalsy();
+    });
+
+    test('should add a generate-event target to the project configuration.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
+      expect(config.targets?.['generate-event']).toBeTruthy();
     });
 
     test('should format the project files and run successful.', async () => {

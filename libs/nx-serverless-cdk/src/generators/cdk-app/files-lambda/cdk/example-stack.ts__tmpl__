@@ -1,15 +1,11 @@
-import { Duration, Stack, StackProps } from 'aws-cdk-lib';
-import { LogFormat, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
-import {
-  Charset,
-  NodejsFunction,
-  OutputFormat,
-  SourceMapMode,
-} from 'aws-cdk-lib/aws-lambda-nodejs';
-import { RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { Stack, StackProps } from 'aws-cdk-lib';
+import { NodejsFunction, SourceMapMode } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 import { resolve } from 'node:path';
 import { Environment } from '../shared/environment';
+import { createDefaultLambdaProps } from './default-lambda-props';
+import { ExampleApiConstruct } from './example-api-construct';
 
 export interface ExampleStackProps extends StackProps {
   // Define stack properties here
@@ -26,37 +22,33 @@ export interface ExampleStackProps extends StackProps {
 export class ExampleStack extends Stack {
   constructor(scope: Construct, id: string, props: ExampleStackProps) {
     const { environment, serviceName, build, ...stackProps } = props;
-    const { minify, sourceMapMode, tsconfig } = build;
 
     super(scope, id, stackProps);
 
     // The code that defines your stack goes here
 
-    // Example resource
-    new NodejsFunction(this, 'ExampleFunction', {
-      bundling: {
-        charset: Charset.UTF8,
-        format: OutputFormat.ESM,
-        minify,
-        sourceMap: true,
-        sourceMapMode,
-        tsconfig,
-        // TODO Should be bundled once v2 with ESM support is released. Alternatively, the pre-built Lambda layer could be used.
-        nodeModules: ['@aws-lambda-powertools/logger']
-      },
+    // Example resources
+    const exampleFunction = new NodejsFunction(this, 'ExampleFunction', {
+      ...createDefaultLambdaProps({ environment, serviceName, build }),
       description: 'An example Lambda function.',
       entry: resolve(__dirname, '../src/example-handler.ts'),
-      environment: {
-        ENVIRONMENT: environment,
-        POWERTOOLS_SERVICE_NAME: serviceName,
-      },
       handler: 'exampleHandler',
-      logFormat: LogFormat.JSON,
-      logRetention: RetentionDays.THREE_MONTHS,
-      memorySize: 128,
-      runtime: Runtime.NODEJS_20_X,
-      timeout: Duration.seconds(29),
-      tracing: Tracing.ACTIVE,
+    });
+
+    /*
+      The AWS CDK team recommends to use generated resource names (Use generated resource names, not physical names - https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html#best-practices-apps).
+      In the case of a generated resource name, the Lambda function's name is only known after the CloudFormation template has been synthesized.
+      Furthermore, the Lambda function's name changes per environment. To ease E2E testing, the function name is stored as a SSM parameter.
+    */
+    new StringParameter(this, 'E2eExampleFunctionName', {
+      parameterName: `/e2e/${exampleFunction.node.path}`,
+      stringValue: exampleFunction.functionName,
+    });
+
+    new ExampleApiConstruct(this, 'ExampleApiConstruct', {
+      environment,
+      serviceName,
+      build,
     });
   }
 }

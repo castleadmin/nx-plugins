@@ -121,7 +121,12 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/${projectName}',
-  collectCoverageFrom: ['cdk/**/*.ts', '!cdk.out/**/*', '!jest.config.ts'],
+  collectCoverageFrom: [
+    'cdk/**/*.ts',
+    '!cdk/main.ts',
+    '!cdk.out/**/*',
+    '!jest.config.ts',
+  ],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -256,6 +261,7 @@ export default {
     'cdk/**/*.ts',
     'shared/**/*.ts',
     'src/**/*.ts',
+    '!cdk/main.ts',
     '!cdk.out/**/*',
     '!jest.config.ts',
   ],

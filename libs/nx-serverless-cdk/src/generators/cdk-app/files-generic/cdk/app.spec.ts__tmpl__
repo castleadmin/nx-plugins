@@ -1,22 +1,135 @@
-import { App } from 'aws-cdk-lib';
+import { App, Stack } from 'aws-cdk-lib';
 import { createApp } from './app';
+import { Environment } from './environment';
 
 describe('App', () => {
-  describe('Given an app,', () => {
+  describe('Given the default CDK environment variables extracted from the AWS profile,', () => {
     let app: App;
 
     beforeEach(() => {
-      app = createApp();
+      process.env['CDK_DEFAULT_ACCOUNT'] = '012345678901';
+      process.env['CDK_DEFAULT_REGION'] = 'us-east-1';
+
+      delete process.env['CDK_DEV_ACCOUNT'];
+      delete process.env['CDK_DEV_REGION'];
+      delete process.env['CDK_STAGE_ACCOUNT'];
+      delete process.env['CDK_STAGE_REGION'];
+      delete process.env['CDK_PROD_ACCOUNT'];
+      delete process.env['CDK_PROD_REGION'];
     });
 
-    test('the app should contain all environments.', () => {
+    test('an app should be created with all environments.', () => {
+      app = createApp();
+
       const children = app.node.children;
 
-      expect(children.map((stack) => stack.node.id)).toEqual([
-        'Dev',
-        'Stage',
-        'Prod',
+      expect(children.map((construct) => construct.node.id)).toEqual([
+        Environment.Dev,
+        Environment.Stage,
+        Environment.Prod,
       ]);
+    });
+
+    test('an app should be created with the correct environment accounts and regions.', () => {
+      app = createApp();
+
+      const children = app.node.children;
+
+      expect(
+        children.map((construct) => {
+          const stack = construct.node.children[0] as Stack;
+
+          return {
+            id: construct.node.id,
+            account: stack.account,
+            region: stack.region,
+          };
+        }),
+      ).toEqual([
+        { id: Environment.Dev, account: '012345678901', region: 'us-east-1' },
+        { id: Environment.Stage, account: '012345678901', region: 'us-east-1' },
+        { id: Environment.Prod, account: '012345678901', region: 'us-east-1' },
+      ]);
+    });
+  });
+
+  describe('Given a set of app-specific environment variables,', () => {
+    let app: App;
+
+    beforeEach(() => {
+      process.env['CDK_DEV_ACCOUNT'] = '123456789012';
+      process.env['CDK_DEV_REGION'] = 'eu-west-1';
+      process.env['CDK_STAGE_ACCOUNT'] = '212345678901';
+      process.env['CDK_STAGE_REGION'] = 'eu-west-2';
+      process.env['CDK_PROD_ACCOUNT'] = '312345678901';
+      process.env['CDK_PROD_REGION'] = 'eu-west-3';
+
+      delete process.env['CDK_DEFAULT_ACCOUNT'];
+      delete process.env['CDK_DEFAULT_REGION'];
+    });
+
+    test('an app should be created with all environments.', () => {
+      app = createApp();
+
+      const children = app.node.children;
+
+      expect(children.map((construct) => construct.node.id)).toEqual([
+        Environment.Dev,
+        Environment.Stage,
+        Environment.Prod,
+      ]);
+    });
+
+    test('an app should be created with the correct environment accounts and regions.', () => {
+      app = createApp();
+
+      const children = app.node.children;
+
+      expect(
+        children.map((construct) => {
+          const stack = construct.node.children[0] as Stack;
+
+          return {
+            id: construct.node.id,
+            account: stack.account,
+            region: stack.region,
+          };
+        }),
+      ).toEqual([
+        { id: Environment.Dev, account: '123456789012', region: 'eu-west-1' },
+        { id: Environment.Stage, account: '212345678901', region: 'eu-west-2' },
+        { id: Environment.Prod, account: '312345678901', region: 'eu-west-3' },
+      ]);
+    });
+
+    test('should throw an error if the CDK_DEV_ACCOUNT variable is missing during the creation.', () => {
+      delete process.env['CDK_DEV_ACCOUNT'];
+      expect(() => createApp()).toThrow(Error);
+    });
+
+    test('should throw an error if the CDK_DEV_REGION variable is missing during the creation.', () => {
+      delete process.env['CDK_DEV_REGION'];
+      expect(() => createApp()).toThrow(Error);
+    });
+
+    test('should throw an error if the CDK_STAGE_ACCOUNT variable is missing during the creation.', () => {
+      delete process.env['CDK_STAGE_ACCOUNT'];
+      expect(() => createApp()).toThrow(Error);
+    });
+
+    test('should throw an error if the CDK_STAGE_REGION variable is missing during the creation.', () => {
+      delete process.env['CDK_STAGE_REGION'];
+      expect(() => createApp()).toThrow(Error);
+    });
+
+    test('should throw an error if the CDK_PROD_ACCOUNT variable is missing during the creation.', () => {
+      delete process.env['CDK_PROD_ACCOUNT'];
+      expect(() => createApp()).toThrow(Error);
+    });
+
+    test('should throw an error if the CDK_PROD_REGION variable is missing during the creation.', () => {
+      delete process.env['CDK_PROD_REGION'];
+      expect(() => createApp()).toThrow(Error);
     });
   });
 });

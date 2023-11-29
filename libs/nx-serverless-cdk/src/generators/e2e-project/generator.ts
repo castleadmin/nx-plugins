@@ -8,6 +8,7 @@ import {
   joinPathFragments,
   names,
   offsetFromRoot,
+  ProjectConfiguration,
   readProjectConfiguration,
   runTasksInSerial,
   Tree,
@@ -28,6 +29,10 @@ const addGenericDependencies = (
   return addDependenciesToPackageJson(
     tree,
     {
+      // E2E common
+      '@aws-sdk/credential-providers':
+        versions['@aws-sdk/credential-providers'],
+      '@aws-sdk/client-ssm': versions['@aws-sdk/client-ssm'],
       // E2E generic dependencies
       '@aws-sdk/client-sqs': versions['@aws-sdk/client-sqs'],
     },
@@ -42,6 +47,10 @@ const addLambdaDependencies = (
   return addDependenciesToPackageJson(
     tree,
     {
+      // E2E common
+      '@aws-sdk/credential-providers':
+        versions['@aws-sdk/credential-providers'],
+      '@aws-sdk/client-ssm': versions['@aws-sdk/client-ssm'],
       // E2E lambda dependencies
       '@aws-sdk/client-lambda': versions['@aws-sdk/client-lambda'],
     },
@@ -147,18 +156,16 @@ export const e2eProjectGenerator = async (
   if (options.appType === AppType.generic) {
     generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
       ...options,
-      testFileName: names(options.project).fileName,
       tmpl: '',
     });
   } else {
     generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
       ...options,
-      testFileName: names(options.project).fileName,
       tmpl: '',
     });
   }
 
-  addProjectConfiguration(tree, appName, {
+  const projectConfiguration: ProjectConfiguration = {
     root: projectRoot,
     sourceRoot: joinPathFragments(projectRoot, 'src'),
     implicitDependencies: [options.project],
@@ -172,12 +179,21 @@ export const e2eProjectGenerator = async (
           passWithNoTests: true,
         },
       },
-      'generate-event': {
-        executor: 'nx-serverless-cdk:generate-event',
-        options: {},
-      },
     },
-  });
+  };
+
+  if (options.appType === AppType.lambda) {
+    (
+      projectConfiguration.targets as NonNullable<
+        typeof projectConfiguration.targets
+      >
+    )['generate-event'] = {
+      executor: 'nx-serverless-cdk:generate-event',
+      options: {},
+    };
+  }
+
+  addProjectConfiguration(tree, appName, projectConfiguration);
 
   tasks.push(await addEslint(tree, projectRoot, appName));
   tasks.push(await addJest(tree, projectRoot, appName));

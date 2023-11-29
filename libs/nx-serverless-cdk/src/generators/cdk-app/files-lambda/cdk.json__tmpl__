@@ -1,5 +1,5 @@
 {
-  "app": "TS_NODE_PROJECT='tsconfig.cdk.json' node --require ts-node/register cdk/app.ts",
+  "app": "TS_NODE_PROJECT='tsconfig.cdk.json' node --require ts-node/register cdk/main.ts",
   "watch": {
     "include": [
       "cdk/**/*",

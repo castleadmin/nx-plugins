@@ -1,6 +1,5 @@
 import { Context } from 'aws-lambda';
-import { ExampleEvent } from './example-event';
-import { ExampleResult } from './example-result';
+import { ExampleEvent, ExampleResult } from './example-handler-types';
 import { logger } from './logger';
 
 /**
