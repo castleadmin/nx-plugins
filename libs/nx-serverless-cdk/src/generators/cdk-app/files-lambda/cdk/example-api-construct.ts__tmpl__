@@ -208,6 +208,7 @@ export class ExampleApiConstruct extends Construct {
       The documentation parts are added to the OpenAPI export which can be tested in the SwaggerEditor (https://editor.swagger.io/).
       The SwaggerEditor can also be used to execute queries against the example API.
       The URL of the OpenAPI export should be changed to the URL of the CloudFront distribution.
+      Please note that the documentation has to be published before it can be exported.
      */
 
     new CfnDocumentationPart(this, 'ExampleApiDoc', {

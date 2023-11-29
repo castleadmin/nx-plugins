@@ -39,7 +39,7 @@ describe('e2e-project', () => {
       projectFileName = options.project.toLowerCase();
     });
 
-    test('should add generic dependencies.', async () => {
+    test('should add common dependencies.', async () => {
       await e2eProjectGenerator(tree, options);
 
       const packageJson = readJson(tree, 'package.json');
@@ -48,6 +48,13 @@ describe('e2e-project', () => {
         packageJson.dependencies['@aws-sdk/credential-providers'],
       ).toBeTruthy();
       expect(packageJson.dependencies['@aws-sdk/client-ssm']).toBeTruthy();
+    });
+
+    test('should add generic dependencies.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
       expect(packageJson.dependencies['@aws-sdk/client-sqs']).toBeTruthy();
     });
 
@@ -83,6 +90,20 @@ describe('e2e-project', () => {
       );
     });
 
+    test('should not add a test target to the project configuration.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
+      expect(config.targets?.['test']).toBeFalsy();
+    });
+
+    test('should not add a generate-event target to the project configuration.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
+      expect(config.targets?.['generate-event']).toBeFalsy();
+    });
+
     test('should generate a tsconfig file with correct references.', async () => {
       await e2eProjectGenerator(tree, options);
 
@@ -152,20 +173,6 @@ export default {
       );
     });
 
-    test('should not add a test target to the project configuration.', async () => {
-      await e2eProjectGenerator(tree, options);
-
-      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
-      expect(config.targets?.['test']).toBeFalsy();
-    });
-
-    test('should not add a generate-event target to the project configuration.', async () => {
-      await e2eProjectGenerator(tree, options);
-
-      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
-      expect(config.targets?.['generate-event']).toBeFalsy();
-    });
-
     test('should format the project files and run successful.', async () => {
       options.skipFormat = false;
 
@@ -188,6 +195,17 @@ export default {
       projectFileName = options.project.toLowerCase();
     });
 
+    test('should add common dependencies.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const packageJson = readJson(tree, 'package.json');
+
+      expect(
+        packageJson.dependencies['@aws-sdk/credential-providers'],
+      ).toBeTruthy();
+      expect(packageJson.dependencies['@aws-sdk/client-ssm']).toBeTruthy();
+    });
+
     test('should not add generic dependencies.', async () => {
       await e2eProjectGenerator(tree, options);
 
@@ -201,10 +219,6 @@ export default {
 
       const packageJson = readJson(tree, 'package.json');
 
-      expect(
-        packageJson.dependencies['@aws-sdk/credential-providers'],
-      ).toBeTruthy();
-      expect(packageJson.dependencies['@aws-sdk/client-ssm']).toBeTruthy();
       expect(packageJson.dependencies['@aws-sdk/client-lambda']).toBeTruthy();
     });
 
@@ -232,6 +246,20 @@ export default {
       );
     });
 
+    test('should not add a test target to the project configuration.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
+      expect(config.targets?.['test']).toBeFalsy();
+    });
+
+    test('should add a generate-event target to the project configuration.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
+      expect(config.targets?.['generate-event']).toBeTruthy();
+    });
+
     test('should generate a tsconfig file with correct references.', async () => {
       await e2eProjectGenerator(tree, options);
 
@@ -299,20 +327,6 @@ export default {
 };
 `,
       );
-    });
-
-    test('should not add a test target to the project configuration.', async () => {
-      await e2eProjectGenerator(tree, options);
-
-      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
-      expect(config.targets?.['test']).toBeFalsy();
-    });
-
-    test('should add a generate-event target to the project configuration.', async () => {
-      await e2eProjectGenerator(tree, options);
-
-      const config = readProjectConfiguration(tree, `${options.project}-e2e`);
-      expect(config.targets?.['generate-event']).toBeTruthy();
     });
 
     test('should format the project files and run successful.', async () => {

@@ -11,6 +11,7 @@ jest.mock('aws-cdk-lib/aws-lambda', () => {
   const module = jest.requireActual<typeof import('aws-cdk-lib/aws-lambda')>(
     'aws-cdk-lib/aws-lambda',
   );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   module.Code.fromAsset = (path: string): any => ({
     path,
     isInline: false,

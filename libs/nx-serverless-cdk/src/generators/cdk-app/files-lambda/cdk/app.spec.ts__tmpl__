@@ -1,13 +1,14 @@
 import { App, Stack } from 'aws-cdk-lib';
 import { CodeConfig } from 'aws-cdk-lib/aws-lambda';
+import { Environment } from '../shared/environment';
 import { createApp } from './app';
-import { Environment } from './environment';
 
 // TODO Workaround that should be removed after https://github.com/aws/aws-cdk/issues/18125 has been solved.
 jest.mock('aws-cdk-lib/aws-lambda', () => {
   const module = jest.requireActual<typeof import('aws-cdk-lib/aws-lambda')>(
     'aws-cdk-lib/aws-lambda',
   );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   module.Code.fromAsset = (path: string): any => ({
     path,
     isInline: false,

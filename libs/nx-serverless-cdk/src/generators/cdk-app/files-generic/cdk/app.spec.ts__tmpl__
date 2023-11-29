@@ -1,6 +1,6 @@
 import { App, Stack } from 'aws-cdk-lib';
+import { Environment } from '../shared/environment';
 import { createApp } from './app';
-import { Environment } from './environment';
 
 describe('App', () => {
   describe('Given the default CDK environment variables extracted from the AWS profile,', () => {

@@ -22,7 +22,7 @@ import { getVersions, Versions } from '../../utils/versions';
 import { AppType } from '../cdk-app/app-type';
 import { E2ESchema } from './schema';
 
-const addGenericDependencies = (
+const addCommonDependencies = (
   tree: Tree,
   versions: Versions,
 ): GeneratorCallback => {
@@ -33,6 +33,18 @@ const addGenericDependencies = (
       '@aws-sdk/credential-providers':
         versions['@aws-sdk/credential-providers'],
       '@aws-sdk/client-ssm': versions['@aws-sdk/client-ssm'],
+    },
+    {},
+  );
+};
+
+const addGenericDependencies = (
+  tree: Tree,
+  versions: Versions,
+): GeneratorCallback => {
+  return addDependenciesToPackageJson(
+    tree,
+    {
       // E2E generic dependencies
       '@aws-sdk/client-sqs': versions['@aws-sdk/client-sqs'],
     },
@@ -47,15 +59,48 @@ const addLambdaDependencies = (
   return addDependenciesToPackageJson(
     tree,
     {
-      // E2E common
-      '@aws-sdk/credential-providers':
-        versions['@aws-sdk/credential-providers'],
-      '@aws-sdk/client-ssm': versions['@aws-sdk/client-ssm'],
       // E2E lambda dependencies
       '@aws-sdk/client-lambda': versions['@aws-sdk/client-lambda'],
     },
     {},
   );
+};
+
+const addConfiguration = (
+  tree: Tree,
+  options: E2ESchema,
+  projectRoot: string,
+  appName: string,
+): void => {
+  const projectConfiguration: ProjectConfiguration = {
+    root: projectRoot,
+    sourceRoot: joinPathFragments(projectRoot, 'src'),
+    implicitDependencies: [options.project],
+    projectType: 'application',
+    targets: {
+      e2e: {
+        executor: '@nx/jest:jest',
+        outputs: [`{workspaceRoot}/coverage/{projectRoot}`],
+        options: {
+          jestConfig: `${projectRoot}/jest.config.ts`,
+          passWithNoTests: true,
+        },
+      },
+    },
+  };
+
+  if (options.appType === AppType.lambda) {
+    (
+      projectConfiguration.targets as NonNullable<
+        typeof projectConfiguration.targets
+      >
+    )['generate-event'] = {
+      executor: 'nx-serverless-cdk:generate-event',
+      options: {},
+    };
+  }
+
+  addProjectConfiguration(tree, appName, projectConfiguration);
 };
 
 const addEslint = async (
@@ -140,6 +185,7 @@ export const e2eProjectGenerator = async (
 
   const tasks: GeneratorCallback[] = [];
 
+  tasks.push(addCommonDependencies(tree, versions));
   if (options.appType === AppType.generic) {
     tasks.push(addGenericDependencies(tree, versions));
   } else {
@@ -165,35 +211,7 @@ export const e2eProjectGenerator = async (
     });
   }
 
-  const projectConfiguration: ProjectConfiguration = {
-    root: projectRoot,
-    sourceRoot: joinPathFragments(projectRoot, 'src'),
-    implicitDependencies: [options.project],
-    projectType: 'application',
-    targets: {
-      e2e: {
-        executor: '@nx/jest:jest',
-        outputs: [`{workspaceRoot}/coverage/{projectRoot}`],
-        options: {
-          jestConfig: `${projectRoot}/jest.config.ts`,
-          passWithNoTests: true,
-        },
-      },
-    },
-  };
-
-  if (options.appType === AppType.lambda) {
-    (
-      projectConfiguration.targets as NonNullable<
-        typeof projectConfiguration.targets
-      >
-    )['generate-event'] = {
-      executor: 'nx-serverless-cdk:generate-event',
-      options: {},
-    };
-  }
-
-  addProjectConfiguration(tree, appName, projectConfiguration);
+  addConfiguration(tree, options, projectRoot, appName);
 
   tasks.push(await addEslint(tree, projectRoot, appName));
   tasks.push(await addJest(tree, projectRoot, appName));
