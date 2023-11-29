@@ -66,6 +66,31 @@ const addLambdaDependencies = (
   );
 };
 
+const addFiles = (
+  tree: Tree,
+  options: E2ESchema,
+  projectRoot: string,
+): void => {
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
+    ...options,
+    offset: offsetFromRoot(projectRoot),
+    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: '',
+  });
+
+  if (options.appType === AppType.generic) {
+    generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
+      ...options,
+      tmpl: '',
+    });
+  } else {
+    generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
+      ...options,
+      tmpl: '',
+    });
+  }
+};
+
 const addConfiguration = (
   tree: Tree,
   options: E2ESchema,
@@ -192,25 +217,7 @@ export const e2eProjectGenerator = async (
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
-  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    ...options,
-    offset: offsetFromRoot(projectRoot),
-    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
-    tmpl: '',
-  });
-
-  if (options.appType === AppType.generic) {
-    generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
-      ...options,
-      tmpl: '',
-    });
-  } else {
-    generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
-      ...options,
-      tmpl: '',
-    });
-  }
-
+  addFiles(tree, options, projectRoot);
   addConfiguration(tree, options, projectRoot, appName);
 
   tasks.push(await addEslint(tree, projectRoot, appName));

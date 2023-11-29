@@ -41,6 +41,42 @@ const addLambdaDependencies = (
   );
 };
 
+const addFiles = (
+  tree: Tree,
+  options: CdkAppSchema,
+  projectRoot: string,
+): void => {
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
+    ...options,
+    offset: offsetFromRoot(projectRoot),
+    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: '',
+  });
+  if (options.appType === AppType.generic) {
+    generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
+      ...options,
+      tmpl: '',
+    });
+  } else {
+    generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
+      ...options,
+      tmpl: '',
+    });
+  }
+};
+
+const addConfiguration = (
+  tree: Tree,
+  options: CdkAppSchema,
+  projectRoot: string,
+): void => {
+  addProjectConfiguration(
+    tree,
+    options.appName,
+    createProjectConfiguration(projectRoot, options),
+  );
+};
+
 const addESLint = async (
   tree: Tree,
   options: CdkAppSchema,
@@ -59,27 +95,7 @@ const addESLint = async (
   });
 };
 
-const jestConfigGenericSnippet = `,
-  collectCoverageFrom: [
-    'cdk/**/*.ts',
-    '!cdk/main.ts',
-    '!cdk.out/**/*',
-    '!jest.config.ts',
-  ],
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
-    },
-  },
-  coverageReporters: ['lcov', 'text'],
-  resetMocks: true,
-};
-`;
-
-const jestConfigLambdaSnippet = `,
+const jestConfigSnippet = `,
   collectCoverageFrom: [
     'cdk/**/*.ts',
     'shared/**/*.ts',
@@ -105,7 +121,6 @@ const addJest = async (
   tree: Tree,
   options: CdkAppSchema,
   projectRoot: string,
-  isLambdaApp: boolean,
 ): Promise<GeneratorCallback> => {
   const callback = await configurationGenerator(tree, {
     project: options.appName,
@@ -126,9 +141,7 @@ const addJest = async (
   const lines = jestConfig.split('\n');
   lines.pop();
   lines.pop();
-  const extendedJestConfig =
-    lines.join('\n') +
-    (isLambdaApp ? jestConfigLambdaSnippet : jestConfigGenericSnippet);
+  const extendedJestConfig = lines.join('\n') + jestConfigSnippet;
   tree.write(`${projectRoot}/jest.config.ts`, extendedJestConfig);
 
   return callback;
@@ -153,7 +166,6 @@ export const cdkAppGenerator = async (
   const appsDir = getWorkspaceLayout(tree).appsDir;
   const projectName = names(options.appName).fileName;
   const projectRoot = joinPathFragments(appsDir, projectName);
-  const isLambdaApp = options.appType === AppType.lambda;
 
   const tasks: GeneratorCallback[] = [];
 
@@ -163,30 +175,15 @@ export const cdkAppGenerator = async (
     }),
   );
 
-  if (isLambdaApp) {
+  if (options.appType === AppType.lambda) {
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
-  generateFiles(
-    tree,
-    resolve(__dirname, isLambdaApp ? 'files-lambda' : 'files-generic'),
-    projectRoot,
-    {
-      ...options,
-      offset: offsetFromRoot(projectRoot),
-      rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
-      tmpl: '',
-    },
-  );
-
-  addProjectConfiguration(
-    tree,
-    options.appName,
-    createProjectConfiguration(projectRoot, options),
-  );
+  addFiles(tree, options, projectRoot);
+  addConfiguration(tree, options, projectRoot);
 
   tasks.push(await addESLint(tree, options, projectRoot));
-  tasks.push(await addJest(tree, options, projectRoot, isLambdaApp));
+  tasks.push(await addJest(tree, options, projectRoot));
   tasks.push(await addE2ETestsProject(tree, options));
 
   if (!options.skipFormat) {

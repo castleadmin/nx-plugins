@@ -16,7 +16,7 @@ import {
 import { Linter } from '@nx/eslint';
 import { getRelativePathToRootTsConfig, libraryGenerator } from '@nx/js';
 import { resolve } from 'node:path';
-import { getVersions } from '../../utils/versions';
+import { getVersions, Versions } from '../../utils/versions';
 import initGenerator from '../init/generator';
 import { CdkLibSchema } from './schema';
 
@@ -58,6 +58,32 @@ const addJsLibrary = async (
   }
 
   return await libraryGenerator(tree, libOptions);
+};
+
+const addFiles = ({
+  tree,
+  options,
+  projectRoot,
+  packageName,
+  projectName,
+  versions,
+}: {
+  tree: Tree;
+  options: CdkLibSchema;
+  projectRoot: string;
+  packageName: string;
+  projectName: string;
+  versions: Versions;
+}): void => {
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
+    ...options,
+    projectName,
+    packageName,
+    versions,
+    offset: offsetFromRoot(projectRoot),
+    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: '',
+  });
 };
 
 const changeProjectConfiguration = (
@@ -156,20 +182,17 @@ export const cdkLibGenerator = async (
 
   tasks.push(await addJsLibrary(tree, options, projectRoot, packageName));
 
-  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    ...options,
-    projectName,
+  addFiles({
+    tree,
+    options,
+    projectRoot,
     packageName,
+    projectName,
     versions,
-    offset: offsetFromRoot(projectRoot),
-    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
-    tmpl: '',
   });
 
   changeProjectConfiguration(tree, options, projectRoot);
-
   changeSrcDirectory(tree, projectRoot, packageName);
-
   changeJestConfig(tree, projectRoot);
 
   if (!options.skipFormat) {

@@ -65,10 +65,10 @@ describe('cdk-app', () => {
       expect(tree.isFile(`apps/${projectName}/cdk`)).toBe(false);
     });
 
-    test('should not generate a src directory.', async () => {
+    test('should generate a src directory.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectName}/src`)).toBe(false);
+      expect(tree.exists(`apps/${projectName}/src`)).toBe(true);
     });
 
     test('should generate the project configuration file.', async () => {
@@ -83,6 +83,9 @@ describe('cdk-app', () => {
 
       const tsconfig = readJson(tree, `apps/${projectName}/tsconfig.json`);
       expect(tsconfig.references).toEqual([
+        {
+          path: './tsconfig.app.json',
+        },
         {
           path: './tsconfig.cdk.json',
         },
@@ -123,6 +126,8 @@ export default {
   coverageDirectory: '../../coverage/apps/${projectName}',
   collectCoverageFrom: [
     'cdk/**/*.ts',
+    'shared/**/*.ts',
+    'src/**/*.ts',
     '!cdk/main.ts',
     '!cdk.out/**/*',
     '!jest.config.ts',

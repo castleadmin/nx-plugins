@@ -7,8 +7,6 @@ export const createProjectConfiguration = (
   projectRoot: string,
   options: CdkAppSchema,
 ): ProjectConfiguration => {
-  const isLambdaApp = options.appType === AppType.lambda;
-
   const projectConfiguration: ProjectConfiguration = {
     root: projectRoot,
     sourceRoot: joinPathFragments(projectRoot, 'cdk'),
@@ -34,7 +32,7 @@ export const createProjectConfiguration = (
     tags: ['cdk-app'],
   };
 
-  if (isLambdaApp) {
+  if (options.appType === AppType.lambda) {
     projectConfiguration.targets = {
       ...projectConfiguration.targets,
       'generate-event': {
