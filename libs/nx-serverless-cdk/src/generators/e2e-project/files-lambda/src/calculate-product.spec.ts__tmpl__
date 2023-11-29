@@ -5,6 +5,7 @@ import { Environment, getProfile, getRegion } from './environment';
 import { infoSdkLogger } from './sdk-logger';
 
 describe('Calculate product', () => {
+  const serviceName = '<%= project %>';
   let environment: Environment;
   let profile: string;
   let region: string;
@@ -27,7 +28,7 @@ describe('Calculate product', () => {
       (
         await ssmClient.send(
           new GetParameterCommand({
-            Name: `/e2e/${environment}/<%= project %>/ExampleApiConstruct/url`,
+            Name: `/e2e/${environment}/${serviceName.slice(0, 1).toUpperCase()}${serviceName.slice(1)}/ExampleApiConstruct/url`,
           }),
         )
       ).Parameter?.Value ?? '';
