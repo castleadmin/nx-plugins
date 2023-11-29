@@ -1,5 +1,6 @@
 import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 
 export interface ExampleStackProps extends StackProps {
@@ -17,8 +18,17 @@ export class ExampleStack extends Stack {
     // The code that defines your stack goes here
 
     // Example resource
-    new Queue(this, 'ExampleQueue', {
+    const exampleQueue = new Queue(this, 'ExampleQueue', {
       visibilityTimeout: Duration.seconds(queueVisibilityTimeout ?? 300),
+    });
+
+    /*
+      The SQS queue's URL is only known after the CloudFormation template has been synthesized.
+      Furthermore, the URL changes per environment. To ease E2E testing, the URL is stored as a SSM parameter.
+    */
+    new StringParameter(this, 'E2eExampleQueueUrl', {
+      parameterName: `/e2e/${exampleQueue.node.path}/url`,
+      stringValue: exampleQueue.queueUrl,
     });
   }
 }

@@ -1,0 +1,87 @@
+import {
+  DeleteMessageCommand,
+  ReceiveMessageCommand,
+  SQSClient,
+  SendMessageCommand,
+} from '@aws-sdk/client-sqs';
+import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
+import { fromSSO } from '@aws-sdk/credential-providers';
+import { Environment, getProfile, getRegion } from './environment';
+import { infoSdkLogger } from './sdk-logger';
+
+describe('Receive message', () => {
+  const serviceName = 'generic-app';
+  let environment: Environment;
+  let profile: string;
+  let region: string;
+  let sqsClient: SQSClient;
+  let queueUrl: string;
+
+  beforeEach(async () => {
+    environment = process.env['E2E_ENVIRONMENT'] as Environment;
+    profile = getProfile(environment);
+    region = getRegion(environment);
+
+    const ssmClient = new SSMClient({
+      credentials: fromSSO({
+        profile,
+      }),
+      region,
+      logger: infoSdkLogger,
+    });
+    sqsClient = new SQSClient({
+      credentials: fromSSO({
+        profile,
+      }),
+      region,
+      logger: infoSdkLogger,
+    });
+
+    queueUrl =
+      (
+        await ssmClient.send(
+          new GetParameterCommand({
+            Name: `/e2e/${environment}/${serviceName
+              .slice(0, 1)
+              .toUpperCase()}${serviceName.slice(1)}/ExampleQueue/url`,
+          }),
+        )
+      ).Parameter?.Value ?? '';
+  });
+
+  describe('Given an example queue and a message,', () => {
+    let message: string;
+
+    beforeEach(async () => {
+      message = JSON.stringify({
+        a: 5,
+        b: 12,
+      });
+    });
+
+    test('the message should be sent to the queue and received from it.', async () => {
+      await sqsClient.send(
+        new SendMessageCommand({
+          QueueUrl: queueUrl,
+          MessageBody: message,
+        }),
+      );
+      const response = await sqsClient.send(
+        new ReceiveMessageCommand({
+          QueueUrl: queueUrl,
+        }),
+      );
+      if (response.Messages?.[0]?.ReceiptHandle) {
+        await sqsClient.send(
+          new DeleteMessageCommand({
+            QueueUrl: queueUrl,
+            ReceiptHandle: response.Messages?.[0]?.ReceiptHandle,
+          }),
+        );
+      }
+
+      expect(response.Messages?.length).toBe(1);
+      expect(response.Messages?.[0]?.Body).toBe(message);
+    });
+  });
+});

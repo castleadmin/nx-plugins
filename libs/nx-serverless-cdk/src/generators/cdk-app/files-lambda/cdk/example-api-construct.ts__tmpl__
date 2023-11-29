@@ -63,8 +63,8 @@ export class ExampleApiConstruct extends Construct {
     this.createDocumentation(exampleApi);
 
     /*
-      The CloudFront distribution domain name is only known after the CloudFormation template has been synthesized.
-      Furthermore, the CloudFront distribution domain name changes per environment. To ease E2E testing, the domain name is stored as a SSM parameter.
+      The CloudFront distribution's domain name is only known after the CloudFormation template has been synthesized.
+      Furthermore, the domain name changes per environment. To ease E2E testing, the domain name is stored as a SSM parameter.
     */
     new StringParameter(this, 'E2eExampleApiUrl', {
       parameterName: `/e2e/${this.node.path}/url`,

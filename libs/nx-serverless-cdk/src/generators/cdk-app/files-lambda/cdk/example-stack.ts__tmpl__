@@ -38,7 +38,7 @@ export class ExampleStack extends Stack {
     /*
       The AWS CDK team recommends to use generated resource names (Use generated resource names, not physical names - https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html#best-practices-apps).
       In the case of a generated resource name, the Lambda function's name is only known after the CloudFormation template has been synthesized.
-      Furthermore, the Lambda function's name changes per environment. To ease E2E testing, the function name is stored as a SSM parameter.
+      Furthermore, the name changes per environment. To ease E2E testing, the name is stored as a SSM parameter.
     */
     new StringParameter(this, 'E2eExampleFunctionName', {
       parameterName: `/e2e/${exampleFunction.node.path}`,

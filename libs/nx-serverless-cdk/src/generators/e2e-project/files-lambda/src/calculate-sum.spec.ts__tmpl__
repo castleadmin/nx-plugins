@@ -9,7 +9,6 @@ import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 import { fromSSO } from '@aws-sdk/credential-providers';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import * as process from 'process';
 import { Environment, getProfile, getRegion } from './environment';
 import { infoSdkLogger } from './sdk-logger';
 
