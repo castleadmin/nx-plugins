@@ -6,6 +6,7 @@ import { resolve } from 'node:path';
 import { Environment } from '../shared/environment';
 import { createDefaultLambdaProps } from './default-lambda-props';
 import { ExampleApiConstruct } from './example-api-construct';
+import { toValidSsmParameterName } from './to-valid-ssm-parameter-name';
 
 export interface ExampleStackProps extends StackProps {
   // Define stack properties here
@@ -41,7 +42,7 @@ export class ExampleStack extends Stack {
       Furthermore, the name changes per environment. To ease E2E testing, the name is stored as a SSM parameter.
     */
     new StringParameter(this, 'E2eExampleFunctionName', {
-      parameterName: `/e2e/${exampleFunction.node.path}`,
+      parameterName: toValidSsmParameterName(`/e2e/${exampleFunction.node.path}`),
       stringValue: exampleFunction.functionName,
     });
 

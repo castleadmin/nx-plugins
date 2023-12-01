@@ -13,7 +13,6 @@ import { Environment, getProfile, getRegion } from './environment';
 import { infoSdkLogger } from './sdk-logger';
 
 describe('Calculate sum', () => {
-  const serviceName = '<%= project %>';
   let environment: Environment;
   let profile: string;
   let region: string;
@@ -42,7 +41,7 @@ describe('Calculate sum', () => {
 
     const functionNameOutput = await ssmClient.send(
       new GetParameterCommand({
-        Name: `/e2e/${environment}/${serviceName.slice(0, 1).toUpperCase()}${serviceName.slice(1)}/ExampleFunction`,
+        Name: `/e2e/${environment}/<%= toValidSsmParameterName(`${project.slice(0, 1).toUpperCase()}${project.slice(1)}`).replace(/\//g, '--') %>/ExampleFunction`,
       }),
     );
 

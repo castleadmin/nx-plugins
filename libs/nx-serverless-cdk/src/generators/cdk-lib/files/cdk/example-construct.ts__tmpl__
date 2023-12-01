@@ -5,7 +5,7 @@ import { Construct } from 'constructs';
 export interface ExampleConstructProps {
   // Define construct properties here
 
-  queueVisibilityTimeout?: number;
+  queueVisibilityTimeout?: Duration;
 }
 
 export class ExampleConstruct extends Construct {
@@ -18,7 +18,7 @@ export class ExampleConstruct extends Construct {
 
     // Example resource
     new Queue(this, 'ExampleQueue', {
-      visibilityTimeout: Duration.seconds(queueVisibilityTimeout ?? 300),
+      visibilityTimeout: queueVisibilityTimeout ?? Duration.seconds(300),
     });
   }
 }

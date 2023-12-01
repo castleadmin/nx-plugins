@@ -24,6 +24,7 @@ import { getVersions, Versions } from '../../utils/versions';
 import { AppType } from '../cdk-app/app-type';
 import initGenerator from '../init/generator';
 import { E2ESchema } from './schema';
+import { toValidSsmParameterName } from './to-valid-ssm-parameter-name';
 
 const addCommonDependencies = (
   tree: Tree,
@@ -85,11 +86,13 @@ const addFiles = (
   if (options.type === AppType.generic) {
     generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
       project: options.project,
+      toValidSsmParameterName,
       tmpl: '',
     });
   } else {
     generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
       project: options.project,
+      toValidSsmParameterName,
       tmpl: '',
     });
   }

@@ -2,11 +2,12 @@ import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
+import { toValidSsmParameterName } from './to-valid-ssm-parameter-name';
 
 export interface ExampleStackProps extends StackProps {
   // Define stack properties here
 
-  queueVisibilityTimeout?: number;
+  queueVisibilityTimeout?: Duration;
 }
 
 export class ExampleStack extends Stack {
@@ -19,7 +20,7 @@ export class ExampleStack extends Stack {
 
     // Example resource
     const exampleQueue = new Queue(this, 'ExampleQueue', {
-      visibilityTimeout: Duration.seconds(queueVisibilityTimeout ?? 300),
+      visibilityTimeout: queueVisibilityTimeout ?? Duration.seconds(300),
     });
 
     /*
@@ -27,7 +28,7 @@ export class ExampleStack extends Stack {
       Furthermore, the URL changes per environment. To ease E2E testing, the URL is stored as a SSM parameter.
     */
     new StringParameter(this, 'E2eExampleQueueUrl', {
-      parameterName: `/e2e/${exampleQueue.node.path}/url`,
+      parameterName: toValidSsmParameterName(`/e2e/${exampleQueue.node.path}/url`),
       stringValue: exampleQueue.queueUrl,
     });
   }

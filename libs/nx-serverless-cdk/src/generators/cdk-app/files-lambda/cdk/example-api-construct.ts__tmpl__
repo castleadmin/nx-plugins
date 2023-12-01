@@ -28,6 +28,7 @@ import { Construct } from 'constructs';
 import { resolve } from 'node:path';
 import { Environment } from '../shared/environment';
 import { createDefaultLambdaProps } from './default-lambda-props';
+import { toValidSsmParameterName } from './to-valid-ssm-parameter-name';
 
 export interface ExampleApiConstructProps {
   // Define construct properties here
@@ -67,7 +68,7 @@ export class ExampleApiConstruct extends Construct {
       Furthermore, the domain name changes per environment. To ease E2E testing, the domain name is stored as a SSM parameter.
     */
     new StringParameter(this, 'E2eExampleApiUrl', {
-      parameterName: `/e2e/${this.node.path}/url`,
+      parameterName: toValidSsmParameterName(`/e2e/${this.node.path}/url`),
       stringValue: `https://${exampleDistribution.distributionDomainName}`,
     });
   }
