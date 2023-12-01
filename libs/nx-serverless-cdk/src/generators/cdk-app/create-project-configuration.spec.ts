@@ -1,4 +1,6 @@
+import { faker } from '@faker-js/faker';
 import { ProjectType } from '@nx/workspace';
+import { NormalizedProjectOptionsApplication } from '../../utils/normalize-project-options';
 import { AppType } from './app-type';
 import { createProjectConfiguration } from './create-project-configuration';
 import { CdkAppSchema } from './schema';
@@ -6,34 +8,59 @@ import { CdkAppSchema } from './schema';
 describe('create-project-configuration', () => {
   describe('createProjectConfiguration', () => {
     describe('Given a cdk-app of type generic,', () => {
-      let projectRoot: string;
       let options: CdkAppSchema;
+      let projectOptions: NormalizedProjectOptionsApplication;
 
       beforeEach(() => {
-        projectRoot = 'apps/awesome';
-        options = { appName: 'awesome', appType: AppType.generic };
+        const projectName = faker.word.sample().toUpperCase();
+        const projectRoot = `apps/${projectName}`;
+        options = {
+          name: projectName,
+          directory: `apps/${projectName}`,
+          type: AppType.generic,
+          skipFormat: true,
+        };
+        projectOptions = {
+          projectName,
+          projectRoot,
+          projectFileName: projectName,
+        };
       });
 
       test('should set the root property.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
-        expect(configuration.root).toBe(projectRoot);
+        expect(configuration.root).toBe(projectOptions.projectRoot);
       });
 
       test('should set the sourceRoot property.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
-        expect(configuration.sourceRoot).toBe(`${projectRoot}/cdk`);
+        expect(configuration.sourceRoot).toBe(
+          `${projectOptions.projectRoot}/cdk`,
+        );
       });
 
       test('should create a configuration of projectType application.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
         expect(configuration.projectType).toBe(ProjectType.Application);
       });
 
       test('should create a configuration with a cdk target.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
         expect(configuration.targets).toEqual({
           cdk: {
@@ -55,41 +82,69 @@ describe('create-project-configuration', () => {
       });
 
       test('should add a cdk-app tag.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
         expect(configuration.tags).toEqual(['cdk-app']);
       });
     });
 
     describe('Given a cdk-app of type lambda,', () => {
-      let projectRoot: string;
       let options: CdkAppSchema;
+      let projectOptions: NormalizedProjectOptionsApplication;
 
       beforeEach(() => {
-        projectRoot = 'apps/awesome';
-        options = { appName: 'awesome', appType: AppType.lambda };
+        const projectName = faker.word.sample().toUpperCase();
+        const projectRoot = `apps/${projectName}`;
+        options = {
+          name: projectName,
+          directory: `apps/${projectName}`,
+          type: AppType.lambda,
+          skipFormat: true,
+        };
+        projectOptions = {
+          projectName,
+          projectRoot,
+          projectFileName: projectName,
+        };
       });
 
       test('should set the root property.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
-        expect(configuration.root).toBe(projectRoot);
+        expect(configuration.root).toBe(projectOptions.projectRoot);
       });
 
       test('should set the sourceRoot property.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
-        expect(configuration.sourceRoot).toBe(`${projectRoot}/cdk`);
+        expect(configuration.sourceRoot).toBe(
+          `${projectOptions.projectRoot}/cdk`,
+        );
       });
 
       test('should create a configuration of projectType application.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
         expect(configuration.projectType).toBe(ProjectType.Application);
       });
 
       test('should create a configuration with a cdk target and all sam targets.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
         expect(configuration.targets).toEqual({
           cdk: {
@@ -127,7 +182,10 @@ describe('create-project-configuration', () => {
       });
 
       test('should add a cdk-app tag.', () => {
-        const configuration = createProjectConfiguration(projectRoot, options);
+        const configuration = createProjectConfiguration(
+          options,
+          projectOptions,
+        );
 
         expect(configuration.tags).toEqual(['cdk-app']);
       });

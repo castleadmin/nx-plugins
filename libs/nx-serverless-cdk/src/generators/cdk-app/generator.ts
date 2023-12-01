@@ -4,9 +4,7 @@ import {
   formatFiles,
   generateFiles,
   GeneratorCallback,
-  getWorkspaceLayout,
   joinPathFragments,
-  names,
   offsetFromRoot,
   runTasksInSerial,
   Tree,
@@ -14,7 +12,11 @@ import {
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
 import { getRelativePathToRootTsConfig } from '@nx/js';
+import { ProjectType } from '@nx/workspace';
 import { resolve } from 'node:path';
+import normalizeProjectOptions, {
+  NormalizedProjectOptionsApplication,
+} from '../../utils/normalize-project-options';
 import { getVersions, Versions } from '../../utils/versions';
 import e2eProjectGenerator from '../e2e-project/generator';
 import initGenerator from '../init/generator';
@@ -44,22 +46,23 @@ const addLambdaDependencies = (
 const addFiles = (
   tree: Tree,
   options: CdkAppSchema,
-  projectRoot: string,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): void => {
+  const { projectName, projectRoot } = projectOptions;
+
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    ...options,
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
   });
-  if (options.appType === AppType.generic) {
+  if (options.type === AppType.generic) {
     generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
-      ...options,
+      projectName,
       tmpl: '',
     });
   } else {
     generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
-      ...options,
+      projectName,
       tmpl: '',
     });
   }
@@ -68,22 +71,25 @@ const addFiles = (
 const addConfiguration = (
   tree: Tree,
   options: CdkAppSchema,
-  projectRoot: string,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): void => {
+  const { projectName } = projectOptions;
+
   addProjectConfiguration(
     tree,
-    options.appName,
-    createProjectConfiguration(projectRoot, options),
+    projectName,
+    createProjectConfiguration(options, projectOptions),
   );
 };
 
 const addESLint = async (
   tree: Tree,
-  options: CdkAppSchema,
-  projectRoot: string,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): Promise<GeneratorCallback> => {
+  const { projectName, projectRoot } = projectOptions;
+
   return await lintProjectGenerator(tree, {
-    project: options.appName,
+    project: projectName,
     linter: Linter.EsLint,
     eslintFilePatterns: [`${projectRoot}/**/*.ts`],
     tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.app.json')],
@@ -119,11 +125,12 @@ const jestConfigSnippet = `,
 
 const addJest = async (
   tree: Tree,
-  options: CdkAppSchema,
-  projectRoot: string,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): Promise<GeneratorCallback> => {
+  const { projectName, projectRoot } = projectOptions;
+
   const callback = await configurationGenerator(tree, {
-    project: options.appName,
+    project: projectName,
     supportTsx: false,
     setupFile: 'none',
     skipSerializers: true,
@@ -150,10 +157,15 @@ const addJest = async (
 const addE2ETestsProject = async (
   tree: Tree,
   options: CdkAppSchema,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): Promise<GeneratorCallback> => {
+  const { projectName, projectRoot } = projectOptions;
+
   return await e2eProjectGenerator(tree, {
-    project: options.appName,
-    appType: options.appType,
+    name: `${projectName}-e2e`,
+    directory: `${projectRoot}-e2e`,
+    project: projectName,
+    type: options.type,
     skipFormat: true,
   });
 };
@@ -163,9 +175,11 @@ export const cdkAppGenerator = async (
   options: CdkAppSchema,
 ): Promise<GeneratorCallback> => {
   const versions = getVersions();
-  const appsDir = getWorkspaceLayout(tree).appsDir;
-  const projectName = names(options.appName).fileName;
-  const projectRoot = joinPathFragments(appsDir, projectName);
+  const projectOptions = normalizeProjectOptions(tree, {
+    name: options.name,
+    directory: options.directory,
+    projectType: ProjectType.Application,
+  });
 
   const tasks: GeneratorCallback[] = [];
 
@@ -175,16 +189,16 @@ export const cdkAppGenerator = async (
     }),
   );
 
-  if (options.appType === AppType.lambda) {
+  if (options.type === AppType.lambda) {
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
-  addFiles(tree, options, projectRoot);
-  addConfiguration(tree, options, projectRoot);
+  addFiles(tree, options, projectOptions);
+  addConfiguration(tree, options, projectOptions);
 
-  tasks.push(await addESLint(tree, options, projectRoot));
-  tasks.push(await addJest(tree, options, projectRoot));
-  tasks.push(await addE2ETestsProject(tree, options));
+  tasks.push(await addESLint(tree, projectOptions));
+  tasks.push(await addJest(tree, projectOptions));
+  tasks.push(await addE2ETestsProject(tree, options, projectOptions));
 
   if (!options.skipFormat) {
     await formatFiles(tree);

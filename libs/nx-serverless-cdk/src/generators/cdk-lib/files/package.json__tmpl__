@@ -1,5 +1,5 @@
 {
-  "name": "<%= packageName %>",
+  "name": "<%= importPath %>",
   "version": "0.0.1",
   "devDependencies": {
     "aws-cdk-lib": "<%= versions['aws-cdk-lib'] %>",

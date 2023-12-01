@@ -5,15 +5,20 @@
   "description": "Creates an AWS CDK constructs library.",
   "type": "object",
   "properties": {
-    "libName": {
+    "name": {
       "type": "string",
-      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
+      "pattern": "(?:^@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*\\\\/[a-zA-Z0-9-~][a-zA-Z0-9-._~]*|^[a-zA-Z][^:]*)$",
       "description": "Constructs library name",
       "$default": {
         "$source": "argv",
         "index": 0
       },
       "x-prompt": "What name would you like to use for the newly generated constructs library?"
+    },
+    "directory": {
+      "description": "The project's directory path relative to the current working directory.",
+      "type": "string",
+      "x-priority": "important"
     },
     "importPath": {
       "type": "string",
@@ -30,6 +35,6 @@
       "default": false
     }
   },
-  "required": ["libName"],
+  "required": ["name"],
   "additionalProperties": false
 }

@@ -9,20 +9,6 @@ describe('cdk-lib', () => {
 
   beforeEach(() => {
     tree = createTreeWithEmptyWorkspace();
-    tree.write(
-      'nx.json',
-      JSON.stringify(
-        {
-          $schema: './node_modules/nx/schemas/nx-schema.json',
-          workspaceLayout: {
-            appsDir: 'apps',
-            libsDir: 'libs',
-          },
-        },
-        null,
-        2,
-      ),
-    );
   });
 
   describe('Given a lib generator,', () => {
@@ -30,11 +16,12 @@ describe('cdk-lib', () => {
     let projectName: string;
 
     beforeEach(() => {
+      projectName = faker.word.sample().toUpperCase();
       options = {
-        libName: faker.word.sample().toUpperCase(),
+        name: projectName,
+        directory: `libs/${projectName}`,
         skipFormat: true,
       };
-      projectName = options.libName.toLowerCase();
     });
 
     test('should generate the workspace tsconfig file.', async () => {
@@ -72,7 +59,7 @@ describe('cdk-lib', () => {
       expect(tree.read(`libs/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
         `/* eslint-disable */
 export default {
-  displayName: '${options.libName}',
+  displayName: '${projectName}',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -112,14 +99,14 @@ export default {
     test("should change the project configuration's source root.", async () => {
       await cdkLibGenerator(tree, options);
 
-      const config = readProjectConfiguration(tree, options.libName);
+      const config = readProjectConfiguration(tree, projectName);
       expect(config.sourceRoot).toBe(`libs/${projectName}/cdk`);
     });
 
     test('should add a build target to the project configuration.', async () => {
       await cdkLibGenerator(tree, options);
 
-      const config = readProjectConfiguration(tree, options.libName);
+      const config = readProjectConfiguration(tree, projectName);
       expect(config.targets?.['build']).toEqual({
         executor: `@nx/js:tsc`,
         outputs: ['{options.outputPath}'],
@@ -136,7 +123,7 @@ export default {
     test('should not add a publish target to the project configuration.', async () => {
       await cdkLibGenerator(tree, options);
 
-      const config = readProjectConfiguration(tree, options.libName);
+      const config = readProjectConfiguration(tree, projectName);
       expect(config.targets?.['publish']).toBeFalsy();
     });
 
@@ -157,17 +144,19 @@ export default {
     test('should use the project name as package.json name.', async () => {
       await cdkLibGenerator(tree, options);
 
+      const workspacePackageJson = readJson(tree, 'package.json');
       const packageJson = readJson(tree, `libs/${projectName}/package.json`);
-      expect(packageJson.name).toEqual(projectName);
+      expect(workspacePackageJson.name).toBe('@proj/source');
+      expect(packageJson.name).toEqual(`@proj/${projectName}`);
     });
 
     test('should modify the path mapping in the tsconfig.base.json.', async () => {
       await cdkLibGenerator(tree, options);
 
       const tsconfigBase = readJson(tree, 'tsconfig.base.json');
-      expect(tsconfigBase.compilerOptions.paths[projectName]).toEqual([
-        `libs/${projectName}/cdk/index.ts`,
-      ]);
+      expect(
+        tsconfigBase.compilerOptions.paths[`@proj/${projectName}`],
+      ).toEqual([`libs/${projectName}/cdk/index.ts`]);
     });
 
     test('should format the project files and run successful.', async () => {
@@ -182,21 +171,24 @@ export default {
   describe('Given a lib generator that creates a publishable library,', () => {
     let options: CdkLibSchema;
     let projectName: string;
+    let importPath: string;
 
     beforeEach(() => {
+      projectName = faker.word.sample().toUpperCase();
+      importPath = faker.word.sample().toLowerCase();
       options = {
-        libName: faker.word.sample().toUpperCase(),
-        importPath: faker.word.sample().toLowerCase(),
+        name: projectName,
+        directory: `libs/${projectName}`,
+        importPath,
         publishable: true,
         skipFormat: true,
       };
-      projectName = options.libName.toLowerCase();
     });
 
     test('should add a publish target to the project configuration.', async () => {
       await cdkLibGenerator(tree, options);
 
-      const config = readProjectConfiguration(tree, options.libName);
+      const config = readProjectConfiguration(tree, projectName);
       expect(config.targets?.['publish']).toBeTruthy();
     });
 
@@ -204,23 +196,16 @@ export default {
       await cdkLibGenerator(tree, options);
 
       const packageJson = readJson(tree, `libs/${projectName}/package.json`);
-      expect(packageJson.name).toEqual(options.importPath);
+      expect(packageJson.name).toEqual(importPath);
     });
 
     test('should modify the path mapping in the tsconfig.base.json.', async () => {
       await cdkLibGenerator(tree, options);
 
       const tsconfigBase = readJson(tree, 'tsconfig.base.json');
-      expect(tsconfigBase.compilerOptions.paths[options.importPath!]).toEqual([
+      expect(tsconfigBase.compilerOptions.paths[importPath]).toEqual([
         `libs/${projectName}/cdk/index.ts`,
       ]);
-    });
-
-    test("should throw an error if the import path isn't defined.", async () => {
-      delete options.importPath;
-      await expect(cdkLibGenerator(tree, options)).rejects.toBeInstanceOf(
-        Error,
-      );
     });
   });
 });

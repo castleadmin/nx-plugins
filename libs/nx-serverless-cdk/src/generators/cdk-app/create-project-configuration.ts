@@ -1,12 +1,15 @@
 import { joinPathFragments, ProjectConfiguration } from '@nx/devkit';
 import { ProjectType } from '@nx/workspace';
+import { NormalizedProjectOptionsApplication } from '../../utils/normalize-project-options';
 import { AppType } from './app-type';
 import { CdkAppSchema } from './schema';
 
 export const createProjectConfiguration = (
-  projectRoot: string,
   options: CdkAppSchema,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): ProjectConfiguration => {
+  const { projectRoot } = projectOptions;
+
   const projectConfiguration: ProjectConfiguration = {
     root: projectRoot,
     sourceRoot: joinPathFragments(projectRoot, 'cdk'),
@@ -32,7 +35,7 @@ export const createProjectConfiguration = (
     tags: ['cdk-app'],
   };
 
-  if (options.appType === AppType.lambda) {
+  if (options.type === AppType.lambda) {
     projectConfiguration.targets = {
       ...projectConfiguration.targets,
       'generate-event': {

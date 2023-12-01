@@ -10,7 +10,7 @@ import { Environment, getProfile, getRegion } from './environment';
 import { infoSdkLogger } from './sdk-logger';
 
 describe('Receive message', () => {
-  const serviceName = 'generic-app';
+  const serviceName = '<%= project %>';
   let environment: Environment;
   let profile: string;
   let region: string;

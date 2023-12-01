@@ -2,9 +2,7 @@ import {
   formatFiles,
   generateFiles,
   GeneratorCallback,
-  getWorkspaceLayout,
   joinPathFragments,
-  names,
   offsetFromRoot,
   readJson,
   readProjectConfiguration,
@@ -15,7 +13,11 @@ import {
 } from '@nx/devkit';
 import { Linter } from '@nx/eslint';
 import { getRelativePathToRootTsConfig, libraryGenerator } from '@nx/js';
+import { ProjectType } from '@nx/workspace';
 import { resolve } from 'node:path';
+import normalizeProjectOptions, {
+  NormalizedProjectOptionsLibrary,
+} from '../../utils/normalize-project-options';
 import { getVersions, Versions } from '../../utils/versions';
 import initGenerator from '../init/generator';
 import { CdkLibSchema } from './schema';
@@ -23,11 +25,12 @@ import { CdkLibSchema } from './schema';
 const addJsLibrary = async (
   tree: Tree,
   options: CdkLibSchema,
-  projectRoot: string,
-  packageName: string,
+  projectOptions: NormalizedProjectOptionsLibrary,
 ): Promise<GeneratorCallback> => {
+  const { projectName, projectRoot, importPath } = projectOptions;
+
   const libOptions: Parameters<typeof libraryGenerator>[1] = {
-    name: options.libName,
+    name: projectName,
     directory: projectRoot,
     projectNameAndRootFormat: 'as-provided',
     skipFormat: true,
@@ -38,7 +41,7 @@ const addJsLibrary = async (
     unitTestRunner: 'jest',
     linter: Linter.EsLint,
     testEnvironment: 'node',
-    importPath: packageName,
+    importPath,
     js: false,
     pascalCaseFiles: false,
     strict: false,
@@ -60,25 +63,16 @@ const addJsLibrary = async (
   return await libraryGenerator(tree, libOptions);
 };
 
-const addFiles = ({
-  tree,
-  options,
-  projectRoot,
-  packageName,
-  projectName,
-  versions,
-}: {
-  tree: Tree;
-  options: CdkLibSchema;
-  projectRoot: string;
-  packageName: string;
-  projectName: string;
-  versions: Versions;
-}): void => {
+const addFiles = (
+  tree: Tree,
+  projectOptions: NormalizedProjectOptionsLibrary,
+  versions: Versions,
+): void => {
+  const { projectName, projectRoot, importPath } = projectOptions;
+
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    ...options,
     projectName,
-    packageName,
+    importPath,
     versions,
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
@@ -88,10 +82,10 @@ const addFiles = ({
 
 const changeProjectConfiguration = (
   tree: Tree,
-  options: CdkLibSchema,
-  projectRoot: string,
+  projectOptions: NormalizedProjectOptionsLibrary,
 ): void => {
-  const config = readProjectConfiguration(tree, options.libName);
+  const { projectName, projectRoot } = projectOptions;
+  const config = readProjectConfiguration(tree, projectName);
 
   config.sourceRoot = joinPathFragments(projectRoot, 'cdk');
 
@@ -107,19 +101,20 @@ const changeProjectConfiguration = (
     },
   };
 
-  updateProjectConfiguration(tree, options.libName, config);
+  updateProjectConfiguration(tree, projectName, config);
 };
 
 const changeSrcDirectory = (
   tree: Tree,
-  projectRoot: string,
-  packageName: string,
+  projectOptions: NormalizedProjectOptionsLibrary,
 ): void => {
+  const { projectRoot, importPath } = projectOptions;
+
   tree.delete(joinPathFragments(projectRoot, 'src'));
 
   const tsConfigBaseFilePath = 'tsconfig.base.json';
   const tsConfigBase = readJson(tree, tsConfigBaseFilePath);
-  tsConfigBase.compilerOptions.paths[packageName] = [
+  tsConfigBase.compilerOptions.paths[importPath] = [
     joinPathFragments(projectRoot, 'cdk', 'index.ts'),
   ];
   writeJson(tree, tsConfigBaseFilePath, tsConfigBase);
@@ -144,7 +139,12 @@ const jestConfigSnippet = `,
 };
 `;
 
-const changeJestConfig = (tree: Tree, projectRoot: string): void => {
+const changeJestConfig = (
+  tree: Tree,
+  projectOptions: NormalizedProjectOptionsLibrary,
+): void => {
+  const { projectRoot } = projectOptions;
+
   const jestConfig = tree.read(
     `${projectRoot}/jest.config.ts`,
     'utf-8',
@@ -160,17 +160,13 @@ export const cdkLibGenerator = async (
   tree: Tree,
   options: CdkLibSchema,
 ): Promise<GeneratorCallback> => {
-  if (options.publishable && !options.importPath) {
-    throw new Error(
-      `The '--importPath' parameter has to be provided for publishable libraries. It must be a valid npm package name (e.g. 'example-lib' or '@example-org/example-lib').`,
-    );
-  }
-
   const versions = getVersions();
-  const libsDir = getWorkspaceLayout(tree).libsDir;
-  const projectName = names(options.libName).fileName;
-  const projectRoot = joinPathFragments(libsDir, projectName);
-  const packageName = options.importPath ?? projectName;
+  const projectOptions = normalizeProjectOptions(tree, {
+    name: options.name,
+    directory: options.directory,
+    projectType: ProjectType.Library,
+    importPath: options.importPath,
+  });
 
   const tasks: GeneratorCallback[] = [];
 
@@ -180,20 +176,13 @@ export const cdkLibGenerator = async (
     }),
   );
 
-  tasks.push(await addJsLibrary(tree, options, projectRoot, packageName));
+  tasks.push(await addJsLibrary(tree, options, projectOptions));
 
-  addFiles({
-    tree,
-    options,
-    projectRoot,
-    packageName,
-    projectName,
-    versions,
-  });
+  addFiles(tree, projectOptions, versions);
 
-  changeProjectConfiguration(tree, options, projectRoot);
-  changeSrcDirectory(tree, projectRoot, packageName);
-  changeJestConfig(tree, projectRoot);
+  changeProjectConfiguration(tree, projectOptions);
+  changeSrcDirectory(tree, projectOptions);
+  changeJestConfig(tree, projectOptions);
 
   if (!options.skipFormat) {
     await formatFiles(tree);

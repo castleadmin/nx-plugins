@@ -4,9 +4,7 @@ import {
   formatFiles,
   generateFiles,
   GeneratorCallback,
-  getWorkspaceLayout,
   joinPathFragments,
-  names,
   offsetFromRoot,
   ProjectConfiguration,
   readProjectConfiguration,
@@ -17,9 +15,14 @@ import {
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
 import { getRelativePathToRootTsConfig } from '@nx/js';
+import { ProjectType } from '@nx/workspace';
 import { resolve } from 'node:path';
+import normalizeProjectOptions, {
+  NormalizedProjectOptionsApplication,
+} from '../../utils/normalize-project-options';
 import { getVersions, Versions } from '../../utils/versions';
 import { AppType } from '../cdk-app/app-type';
+import initGenerator from '../init/generator';
 import { E2ESchema } from './schema';
 
 const addCommonDependencies = (
@@ -69,23 +72,24 @@ const addLambdaDependencies = (
 const addFiles = (
   tree: Tree,
   options: E2ESchema,
-  projectRoot: string,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): void => {
+  const { projectRoot } = projectOptions;
+
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    ...options,
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
   });
 
-  if (options.appType === AppType.generic) {
+  if (options.type === AppType.generic) {
     generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
-      ...options,
+      project: options.project,
       tmpl: '',
     });
   } else {
     generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
-      ...options,
+      project: options.project,
       tmpl: '',
     });
   }
@@ -94,9 +98,10 @@ const addFiles = (
 const addConfiguration = (
   tree: Tree,
   options: E2ESchema,
-  projectRoot: string,
-  appName: string,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): void => {
+  const { projectName, projectRoot } = projectOptions;
+
   const projectConfiguration: ProjectConfiguration = {
     root: projectRoot,
     sourceRoot: joinPathFragments(projectRoot, 'src'),
@@ -114,7 +119,7 @@ const addConfiguration = (
     },
   };
 
-  if (options.appType === AppType.lambda) {
+  if (options.type === AppType.lambda) {
     (
       projectConfiguration.targets as NonNullable<
         typeof projectConfiguration.targets
@@ -125,16 +130,17 @@ const addConfiguration = (
     };
   }
 
-  addProjectConfiguration(tree, appName, projectConfiguration);
+  addProjectConfiguration(tree, projectName, projectConfiguration);
 };
 
 const addEslint = async (
   tree: Tree,
-  projectRoot: string,
-  appName: string,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): Promise<GeneratorCallback> => {
+  const { projectName, projectRoot } = projectOptions;
+
   return await lintProjectGenerator(tree, {
-    project: appName,
+    project: projectName,
     linter: Linter.EsLint,
     eslintFilePatterns: [`${projectRoot}/**/*.ts`],
     tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.spec.json')],
@@ -166,11 +172,12 @@ const jestConfigSnippet = `,
 
 const addJest = async (
   tree: Tree,
-  projectRoot: string,
-  appName: string,
+  projectOptions: NormalizedProjectOptionsApplication,
 ): Promise<GeneratorCallback> => {
+  const { projectName, projectRoot } = projectOptions;
+
   const callback = await configurationGenerator(tree, {
-    project: appName,
+    project: projectName,
     supportTsx: false,
     setupFile: 'none',
     skipSerializers: true,
@@ -191,9 +198,9 @@ const addJest = async (
   const extendedJestConfig = lines.join('\n') + jestConfigSnippet;
   tree.write(`${projectRoot}/jest.config.ts`, extendedJestConfig);
 
-  const config = readProjectConfiguration(tree, appName);
+  const config = readProjectConfiguration(tree, projectName);
   delete config.targets?.['test'];
-  updateProjectConfiguration(tree, appName, config);
+  updateProjectConfiguration(tree, projectName, config);
 
   return callback;
 };
@@ -203,25 +210,32 @@ export const e2eProjectGenerator = async (
   options: E2ESchema,
 ): Promise<GeneratorCallback> => {
   const versions = getVersions();
-  const appsDir = getWorkspaceLayout(tree).appsDir;
-  const appName = `${options.project}-e2e`;
-  const projectName = names(appName).fileName;
-  const projectRoot = joinPathFragments(appsDir, projectName);
+  const projectOptions = normalizeProjectOptions(tree, {
+    name: options.name,
+    directory: options.directory,
+    projectType: ProjectType.Application,
+  });
 
   const tasks: GeneratorCallback[] = [];
 
+  tasks.push(
+    await initGenerator(tree, {
+      skipFormat: true,
+    }),
+  );
+
   tasks.push(addCommonDependencies(tree, versions));
-  if (options.appType === AppType.generic) {
+  if (options.type === AppType.generic) {
     tasks.push(addGenericDependencies(tree, versions));
   } else {
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
-  addFiles(tree, options, projectRoot);
-  addConfiguration(tree, options, projectRoot, appName);
+  addFiles(tree, options, projectOptions);
+  addConfiguration(tree, options, projectOptions);
 
-  tasks.push(await addEslint(tree, projectRoot, appName));
-  tasks.push(await addJest(tree, projectRoot, appName));
+  tasks.push(await addEslint(tree, projectOptions));
+  tasks.push(await addJest(tree, projectOptions));
 
   if (!options.skipFormat) {
     await formatFiles(tree);

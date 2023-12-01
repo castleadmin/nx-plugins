@@ -10,33 +10,23 @@ describe('e2e-project', () => {
 
   beforeEach(async () => {
     tree = createTreeWithEmptyWorkspace();
-    tree.write(
-      'nx.json',
-      JSON.stringify(
-        {
-          $schema: './node_modules/nx/schemas/nx-schema.json',
-          workspaceLayout: {
-            appsDir: 'apps',
-            libsDir: 'libs',
-          },
-        },
-        null,
-        2,
-      ),
-    );
   });
 
   describe('Given a generic e2e project generator,', () => {
     let options: E2ESchema;
-    let projectFileName: string;
+    let project: string;
+    let projectName: string;
 
     beforeEach(() => {
+      project = faker.word.sample().toUpperCase();
+      projectName = `${project}-e2e`;
       options = {
-        project: faker.word.sample().toUpperCase(),
-        appType: AppType.generic,
+        name: projectName,
+        directory: `apps/${projectName}`,
+        project,
+        type: AppType.generic,
         skipFormat: true,
       };
-      projectFileName = options.project.toLowerCase();
     });
 
     test('should add common dependencies.', async () => {
@@ -66,28 +56,26 @@ describe('e2e-project', () => {
       expect(packageJson.dependencies['@aws-sdk/client-lambda']).toBeFalsy();
     });
 
-    test('should generate the example spec.', async () => {
+    test('should generate the example specs.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      // TODO add
-      /*
       expect(
-        tree.exists(
-          `apps/${projectFileName}-e2e/src/${projectFileName}.spec.ts`,
-        ),
+        tree.exists(`apps/${projectName}/src/environment.spec.ts`),
       ).toBeTruthy();
-      */
+      expect(
+        tree.exists(`apps/${projectName}/src/environment.ts`),
+      ).toBeTruthy();
+      expect(tree.exists(`apps/${projectName}/src/sdk-logger.ts`)).toBeTruthy();
+      expect(
+        tree.exists(`apps/${projectName}/src/receive-message.spec.ts`),
+      ).toBeTruthy();
     });
 
     test('should generate the project configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectFileName}-e2e/project.json`)).toBe(
-        true,
-      );
-      expect(tree.isFile(`apps/${projectFileName}-e2e/project.json`)).toBe(
-        true,
-      );
+      expect(tree.exists(`apps/${projectName}/project.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/project.json`)).toBe(true);
     });
 
     test('should not add a test target to the project configuration.', async () => {
@@ -107,10 +95,7 @@ describe('e2e-project', () => {
     test('should generate a tsconfig file with correct references.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      const tsconfig = readJson(
-        tree,
-        `apps/${projectFileName}-e2e/tsconfig.json`,
-      );
+      const tsconfig = readJson(tree, `apps/${projectName}/tsconfig.json`);
       expect(tsconfig.references).toEqual([
         {
           path: './tsconfig.spec.json',
@@ -121,32 +106,22 @@ describe('e2e-project', () => {
     test('should generate the eslint configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectFileName}-e2e/.eslintrc.json`)).toBe(
-        true,
-      );
-      expect(tree.isFile(`apps/${projectFileName}-e2e/.eslintrc.json`)).toBe(
-        true,
-      );
+      expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
     });
 
     test('should generate the jest configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectFileName}-e2e/jest.config.ts`)).toBe(
-        true,
-      );
-      expect(tree.isFile(`apps/${projectFileName}-e2e/jest.config.ts`)).toBe(
-        true,
-      );
+      expect(tree.exists(`apps/${projectName}/jest.config.ts`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/jest.config.ts`)).toBe(true);
     });
 
     test('should modify the jest configuration file.', async () => {
       options.skipFormat = false;
       await e2eProjectGenerator(tree, options);
 
-      expect(
-        tree.read(`apps/${projectFileName}-e2e/jest.config.ts`, 'utf-8'),
-      ).toEqual(
+      expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
         `/* eslint-disable */
 export default {
   displayName: '${options.project}-e2e',
@@ -156,7 +131,7 @@ export default {
     '^.+\\\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/${projectFileName}-e2e',
+  coverageDirectory: '../../coverage/apps/${projectName}',
   collectCoverageFrom: ['src/**/*.ts', '!jest.config.ts'],
   coverageThreshold: {
     global: {
@@ -184,15 +159,19 @@ export default {
 
   describe('Given a lambda e2e project generator,', () => {
     let options: E2ESchema;
-    let projectFileName: string;
+    let project: string;
+    let projectName: string;
 
     beforeEach(() => {
+      project = faker.word.sample().toUpperCase();
+      projectName = `${project}-e2e`;
       options = {
-        project: faker.word.sample().toUpperCase(),
-        appType: AppType.lambda,
+        name: projectName,
+        directory: `apps/${projectName}`,
+        project,
+        type: AppType.lambda,
         skipFormat: true,
       };
-      projectFileName = options.project.toLowerCase();
     });
 
     test('should add common dependencies.', async () => {
@@ -226,24 +205,25 @@ export default {
       await e2eProjectGenerator(tree, options);
 
       expect(
-        tree.exists(
-          `apps/${projectFileName}-e2e/src/calculate-product.spec.ts`,
-        ),
+        tree.exists(`apps/${projectName}/src/environment.spec.ts`),
       ).toBeTruthy();
       expect(
-        tree.exists(`apps/${projectFileName}-e2e/src/calculate-sum.spec.ts`),
+        tree.exists(`apps/${projectName}/src/environment.ts`),
+      ).toBeTruthy();
+      expect(tree.exists(`apps/${projectName}/src/sdk-logger.ts`)).toBeTruthy();
+      expect(
+        tree.exists(`apps/${projectName}/src/calculate-product.spec.ts`),
+      ).toBeTruthy();
+      expect(
+        tree.exists(`apps/${projectName}/src/calculate-sum.spec.ts`),
       ).toBeTruthy();
     });
 
     test('should generate the project configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectFileName}-e2e/project.json`)).toBe(
-        true,
-      );
-      expect(tree.isFile(`apps/${projectFileName}-e2e/project.json`)).toBe(
-        true,
-      );
+      expect(tree.exists(`apps/${projectName}/project.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/project.json`)).toBe(true);
     });
 
     test('should not add a test target to the project configuration.', async () => {
@@ -263,10 +243,7 @@ export default {
     test('should generate a tsconfig file with correct references.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      const tsconfig = readJson(
-        tree,
-        `apps/${projectFileName}-e2e/tsconfig.json`,
-      );
+      const tsconfig = readJson(tree, `apps/${projectName}/tsconfig.json`);
       expect(tsconfig.references).toEqual([
         {
           path: './tsconfig.spec.json',
@@ -277,32 +254,22 @@ export default {
     test('should generate the eslint configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectFileName}-e2e/.eslintrc.json`)).toBe(
-        true,
-      );
-      expect(tree.isFile(`apps/${projectFileName}-e2e/.eslintrc.json`)).toBe(
-        true,
-      );
+      expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
     });
 
     test('should generate the jest configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectFileName}-e2e/jest.config.ts`)).toBe(
-        true,
-      );
-      expect(tree.isFile(`apps/${projectFileName}-e2e/jest.config.ts`)).toBe(
-        true,
-      );
+      expect(tree.exists(`apps/${projectName}/jest.config.ts`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/jest.config.ts`)).toBe(true);
     });
 
     test('should modify the jest configuration file.', async () => {
       options.skipFormat = false;
       await e2eProjectGenerator(tree, options);
 
-      expect(
-        tree.read(`apps/${projectFileName}-e2e/jest.config.ts`, 'utf-8'),
-      ).toEqual(
+      expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
         `/* eslint-disable */
 export default {
   displayName: '${options.project}-e2e',
@@ -312,7 +279,7 @@ export default {
     '^.+\\\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/${projectFileName}-e2e',
+  coverageDirectory: '../../coverage/apps/${projectName}',
   collectCoverageFrom: ['src/**/*.ts', '!jest.config.ts'],
   coverageThreshold: {
     global: {

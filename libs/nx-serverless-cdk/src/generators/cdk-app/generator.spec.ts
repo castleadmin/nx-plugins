@@ -10,20 +10,6 @@ describe('cdk-app', () => {
 
   beforeEach(() => {
     tree = createTreeWithEmptyWorkspace();
-    tree.write(
-      'nx.json',
-      JSON.stringify(
-        {
-          $schema: './node_modules/nx/schemas/nx-schema.json',
-          workspaceLayout: {
-            appsDir: 'apps',
-            libsDir: 'libs',
-          },
-        },
-        null,
-        2,
-      ),
-    );
   });
 
   describe('Given an app generator of type generic,', () => {
@@ -31,12 +17,13 @@ describe('cdk-app', () => {
     let projectName: string;
 
     beforeEach(() => {
+      projectName = faker.word.sample().toUpperCase();
       options = {
-        appName: faker.word.sample().toUpperCase(),
-        appType: AppType.generic,
+        name: projectName,
+        directory: `apps/${projectName}`,
+        type: AppType.generic,
         skipFormat: true,
       };
-      projectName = options.appName.toLowerCase();
     });
 
     test('should generate the workspace tsconfig file.', async () => {
@@ -116,7 +103,7 @@ describe('cdk-app', () => {
       expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
         `/* eslint-disable */
 export default {
-  displayName: '${options.appName}',
+  displayName: '${projectName}',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -168,12 +155,13 @@ export default {
     let projectName: string;
 
     beforeEach(() => {
+      projectName = faker.word.sample().toUpperCase();
       options = {
-        appName: faker.word.sample().toUpperCase(),
-        appType: AppType.lambda,
+        name: projectName,
+        directory: `apps/${projectName}`,
+        type: AppType.lambda,
         skipFormat: true,
       };
-      projectName = options.appName.toLowerCase();
     });
 
     test('should generate the workspace tsconfig file.', async () => {
@@ -254,7 +242,7 @@ export default {
       expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
         `/* eslint-disable */
 export default {
-  displayName: '${options.appName}',
+  displayName: '${projectName}',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

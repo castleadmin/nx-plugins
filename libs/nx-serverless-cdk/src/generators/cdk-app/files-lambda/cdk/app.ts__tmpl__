@@ -15,7 +15,7 @@ export const createApp = (): App => {
   */
 
   const app = new App();
-  const serviceName = '<%= appName %>';
+  const serviceName = '<%= projectName %>';
 
   const devAccount =
     process.env['CDK_DEV_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'];

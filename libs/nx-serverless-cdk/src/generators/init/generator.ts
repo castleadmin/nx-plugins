@@ -42,14 +42,21 @@ export const initGenerator = async (
 
   tasks.push(
     await jsInitGenerator(tree, {
-      ...options,
-      tsConfigName: 'tsconfig.base.json',
+      js: false,
       skipFormat: true,
+      skipPackageJson: false,
+      tsConfigName: 'tsconfig.base.json',
     }),
   );
 
   tasks.push(
-    await jestInitGenerator(tree, { ...options, testEnvironment: 'node' }),
+    await jestInitGenerator(tree, {
+      compiler: 'tsc',
+      js: false,
+      skipPackageJson: false,
+      testEnvironment: 'node',
+      rootProject: false,
+    }),
   );
 
   tasks.push(addInitDependencies(tree, versions));

@@ -5,9 +5,9 @@
   "description": "Creates an AWS CDK application.",
   "type": "object",
   "properties": {
-    "appName": {
+    "name": {
       "type": "string",
-      "pattern": "^[A-Za-z_][A-Za-z0-9_\\-]*$",
+      "pattern": "(?:^@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*\\\\/[a-zA-Z0-9-~][a-zA-Z0-9-._~]*|^[a-zA-Z][^:]*)$",
       "description": "Application name",
       "$default": {
         "$source": "argv",
@@ -15,7 +15,12 @@
       },
       "x-prompt": "What name would you like to use for the newly generated application?"
     },
-    "appType": {
+    "directory": {
+      "description": "The project's directory path relative to the current working directory.",
+      "type": "string",
+      "x-priority": "important"
+    },
+    "type": {
       "type": "string",
       "enum": ["generic", "lambda"],
       "description": "Application type",
@@ -40,6 +45,6 @@
       "default": false
     }
   },
-  "required": ["appName", "appType"],
+  "required": ["name", "type"],
   "additionalProperties": false
 }

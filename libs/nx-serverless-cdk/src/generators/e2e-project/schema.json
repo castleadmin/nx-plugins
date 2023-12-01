@@ -5,17 +5,46 @@
   "description": "Creates an E2E project for a nx-serverless-cdk application.",
   "type": "object",
   "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "(?:^@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*\\\\/[a-zA-Z0-9-~][a-zA-Z0-9-._~]*|^[a-zA-Z][^:]*)$",
+      "description": "E2E application name.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use for the newly generated E2E application?"
+    },
+    "directory": {
+      "description": "The project's directory path relative to the current working directory.",
+      "type": "string",
+      "x-priority": "important"
+    },
     "project": {
       "type": "string",
-      "description": "The name of the project.",
-      "$default": { "$source": "argv", "index": 0 },
+      "pattern": "(?:^@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*\\\\/[a-zA-Z0-9-~][a-zA-Z0-9-._~]*|^[a-zA-Z][^:]*)$",
+      "description": "CDK application name.",
       "x-dropdown": "project",
-      "x-prompt": "What project is this for?"
+      "x-prompt": "For which CDK application should the E2E application be generated?"
     },
-    "appType": {
+    "type": {
       "type": "string",
       "enum": ["generic", "lambda"],
-      "description": "Application type"
+      "description": "Application type",
+      "x-prompt": {
+        "message": "Which application type would you like to use?",
+        "type": "list",
+        "items": [
+          {
+            "value": "generic",
+            "label": "Generic"
+          },
+          {
+            "value": "lambda",
+            "label": "Lambda"
+          }
+        ]
+      }
     },
     "skipFormat": {
       "description": "Skip formatting files.",
@@ -25,6 +54,6 @@
       "x-priority": "internal"
     }
   },
-  "required": ["project", "appType"],
+  "required": ["name", "project", "type"],
   "additionalProperties": false
 }
