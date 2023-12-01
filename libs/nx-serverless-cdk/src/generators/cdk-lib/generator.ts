@@ -63,23 +63,6 @@ const addJsLibrary = async (
   return await libraryGenerator(tree, libOptions);
 };
 
-const addFiles = (
-  tree: Tree,
-  projectOptions: NormalizedProjectOptionsLibrary,
-  versions: Versions,
-): void => {
-  const { projectName, projectRoot, importPath } = projectOptions;
-
-  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    projectName,
-    importPath,
-    versions,
-    offset: offsetFromRoot(projectRoot),
-    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
-    tmpl: '',
-  });
-};
-
 const changeProjectConfiguration = (
   tree: Tree,
   projectOptions: NormalizedProjectOptionsLibrary,
@@ -156,6 +139,23 @@ const changeJestConfig = (
   tree.write(`${projectRoot}/jest.config.ts`, extendedJestConfig);
 };
 
+const addFiles = (
+  tree: Tree,
+  projectOptions: NormalizedProjectOptionsLibrary,
+  versions: Versions,
+): void => {
+  const { projectName, projectRoot, importPath } = projectOptions;
+
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
+    projectName,
+    importPath,
+    versions,
+    offset: offsetFromRoot(projectRoot),
+    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: '',
+  });
+};
+
 export const cdkLibGenerator = async (
   tree: Tree,
   options: CdkLibSchema,
@@ -178,11 +178,11 @@ export const cdkLibGenerator = async (
 
   tasks.push(await addJsLibrary(tree, options, projectOptions));
 
-  addFiles(tree, projectOptions, versions);
-
   changeProjectConfiguration(tree, projectOptions);
   changeSrcDirectory(tree, projectOptions);
   changeJestConfig(tree, projectOptions);
+
+  addFiles(tree, projectOptions, versions);
 
   if (!options.skipFormat) {
     await formatFiles(tree);

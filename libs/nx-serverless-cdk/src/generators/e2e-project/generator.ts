@@ -11,6 +11,7 @@ import {
   runTasksInSerial,
   Tree,
   updateProjectConfiguration,
+  writeJson,
 } from '@nx/devkit';
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
@@ -68,34 +69,6 @@ const addLambdaDependencies = (
     },
     {},
   );
-};
-
-const addFiles = (
-  tree: Tree,
-  options: E2ESchema,
-  projectOptions: NormalizedProjectOptionsApplication,
-): void => {
-  const { projectRoot } = projectOptions;
-
-  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    offset: offsetFromRoot(projectRoot),
-    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
-    tmpl: '',
-  });
-
-  if (options.type === AppType.generic) {
-    generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
-      project: options.project,
-      toValidSsmParameterName,
-      tmpl: '',
-    });
-  } else {
-    generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
-      project: options.project,
-      toValidSsmParameterName,
-      tmpl: '',
-    });
-  }
 };
 
 const addConfiguration = (
@@ -179,6 +152,12 @@ const addJest = async (
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
+  writeJson(
+    tree,
+    joinPathFragments(projectOptions.projectRoot, 'tsconfig.json'),
+    {},
+  );
+
   const callback = await configurationGenerator(tree, {
     project: projectName,
     supportTsx: false,
@@ -208,6 +187,34 @@ const addJest = async (
   return callback;
 };
 
+const addFiles = (
+  tree: Tree,
+  options: E2ESchema,
+  projectOptions: NormalizedProjectOptionsApplication,
+): void => {
+  const { projectRoot } = projectOptions;
+
+  generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
+    offset: offsetFromRoot(projectRoot),
+    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: '',
+  });
+
+  if (options.type === AppType.generic) {
+    generateFiles(tree, resolve(__dirname, 'files-generic'), projectRoot, {
+      project: options.project,
+      toValidSsmParameterName,
+      tmpl: '',
+    });
+  } else {
+    generateFiles(tree, resolve(__dirname, 'files-lambda'), projectRoot, {
+      project: options.project,
+      toValidSsmParameterName,
+      tmpl: '',
+    });
+  }
+};
+
 export const e2eProjectGenerator = async (
   tree: Tree,
   options: E2ESchema,
@@ -234,11 +241,12 @@ export const e2eProjectGenerator = async (
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
-  addFiles(tree, options, projectOptions);
   addConfiguration(tree, options, projectOptions);
 
   tasks.push(await addEslint(tree, projectOptions));
   tasks.push(await addJest(tree, projectOptions));
+
+  addFiles(tree, options, projectOptions);
 
   if (!options.skipFormat) {
     await formatFiles(tree);
