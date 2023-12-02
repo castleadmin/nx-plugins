@@ -9,6 +9,7 @@ jest.setTimeout(15 * 60 * 1000); // 15 minutes
  */
 describe('Unix', () => {
   describe('Given a monorepo for cdk applications,', () => {
+    let nxVersion: string;
     let nxServerlessCdkVersion: string;
     let devProfile: string;
     let stageProfile: string;
@@ -17,6 +18,12 @@ describe('Unix', () => {
     let workspaceRootResolved: string;
 
     beforeAll(async () => {
+      if (!process.env['NX_VERSION']) {
+        throw new Error(
+          `The 'NX_VERSION' environment variable isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
+        );
+      }
+
       if (!process.env['NX_SERVERLESS_CDK_VERSION']) {
         throw new Error(
           `The 'NX_SERVERLESS_CDK_VERSION' environment variable isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
@@ -77,6 +84,7 @@ describe('Unix', () => {
         );
       }
 
+      nxVersion = process.env['NX_VERSION'];
       nxServerlessCdkVersion = process.env['NX_SERVERLESS_CDK_VERSION'];
       devProfile = process.env['E2E_DEV_PROFILE'];
       stageProfile = process.env['E2E_STAGE_PROFILE'];
@@ -91,7 +99,7 @@ describe('Unix', () => {
       await mkdir(rootTemporaryResolved, { recursive: true });
 
       await executeCommand(
-        'npx create-nx-workspace@latest --name "workspace-e2e" --preset "apps" --workspaceType "integrated" --no-nxCloud',
+        `npx create-nx-workspace@${nxVersion} --name "workspace-e2e" --preset "apps" --workspaceType "integrated" --no-nxCloud`,
         [],
         { cwd: rootTemporaryResolved },
       );
