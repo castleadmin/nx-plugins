@@ -13,7 +13,7 @@ export const getProfile = (environment: Environment): string => {
 
       if (!process.env[profileEnv]) {
         throw new Error(
-          `The environment variable '${profileEnv}' isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
+          `The '${profileEnv}' environment variable isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
         );
       }
 
@@ -23,7 +23,7 @@ export const getProfile = (environment: Environment): string => {
 
       if (!process.env[profileEnv]) {
         throw new Error(
-          `The environment variable '${profileEnv}' isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
+          `The '${profileEnv}' environment variable isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
         );
       }
 
@@ -33,7 +33,7 @@ export const getProfile = (environment: Environment): string => {
 
       if (!process.env[profileEnv]) {
         throw new Error(
-          `The environment variable '${profileEnv}' isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
+          `The '${profileEnv}' environment variable isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
         );
       }
 
@@ -54,7 +54,7 @@ export const getRegion = (environment: Environment): string => {
 
       if (!process.env[regionEnv]) {
         throw new Error(
-          `The environment variable '${regionEnv}' isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
+          `The '${regionEnv}' environment variable isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
         );
       }
 
@@ -64,7 +64,7 @@ export const getRegion = (environment: Environment): string => {
 
       if (!process.env[regionEnv]) {
         throw new Error(
-          `The environment variable '${regionEnv}' isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
+          `The '${regionEnv}' environment variable isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
         );
       }
 
@@ -74,7 +74,7 @@ export const getRegion = (environment: Environment): string => {
 
       if (!process.env[regionEnv]) {
         throw new Error(
-          `The environment variable '${regionEnv}' isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
+          `The '${regionEnv}' environment variable isn't defined. Please set it via the '.env.e2e' file in the project directory.`,
         );
       }
 

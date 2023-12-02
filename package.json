@@ -1,6 +1,7 @@
 {
   "name": "@nx-plugins/source",
   "version": "0.0.0",
+  "author": "Tobias Willig",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
