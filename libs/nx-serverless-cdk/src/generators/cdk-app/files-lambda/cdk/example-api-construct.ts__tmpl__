@@ -165,6 +165,8 @@ export class ExampleApiConstruct extends Construct {
       The response model and the request parameters definition are used to describe the endpoint.
       If the REST API is exported as OpenAPI schema, then both are incorporated into the schema.
       On each request, the request parameters are validated. The response isn't validated.
+      If a custom integration is being chosen, then the request and response validation can be implemented as desired
+      (https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-integration-types.html).
      */
     const getProductResponseModel = exampleApi.addModel(
       'ProductGetResponseModel',

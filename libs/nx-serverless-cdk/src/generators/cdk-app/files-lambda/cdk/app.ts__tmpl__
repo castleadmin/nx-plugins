@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import 'source-map-support/register';
 import { Environment } from '../shared/environment';
 import { ExampleStack, ExampleStackProps } from './example-stack';
+import { toValidTag } from './to-valid-tag';
 
 export const createApp = (): App => {
   /*
@@ -133,7 +134,7 @@ export class EnvironmentStacks extends Construct {
 
     const exampleStack = new ExampleStack(this, `${serviceName.slice(0,1).toUpperCase()}${serviceName.slice(1)}`, props);
 
-    Tags.of(exampleStack).add('Environment', environment);
-    Tags.of(exampleStack).add('App', serviceName);
+    Tags.of(exampleStack).add('Environment', toValidTag(environment));
+    Tags.of(exampleStack).add('App', toValidTag(serviceName));
   }
 }
