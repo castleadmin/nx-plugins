@@ -1,6 +1,6 @@
-import { mkdir, rm } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path/posix';
-import { executeCommand } from 'nx-serverless-cdk';
+import { executeCommand } from './execute-command';
 
 jest.setTimeout(15 * 60 * 1000); // 15 minutes
 
@@ -278,6 +278,127 @@ describe('Unix', () => {
           [],
           { cwd: workspaceRootResolved },
         );
+      });
+
+      test('should lint the application successfully.', async () => {
+        await executeCommand(`npx nx run '${projectName}':lint`, [], {
+          cwd: workspaceRootResolved,
+        });
+      });
+
+      test('should test the application with code coverage successfully.', async () => {
+        await executeCommand(
+          `npx nx run '${projectName}':test --codeCoverage`,
+          [],
+          { cwd: workspaceRootResolved },
+        );
+      });
+
+      describe('and deployed Dev stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Dev/*' --profile ${devProfile}`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Dev environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Dev npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+
+      describe('and deployed Stage stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Stage/*' --profile ${stageProfile}`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Stage environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Stage npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+
+      describe('and deployed Prod stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Prod/*' --profile ${prodProfile}`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Prod environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Prod npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+    });
+
+    describe('and a generated generic CDK application that uses a generated construct library,', () => {
+      let projectName: string;
+      let libName: string;
+
+      beforeAll(async () => {
+        projectName = 'Generic.App+Lib~1-2_3';
+        libName = '@Test~123/ScopeGeneric.Lib~4-5_6';
+
+        await executeCommand(
+          `npx nx g nx-serverless-cdk:cdk-app '${projectName}' --type generic`,
+          [],
+          { cwd: workspaceRootResolved },
+        );
+
+        await executeCommand(
+          `npx nx g nx-serverless-cdk:cdk-lib '${libName}' --publishable`,
+          [],
+          { cwd: workspaceRootResolved },
+        );
+
+        const exampleStackPathResolved = resolve(
+          workspaceRootResolved,
+          `${projectName}/cdk/example-stack.ts`,
+        );
+        const exampleStackFile = await readFile(exampleStackPathResolved, {
+          encoding: 'utf-8',
+        });
+        const lines = exampleStackFile.split('\n');
+        lines.pop();
+        lines.pop();
+        lines.pop();
+        const extendedExampleStackFile =
+          `import { ExampleConstruct } from '${libName}';
+        ` +
+          lines.join('\n') +
+          `
+
+            new ExampleConstruct(this, 'ExampleConstruct', {
+              queueVisibilityTimeout: Duration.seconds(100),
+            });
+          }
+        }
+        `;
+        await writeFile(exampleStackPathResolved, extendedExampleStackFile, {
+          encoding: 'utf-8',
+        });
+
+        await executeCommand(`npx nx format`, [], {
+          cwd: workspaceRootResolved,
+        });
       });
 
       test('should lint the application successfully.', async () => {

@@ -18,5 +18,3 @@ export { default as e2eProjectGenerator } from './generators/e2e-project/generat
 export * from './generators/e2e-project/schema';
 export { default as initGenerator } from './generators/init/generator';
 export * from './generators/init/schema';
-
-export * from './utils/execute-command';
