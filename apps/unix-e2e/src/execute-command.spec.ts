@@ -31,6 +31,18 @@ describe('executeCommand', () => {
     (spawn as jest.MockedFunction<typeof spawn>).mockImplementation(
       () =>
         ({
+          stdin: {
+            on: () => undefined,
+            pipe: () => undefined,
+          },
+          stdout: {
+            on: () => undefined,
+            pipe: () => undefined,
+          },
+          stderr: {
+            on: () => undefined,
+            pipe: () => undefined,
+          },
           on,
         } as unknown as ChildProcess),
     );
@@ -51,7 +63,7 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledTimes(1);
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
-      stdio: 'inherit',
+      stdio: 'pipe',
       shell: true,
     });
   });
@@ -68,7 +80,7 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledTimes(1);
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
-      stdio: 'inherit',
+      stdio: 'pipe',
       shell: true,
     });
   });
@@ -85,7 +97,7 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledTimes(1);
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
-      stdio: 'inherit',
+      stdio: 'pipe',
       shell: true,
     });
   });

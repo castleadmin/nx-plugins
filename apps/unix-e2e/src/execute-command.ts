@@ -5,6 +5,8 @@ export const executeCommand = (
   args: string[],
   options: {
     cwd: string;
+    stdout?: (data: string) => void;
+    stderr?: (data: string) => void;
   },
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -12,9 +14,23 @@ export const executeCommand = (
 
     const commandProcess = spawn(command, args, {
       cwd,
-      stdio: 'inherit',
+      stdio: 'pipe',
       shell: true,
     });
+
+    commandProcess.stdout.on('data', (chunk) => {
+      if (options.stdout) {
+        options.stdout(Buffer.from(chunk).toString('utf-8'));
+      }
+    });
+    commandProcess.stdout.pipe(process.stdout, { end: false });
+
+    commandProcess.stderr.on('data', (chunk) => {
+      if (options.stderr) {
+        options.stderr(Buffer.from(chunk).toString('utf-8'));
+      }
+    });
+    commandProcess.stderr.pipe(process.stderr, { end: false });
 
     commandProcess.on('close', (code: number | null) => {
       if (code !== 0) {
