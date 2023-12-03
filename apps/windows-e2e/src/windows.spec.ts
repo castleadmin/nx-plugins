@@ -122,7 +122,7 @@ describe('Windows', () => {
       );
 
       await executeCommand(
-        `npm install --save-dev nx-serverless-cdk@${nxServerlessCdkVersion}`,
+        `npm install --save-dev "nx-serverless-cdk@${nxServerlessCdkVersion}"`,
         [],
         { cwd: workspaceRootResolved },
       );
@@ -155,8 +155,8 @@ describe('Windows', () => {
         projectName = name;
 
         await executeCommand(
-          `npx nx g nx-serverless-cdk:cdk-app '${projectName}' --type generic${
-            directory ? ` --directory '${directory}'` : ''
+          `npx nx g nx-serverless-cdk:cdk-app "${projectName}" --type generic${
+            directory ? ` --directory "${directory}"` : ''
           }`,
           [],
           { cwd: workspaceRootResolved },
@@ -164,14 +164,14 @@ describe('Windows', () => {
       });
 
       test('should lint the application successfully.', async () => {
-        await executeCommand(`npx nx run '${projectName}':lint`, [], {
+        await executeCommand(`npx nx run "${projectName}":lint`, [], {
           cwd: workspaceRootResolved,
         });
       });
 
       test('should test the application with code coverage successfully.', async () => {
         await executeCommand(
-          `npx nx run '${projectName}':test --codeCoverage`,
+          `npx nx run "${projectName}":test --codeCoverage`,
           [],
           { cwd: workspaceRootResolved },
         );
@@ -180,7 +180,7 @@ describe('Windows', () => {
       describe('and deployed Dev stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Dev/*' --profile ${devProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile ${devProfile}`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -188,7 +188,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Dev environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Dev npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Dev&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -198,7 +198,7 @@ describe('Windows', () => {
       describe('and deployed Stage stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Stage/*' --profile ${stageProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile ${stageProfile}`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -206,7 +206,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Stage environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Stage npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Stage&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -216,7 +216,7 @@ describe('Windows', () => {
       describe('and deployed Prod stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Prod/*' --profile ${prodProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile ${prodProfile}`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -224,7 +224,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Prod environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Prod npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Prod&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -241,13 +241,13 @@ describe('Windows', () => {
         libName = '@Test~123/ScopeGeneric.Lib~4-5_6';
 
         await executeCommand(
-          `npx nx g nx-serverless-cdk:cdk-app '${projectName}' --type generic`,
+          `npx nx g nx-serverless-cdk:cdk-app "${projectName}" --type generic`,
           [],
           { cwd: workspaceRootResolved },
         );
 
         await executeCommand(
-          `npx nx g nx-serverless-cdk:cdk-lib '${libName}' --publishable`,
+          `npx nx g nx-serverless-cdk:cdk-lib "${libName}" --publishable`,
           [],
           { cwd: workspaceRootResolved },
         );
@@ -285,14 +285,14 @@ describe('Windows', () => {
       });
 
       test('should lint the application successfully.', async () => {
-        await executeCommand(`npx nx run '${projectName}':lint`, [], {
+        await executeCommand(`npx nx run "${projectName}":lint`, [], {
           cwd: workspaceRootResolved,
         });
       });
 
       test('should test the application with code coverage successfully.', async () => {
         await executeCommand(
-          `npx nx run '${projectName}':test --codeCoverage`,
+          `npx nx run "${projectName}":test --codeCoverage`,
           [],
           { cwd: workspaceRootResolved },
         );
@@ -301,7 +301,7 @@ describe('Windows', () => {
       describe('and deployed Dev stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Dev/*' --profile ${devProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile ${devProfile}`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -309,7 +309,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Dev environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Dev npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Dev&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -319,7 +319,7 @@ describe('Windows', () => {
       describe('and deployed Stage stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Stage/*' --profile ${stageProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile ${stageProfile}`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -327,7 +327,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Stage environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Stage npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Stage&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -337,7 +337,7 @@ describe('Windows', () => {
       describe('and deployed Prod stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Prod/*' --profile ${prodProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile ${prodProfile}`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -345,7 +345,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Prod environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Prod npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Prod&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -380,8 +380,8 @@ describe('Windows', () => {
         projectName = name;
 
         await executeCommand(
-          `npx nx g nx-serverless-cdk:cdk-app '${projectName}' --type lambda${
-            directory ? ` --directory '${directory}'` : ''
+          `npx nx g nx-serverless-cdk:cdk-app "${projectName}" --type lambda${
+            directory ? ` --directory "${directory}"` : ''
           }`,
           [],
           { cwd: workspaceRootResolved },
@@ -389,14 +389,14 @@ describe('Windows', () => {
       });
 
       test('should lint the application successfully.', async () => {
-        await executeCommand(`npx nx run '${projectName}':lint`, [], {
+        await executeCommand(`npx nx run "${projectName}":lint`, [], {
           cwd: workspaceRootResolved,
         });
       });
 
       test('should test the application with code coverage successfully.', async () => {
         await executeCommand(
-          `npx nx run '${projectName}':test --codeCoverage`,
+          `npx nx run "${projectName}":test --codeCoverage`,
           [],
           { cwd: workspaceRootResolved },
         );
@@ -409,7 +409,7 @@ describe('Windows', () => {
         };
 
         await executeCommand(
-          `npx nx run '${projectName}':generate-event cloudwatch scheduled-event --region eu-central-1`,
+          `npx nx run "${projectName}":generate-event cloudwatch scheduled-event --region eu-central-1`,
           [],
           { cwd: workspaceRootResolved, stdout: appendToOutput },
         );
@@ -436,7 +436,7 @@ describe('Windows', () => {
 
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk synth 'Dev/*' --profile ${devProfile}`,
+            `npx nx run "${projectName}":cdk synth "Dev/*" --profile ${devProfile}`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -472,7 +472,7 @@ describe('Windows', () => {
           };
 
           await executeCommand(
-            `npx nx run '${projectName}':invoke -t '${templateRelativeToProject}' ExampleFunction --event events/sum/sum7.json`,
+            `npx nx run "${projectName}":invoke -t "${templateRelativeToProject}" ExampleFunction --event events/sum/sum7.json`,
             [],
             {
               cwd: workspaceRootResolved,
@@ -553,7 +553,7 @@ describe('Windows', () => {
             }
           };
           await executeCommand(
-            `npx nx run '${projectName}':start-lambda -t '${templateRelativeToProject}'`,
+            `npx nx run "${projectName}":start-lambda -t "${templateRelativeToProject}"`,
             [],
             {
               cwd: workspaceRootResolved,
@@ -590,7 +590,7 @@ describe('Windows', () => {
             }
           };
           await executeCommand(
-            `npx nx run '${projectName}':start-api -t '${templateRelativeToProject}'`,
+            `npx nx run "${projectName}":start-api -t "${templateRelativeToProject}"`,
             [],
             {
               cwd: workspaceRootResolved,
@@ -609,7 +609,7 @@ describe('Windows', () => {
       describe('and deployed Dev stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Dev/*' --profile ${devProfile} --require-approval never`,
+            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile ${devProfile} --require-approval never`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -617,7 +617,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Dev environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Dev npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Dev&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -627,7 +627,7 @@ describe('Windows', () => {
       describe('and deployed Stage stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Stage/*' --profile ${stageProfile} --require-approval never`,
+            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile ${stageProfile} --require-approval never`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -635,7 +635,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Stage environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Stage npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Stage&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -645,7 +645,7 @@ describe('Windows', () => {
       describe('and deployed Prod stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run '${projectName}':cdk deploy 'Prod/*' --profile ${prodProfile} --require-approval never`,
+            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile ${prodProfile} --require-approval never`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -653,7 +653,7 @@ describe('Windows', () => {
 
         test('should run the E2E tests for the Prod environment successfully.', async () => {
           await executeCommand(
-            `E2E_ENVIRONMENT=Prod npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            `set E2E_ENVIRONMENT=Prod&& npx nx run "${projectName}"-e2e:e2e --codeCoverage`,
             [],
             { cwd: workspaceRootResolved },
           );

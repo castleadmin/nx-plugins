@@ -117,7 +117,7 @@ describe('Unix', () => {
       );
 
       await executeCommand(
-        `npm install --save-dev nx-serverless-cdk@${nxServerlessCdkVersion}`,
+        `npm install --save-dev 'nx-serverless-cdk@${nxServerlessCdkVersion}'`,
         [],
         { cwd: workspaceRootResolved },
       );
