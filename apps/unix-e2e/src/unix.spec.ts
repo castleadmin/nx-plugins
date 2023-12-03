@@ -766,5 +766,559 @@ describe('Unix', () => {
         });
       });
     });
+
+    describe('and a generated lambda CDK application with a given directory,', () => {
+      let projectName: string;
+
+      beforeAll(async () => {
+        projectName = 'dir-Lambda.App~1-2_3';
+
+        await executeCommand(
+          `npx nx g nx-serverless-cdk:cdk-app '${projectName}' --type lambda --directory 'lambda/app`,
+          [],
+          { cwd: workspaceRootResolved },
+        );
+      });
+
+      test('should lint the application successfully.', async () => {
+        await executeCommand(`npx nx run '${projectName}':lint`, [], {
+          cwd: workspaceRootResolved,
+        });
+      });
+
+      test('should test the application with code coverage successfully.', async () => {
+        await executeCommand(
+          `npx nx run '${projectName}':test --codeCoverage`,
+          [],
+          { cwd: workspaceRootResolved },
+        );
+      });
+
+      test('should generate an event successfully.', async () => {
+        let output: string = '';
+        const appendToOutput = (data: string): void => {
+          output += data;
+        };
+
+        await executeCommand(
+          `npx nx run '${projectName}':generate-event cloudwatch scheduled-event --region eu-central-1`,
+          [],
+          { cwd: workspaceRootResolved, stdout: appendToOutput },
+        );
+
+        expect(
+          output.includes(`{
+  "id": "cdc73f9d-aea9-11e3-9d5a-835b769c0d9c",
+  "detail-type": "Scheduled Event",
+  "source": "aws.events",
+  "account": "123456789012",
+  "time": "1970-01-01T00:00:00Z",
+  "region": "eu-central-1",
+  "resources": [
+    "arn:aws:events:eu-central-1:123456789012:rule/ExampleRule"
+  ],
+  "detail": {}
+}
+`),
+        ).toBe(true);
+      });
+
+      describe('and synthesized Dev stacks,', () => {
+        let templateRelativeToProject: string;
+
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk synth 'Dev/*' --profile ${devProfile}`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+
+          const outputFiles = await readdir(
+            join(workspaceRootResolved, projectName, 'cdk.out'),
+            { encoding: 'utf-8' },
+          );
+          const templateFileName = outputFiles.find(
+            (fileName) =>
+              fileName.startsWith('Dev') && fileName.endsWith('.template.json'),
+          );
+
+          if (!templateFileName) {
+            throw new Error(
+              `The Dev template file name couldn't be found for the project '${projectName}'.`,
+            );
+          }
+
+          templateRelativeToProject = `cdk.out/${templateFileName}`;
+        });
+
+        test('should invoke the Dev ExampleFunction locally.', async () => {
+          let hasPrintedResult = false;
+          const hasResult = (data: string): void => {
+            if (data.includes('{"sum": 7}')) {
+              hasPrintedResult = true;
+            }
+          };
+
+          await executeCommand(
+            `npx nx run '${projectName}':invoke -t '${templateRelativeToProject}' ExampleFunction --event events/sum/sum7.json`,
+            [],
+            {
+              cwd: workspaceRootResolved,
+              stdout: hasResult,
+              stderr: hasResult,
+            },
+          );
+
+          expect(hasPrintedResult).toBe(true);
+        });
+
+        test('should test the Dev ExampleFunction locally.', async () => {
+          const payload = await readFile(
+            resolve(
+              join(workspaceRootResolved, projectName, 'events/sum/sum7.json'),
+            ),
+            { encoding: 'utf-8' },
+          );
+          const templateJson = JSON.parse(
+            await readFile(
+              resolve(
+                join(
+                  workspaceRootResolved,
+                  projectName,
+                  templateRelativeToProject,
+                ),
+              ),
+              { encoding: 'utf-8' },
+            ),
+          );
+          const functionName = Object.keys(templateJson.Resources).find(
+            (resource) =>
+              resource.startsWith('ExampleFunction') &&
+              templateJson.Resources[resource].Type === 'AWS::Lambda::Function',
+          );
+
+          if (!functionName) {
+            throw new Error(
+              `Couldn't find the ExampleFunction name in the Dev template file of the project '${projectName}'.`,
+            );
+          }
+
+          let response: InvokeCommandOutput | undefined;
+          const hasStarted = async (
+            data: string,
+            serverProcess: ChildProcess,
+          ): Promise<void> => {
+            if (data.includes('Running on http://127.0.0.1:3001')) {
+              const lambdaClient = new LambdaClient({
+                credentials: fromSSO({
+                  profile: devProfile,
+                }),
+                region: devRegion,
+                endpoint: 'http://127.0.0.1:3001',
+              });
+
+              try {
+                response = await lambdaClient.send(
+                  new InvokeCommand({
+                    FunctionName: functionName,
+                    InvocationType: InvocationType.RequestResponse,
+                    LogType: LogType.None,
+                    Payload: payload,
+                  }),
+                );
+              } catch (error) {
+                console.error(error);
+
+                throw error;
+              } finally {
+                await killLeafProcesses(serverProcess.pid);
+              }
+            }
+          };
+          await executeCommand(
+            `npx nx run '${projectName}':start-lambda -t '${templateRelativeToProject}'`,
+            [],
+            {
+              cwd: workspaceRootResolved,
+              stdout: hasStarted,
+              stderr: hasStarted,
+            },
+          ).catch((error) => console.log(error));
+
+          expect(response?.StatusCode).toBe(200);
+          expect(response?.FunctionError).toBeFalsy();
+          expect(
+            JSON.parse(Buffer.from(response?.Payload ?? '').toString()),
+          ).toEqual({
+            sum: 7,
+          });
+        });
+
+        test('should test the Dev ExampleApiFunction locally.', async () => {
+          let response: Response | undefined;
+          const hasStarted = async (
+            data: string,
+            serverProcess: ChildProcess,
+          ): Promise<void> => {
+            if (data.includes('Running on http://127.0.0.1:3000')) {
+              try {
+                response = await fetch('http://127.0.0.1:3000/product?a=4&b=5');
+              } catch (error) {
+                console.error(error);
+
+                throw error;
+              } finally {
+                await killLeafProcesses(serverProcess.pid);
+              }
+            }
+          };
+          await executeCommand(
+            `npx nx run '${projectName}':start-api -t '${templateRelativeToProject}'`,
+            [],
+            {
+              cwd: workspaceRootResolved,
+              stdout: hasStarted,
+              stderr: hasStarted,
+            },
+          ).catch((error) => console.log(error));
+
+          expect(response?.ok).toBe(true);
+          expect(await response?.json()).toEqual({
+            product: 20,
+          });
+        });
+      });
+
+      describe('and deployed Dev stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Dev/*' --profile ${devProfile} --require-approval never`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Dev environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Dev npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+
+      describe('and deployed Stage stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Stage/*' --profile ${stageProfile} --require-approval never`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Stage environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Stage npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+
+      describe('and deployed Prod stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Prod/*' --profile ${prodProfile} --require-approval never`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Prod environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Prod npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+    });
+
+    describe('and a generated lambda CDK application with a npm scope in its name', () => {
+      let projectName: string;
+
+      beforeAll(async () => {
+        projectName = '@org/ScopeGeneric.App~1-2_3';
+
+        await executeCommand(
+          `npx nx g nx-serverless-cdk:cdk-app '${projectName}' --type lambda`,
+          [],
+          { cwd: workspaceRootResolved },
+        );
+      });
+
+      test('should lint the application successfully.', async () => {
+        await executeCommand(`npx nx run '${projectName}':lint`, [], {
+          cwd: workspaceRootResolved,
+        });
+      });
+
+      test('should test the application with code coverage successfully.', async () => {
+        await executeCommand(
+          `npx nx run '${projectName}':test --codeCoverage`,
+          [],
+          { cwd: workspaceRootResolved },
+        );
+      });
+
+      test('should generate an event successfully.', async () => {
+        let output: string = '';
+        const appendToOutput = (data: string): void => {
+          output += data;
+        };
+
+        await executeCommand(
+          `npx nx run '${projectName}':generate-event cloudwatch scheduled-event --region eu-central-1`,
+          [],
+          { cwd: workspaceRootResolved, stdout: appendToOutput },
+        );
+
+        expect(
+          output.includes(`{
+  "id": "cdc73f9d-aea9-11e3-9d5a-835b769c0d9c",
+  "detail-type": "Scheduled Event",
+  "source": "aws.events",
+  "account": "123456789012",
+  "time": "1970-01-01T00:00:00Z",
+  "region": "eu-central-1",
+  "resources": [
+    "arn:aws:events:eu-central-1:123456789012:rule/ExampleRule"
+  ],
+  "detail": {}
+}
+`),
+        ).toBe(true);
+      });
+
+      describe('and synthesized Dev stacks,', () => {
+        let templateRelativeToProject: string;
+
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk synth 'Dev/*' --profile ${devProfile}`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+
+          const outputFiles = await readdir(
+            join(workspaceRootResolved, projectName, 'cdk.out'),
+            { encoding: 'utf-8' },
+          );
+          const templateFileName = outputFiles.find(
+            (fileName) =>
+              fileName.startsWith('Dev') && fileName.endsWith('.template.json'),
+          );
+
+          if (!templateFileName) {
+            throw new Error(
+              `The Dev template file name couldn't be found for the project '${projectName}'.`,
+            );
+          }
+
+          templateRelativeToProject = `cdk.out/${templateFileName}`;
+        });
+
+        test('should invoke the Dev ExampleFunction locally.', async () => {
+          let hasPrintedResult = false;
+          const hasResult = (data: string): void => {
+            if (data.includes('{"sum": 7}')) {
+              hasPrintedResult = true;
+            }
+          };
+
+          await executeCommand(
+            `npx nx run '${projectName}':invoke -t '${templateRelativeToProject}' ExampleFunction --event events/sum/sum7.json`,
+            [],
+            {
+              cwd: workspaceRootResolved,
+              stdout: hasResult,
+              stderr: hasResult,
+            },
+          );
+
+          expect(hasPrintedResult).toBe(true);
+        });
+
+        test('should test the Dev ExampleFunction locally.', async () => {
+          const payload = await readFile(
+            resolve(
+              join(workspaceRootResolved, projectName, 'events/sum/sum7.json'),
+            ),
+            { encoding: 'utf-8' },
+          );
+          const templateJson = JSON.parse(
+            await readFile(
+              resolve(
+                join(
+                  workspaceRootResolved,
+                  projectName,
+                  templateRelativeToProject,
+                ),
+              ),
+              { encoding: 'utf-8' },
+            ),
+          );
+          const functionName = Object.keys(templateJson.Resources).find(
+            (resource) =>
+              resource.startsWith('ExampleFunction') &&
+              templateJson.Resources[resource].Type === 'AWS::Lambda::Function',
+          );
+
+          if (!functionName) {
+            throw new Error(
+              `Couldn't find the ExampleFunction name in the Dev template file of the project '${projectName}'.`,
+            );
+          }
+
+          let response: InvokeCommandOutput | undefined;
+          const hasStarted = async (
+            data: string,
+            serverProcess: ChildProcess,
+          ): Promise<void> => {
+            if (data.includes('Running on http://127.0.0.1:3001')) {
+              const lambdaClient = new LambdaClient({
+                credentials: fromSSO({
+                  profile: devProfile,
+                }),
+                region: devRegion,
+                endpoint: 'http://127.0.0.1:3001',
+              });
+
+              try {
+                response = await lambdaClient.send(
+                  new InvokeCommand({
+                    FunctionName: functionName,
+                    InvocationType: InvocationType.RequestResponse,
+                    LogType: LogType.None,
+                    Payload: payload,
+                  }),
+                );
+              } catch (error) {
+                console.error(error);
+
+                throw error;
+              } finally {
+                await killLeafProcesses(serverProcess.pid);
+              }
+            }
+          };
+          await executeCommand(
+            `npx nx run '${projectName}':start-lambda -t '${templateRelativeToProject}'`,
+            [],
+            {
+              cwd: workspaceRootResolved,
+              stdout: hasStarted,
+              stderr: hasStarted,
+            },
+          ).catch((error) => console.log(error));
+
+          expect(response?.StatusCode).toBe(200);
+          expect(response?.FunctionError).toBeFalsy();
+          expect(
+            JSON.parse(Buffer.from(response?.Payload ?? '').toString()),
+          ).toEqual({
+            sum: 7,
+          });
+        });
+
+        test('should test the Dev ExampleApiFunction locally.', async () => {
+          let response: Response | undefined;
+          const hasStarted = async (
+            data: string,
+            serverProcess: ChildProcess,
+          ): Promise<void> => {
+            if (data.includes('Running on http://127.0.0.1:3000')) {
+              try {
+                response = await fetch('http://127.0.0.1:3000/product?a=4&b=5');
+              } catch (error) {
+                console.error(error);
+
+                throw error;
+              } finally {
+                await killLeafProcesses(serverProcess.pid);
+              }
+            }
+          };
+          await executeCommand(
+            `npx nx run '${projectName}':start-api -t '${templateRelativeToProject}'`,
+            [],
+            {
+              cwd: workspaceRootResolved,
+              stdout: hasStarted,
+              stderr: hasStarted,
+            },
+          ).catch((error) => console.log(error));
+
+          expect(response?.ok).toBe(true);
+          expect(await response?.json()).toEqual({
+            product: 20,
+          });
+        });
+      });
+
+      describe('and deployed Dev stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Dev/*' --profile ${devProfile} --require-approval never`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Dev environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Dev npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+
+      describe('and deployed Stage stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Stage/*' --profile ${stageProfile} --require-approval never`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Stage environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Stage npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+
+      describe('and deployed Prod stacks,', () => {
+        beforeAll(async () => {
+          await executeCommand(
+            `npx nx run '${projectName}':cdk deploy 'Prod/*' --profile ${prodProfile} --require-approval never`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+
+        test('should run the E2E tests for the Prod environment successfully.', async () => {
+          await executeCommand(
+            `E2E_ENVIRONMENT=Prod npx nx run '${projectName}'-e2e:e2e --codeCoverage`,
+            [],
+            { cwd: workspaceRootResolved },
+          );
+        });
+      });
+    });
   });
 });
