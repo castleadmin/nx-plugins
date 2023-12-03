@@ -180,7 +180,7 @@ describe('Windows', () => {
       describe('and deployed Dev stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile ${devProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile "${devProfile}"`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -198,7 +198,7 @@ describe('Windows', () => {
       describe('and deployed Stage stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile ${stageProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile "${stageProfile}"`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -216,7 +216,7 @@ describe('Windows', () => {
       describe('and deployed Prod stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile ${prodProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile "${prodProfile}"`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -301,7 +301,7 @@ describe('Windows', () => {
       describe('and deployed Dev stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile ${devProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile "${devProfile}"`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -319,7 +319,7 @@ describe('Windows', () => {
       describe('and deployed Stage stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile ${stageProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile "${stageProfile}"`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -337,7 +337,7 @@ describe('Windows', () => {
       describe('and deployed Prod stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile ${prodProfile}`,
+            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile "${prodProfile}"`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -436,7 +436,7 @@ describe('Windows', () => {
 
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk synth "Dev/*" --profile ${devProfile}`,
+            `npx nx run "${projectName}":cdk synth "Dev/*" --profile "${devProfile}"`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -609,7 +609,7 @@ describe('Windows', () => {
       describe('and deployed Dev stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile ${devProfile} --require-approval never`,
+            `npx nx run "${projectName}":cdk deploy "Dev/*" --profile "${devProfile}" --require-approval never`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -627,7 +627,7 @@ describe('Windows', () => {
       describe('and deployed Stage stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile ${stageProfile} --require-approval never`,
+            `npx nx run "${projectName}":cdk deploy "Stage/*" --profile "${stageProfile}" --require-approval never`,
             [],
             { cwd: workspaceRootResolved },
           );
@@ -645,7 +645,7 @@ describe('Windows', () => {
       describe('and deployed Prod stacks,', () => {
         beforeAll(async () => {
           await executeCommand(
-            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile ${prodProfile} --require-approval never`,
+            `npx nx run "${projectName}":cdk deploy "Prod/*" --profile "${prodProfile}" --require-approval never`,
             [],
             { cwd: workspaceRootResolved },
           );
