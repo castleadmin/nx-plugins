@@ -21,6 +21,7 @@ describe('Calculate product', () => {
       }),
       region,
       logger: infoSdkLogger,
+      maxAttempts: 3,
     });
 
     apiUrl =

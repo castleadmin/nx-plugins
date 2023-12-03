@@ -30,6 +30,7 @@ describe('Calculate sum', () => {
       }),
       region,
       logger: infoSdkLogger,
+      maxAttempts: 3,
     });
     lambdaClient = new LambdaClient({
       credentials: fromSSO({
@@ -37,6 +38,7 @@ describe('Calculate sum', () => {
       }),
       region,
       logger: infoSdkLogger,
+      maxAttempts: 3,
     });
 
     const functionNameOutput = await ssmClient.send(
