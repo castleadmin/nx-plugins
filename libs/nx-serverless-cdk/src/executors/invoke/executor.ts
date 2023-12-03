@@ -12,7 +12,7 @@ export const runExecutor = async (
 
   const { __unparsed__ } = options;
 
-  const command = `sam local invoke`;
+  const command = `sam local invoke --config-file ../samconfig.toml`;
   console.log('Executing command:', command, __unparsed__.join(' '));
 
   await executeCommand(command, __unparsed__, {

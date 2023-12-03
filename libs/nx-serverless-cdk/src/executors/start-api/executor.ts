@@ -12,7 +12,7 @@ export const runExecutor = async (
 
   const { __unparsed__ } = options;
 
-  const command = `sam local start-api`;
+  const command = `sam local start-api --config-file ../samconfig.toml`;
   console.log('Executing command:', command, __unparsed__.join(' '));
 
   await executeCommand(command, __unparsed__, {

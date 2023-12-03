@@ -92,6 +92,7 @@ export class ExampleApiConstruct extends Construct {
      * Please note that a Lambda function could always be reused for multiple REST methods.
      */
     return new RestApi(this, 'ExampleApi', {
+      cloudWatchRole: true,
       deployOptions: {
         stageName: 'default',
         loggingLevel: MethodLoggingLevel.INFO,

@@ -1,12 +1,12 @@
-import { spawn } from 'node:child_process';
+import { ChildProcess, spawn } from 'node:child_process';
 
 export const executeCommand = (
   command: string,
   args: string[],
   options: {
     cwd: string;
-    stdout?: (data: string) => void;
-    stderr?: (data: string) => void;
+    stdout?: (data: string, process: ChildProcess) => void | Promise<void>;
+    stderr?: (data: string, process: ChildProcess) => void | Promise<void>;
   },
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -20,14 +20,14 @@ export const executeCommand = (
 
     commandProcess.stdout.on('data', (chunk) => {
       if (options.stdout) {
-        options.stdout(Buffer.from(chunk).toString('utf-8'));
+        options.stdout(Buffer.from(chunk).toString('utf-8'), commandProcess);
       }
     });
     commandProcess.stdout.pipe(process.stdout, { end: false });
 
     commandProcess.stderr.on('data', (chunk) => {
       if (options.stderr) {
-        options.stderr(Buffer.from(chunk).toString('utf-8'));
+        options.stderr(Buffer.from(chunk).toString('utf-8'), commandProcess);
       }
     });
     commandProcess.stderr.pipe(process.stderr, { end: false });
