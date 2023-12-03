@@ -87,6 +87,7 @@ const addConfiguration = (
       e2e: {
         executor: '@nx/jest:jest',
         outputs: [`{workspaceRoot}/coverage/{projectRoot}`],
+        cache: false,
         options: {
           jestConfig: `${projectRoot}/jest.config.ts`,
           passWithNoTests: true,
