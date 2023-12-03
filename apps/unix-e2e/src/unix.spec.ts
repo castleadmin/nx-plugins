@@ -15,7 +15,7 @@ import { killLeafProcesses } from './kill-leaf-processes';
 jest.setTimeout(15 * 60 * 1000); // 15 minutes
 
 /**
- * Prerequisite: The test must be executed on a Unix system.
+ * Prerequisite: The tests must be executed on a Unix system.
  */
 describe('Unix', () => {
   describe('Given a monorepo for cdk applications,', () => {
