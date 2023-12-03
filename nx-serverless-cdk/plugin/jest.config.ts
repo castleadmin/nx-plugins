@@ -6,7 +6,7 @@ export default {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/libs/nx-serverless-cdk',
+  coverageDirectory: '../../coverage/nx-serverless-cdk/plugin',
   collectCoverageFrom: ['src/**/*.ts', '!src/index.ts', '!jest.config.ts'],
   coverageThreshold: {
     global: {

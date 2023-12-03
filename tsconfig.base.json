@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "nx-serverless-cdk": ["libs/nx-serverless-cdk/src/index.ts"]
+      "nx-serverless-cdk": ["nx-serverless-cdk/plugin/src/index.ts"]
     },
     "strict": true,
     "allowUnreachableCode": false,

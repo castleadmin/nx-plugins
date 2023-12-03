@@ -1,13 +1,13 @@
 /* eslint-disable */
 export default {
-  displayName: 'unix-e2e',
+  displayName: 'nx-serverless-cdk-unix-e2e',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/unix-e2e',
+  coverageDirectory: '../../coverage/nx-serverless-cdk/unix-e2e',
   collectCoverageFrom: ['src/**/*.ts', '!jest.config.ts'],
   coverageThreshold: {
     global: {

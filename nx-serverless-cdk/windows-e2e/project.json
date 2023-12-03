@@ -1,7 +1,7 @@
 {
-  "name": "windows-e2e",
+  "name": "nx-serverless-cdk-windows-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/windows-e2e/src",
+  "sourceRoot": "nx-serverless-cdk/windows-e2e/src",
   "implicitDependencies": ["nx-serverless-cdk"],
   "projectType": "application",
   "targets": {
@@ -9,7 +9,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/windows-e2e/jest.config.ts",
+        "jestConfig": "nx-serverless-cdk/windows-e2e/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -17,7 +17,7 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/windows-e2e/**/*.ts"]
+        "lintFilePatterns": ["nx-serverless-cdk/windows-e2e/**/*.ts"]
       }
     }
   }
