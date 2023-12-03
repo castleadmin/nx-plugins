@@ -143,7 +143,7 @@ describe('Unix', () => {
         directory: undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ])('$_description', ({ description: _description, name, directory }) => {
+    ])('$description', ({ description: _description, name, directory }) => {
       let projectName: string;
 
       beforeAll(async () => {
@@ -364,11 +364,11 @@ describe('Unix', () => {
       {
         description:
           'and a generated lambda CDK application with a npm scope in its name,',
-        name: '@org/ScopeGeneric.App~1-2_3',
+        name: '@org/ScopeLambda.App~1-2_3',
         directory: undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ])('$_description', ({ description: _description, name, directory }) => {
+    ])('$description', ({ description: _description, name, directory }) => {
       let projectName: string;
 
       beforeAll(async () => {
