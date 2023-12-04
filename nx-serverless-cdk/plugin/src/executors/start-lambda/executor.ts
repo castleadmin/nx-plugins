@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { executeCommand } from '../../utils/execute-command';
 import { getProjectRoot } from '../../utils/get-project-root';
 import { getSamconfigPath } from '../../utils/get-samconfig-path';
+import { isWindows } from '../../utils/is-windows';
 import { StartLambdaExecutorSchema } from './schema';
 
 export const runExecutor = async (
@@ -15,11 +16,12 @@ export const runExecutor = async (
   const samconfigPath = getSamconfigPath(__unparsed__, projectRootResolved);
   const command = `sam`;
 
-  const args = [...__unparsed__];
+  let args = [...__unparsed__];
   if (samconfigPath) {
     args.unshift('--config-file', samconfigPath);
   }
   args.unshift('local', 'start-lambda');
+  args = args.map((arg) => (isWindows() ? `"${arg}"` : arg));
 
   console.log('Executing command:', command, args.join(' '));
 

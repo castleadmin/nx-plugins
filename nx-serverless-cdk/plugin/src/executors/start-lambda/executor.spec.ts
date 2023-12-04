@@ -1,5 +1,6 @@
 import { ExecutorContext } from '@nx/devkit';
 import { executeCommand } from '../../utils/execute-command';
+import * as isWindowsModule from '../../utils/is-windows';
 import { useUnixPath, useWindowsPath } from '../../utils/path.mock.spec';
 import executor from './executor';
 import { StartLambdaExecutorSchema } from './schema';
@@ -36,6 +37,7 @@ describe('start-lambda', () => {
 
     beforeEach(() => {
       useUnixPath();
+      jest.spyOn(isWindowsModule, 'isWindows').mockImplementation(() => false);
 
       context = {
         root: '/home/castleadmin/projects/awesome',
@@ -126,6 +128,7 @@ describe('start-lambda', () => {
 
     beforeEach(() => {
       useWindowsPath();
+      jest.spyOn(isWindowsModule, 'isWindows').mockImplementation(() => true);
 
       context = {
         root: 'C:\\Users\\castleadmin\\projects\\awesome',
@@ -150,7 +153,7 @@ describe('start-lambda', () => {
       expect(executeCommand).toHaveBeenCalledTimes(1);
       expect(executeCommand).toHaveBeenCalledWith(
         'sam',
-        ['local', 'start-lambda', '-h'],
+        ['"local"', '"start-lambda"', '"-h"'],
         {
           cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
         },
@@ -174,11 +177,11 @@ describe('start-lambda', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           [
-            'local',
-            'start-lambda',
-            '--config-file',
-            '..\\samconfig.toml',
-            ...options.__unparsed__,
+            '"local"',
+            '"start-lambda"',
+            '"--config-file"',
+            '"..\\samconfig.toml"',
+            ...options.__unparsed__.map((arg) => `"${arg}"`),
           ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
@@ -197,11 +200,11 @@ describe('start-lambda', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           [
-            'local',
-            'start-lambda',
-            '--config-file',
-            '..\\samconfig.toml',
-            ...options.__unparsed__,
+            '"local"',
+            '"start-lambda"',
+            '"--config-file"',
+            '"..\\samconfig.toml"',
+            ...options.__unparsed__.map((arg) => `"${arg}"`),
           ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',

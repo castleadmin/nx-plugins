@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ChildProcess, spawn } from 'node:child_process';
 import { executeCommand } from './execute-command';
+import * as isWindowsModule from './is-windows';
 
 jest.mock('node:child_process', () => {
   const originalModule = jest.requireActual('node:child_process');
@@ -39,54 +40,117 @@ describe('executeCommand', () => {
     cwd = faker.system.directoryPath();
   });
 
-  test('Given a command that returns exit code 0, the execution should be marked as successful.', async () => {
-    const promise = executeCommand(command, args, {
-      cwd,
+  describe('unix', () => {
+    beforeEach(() => {
+      jest.spyOn(isWindowsModule, 'isWindows').mockImplementation(() => false);
     });
 
-    callbackClose(0);
+    test('Given a command that returns exit code 0, the execution should be marked as successful.', async () => {
+      const promise = executeCommand(command, args, {
+        cwd,
+      });
 
-    await promise;
+      callbackClose(0);
 
-    expect(spawn).toHaveBeenCalledTimes(1);
-    expect(spawn).toHaveBeenCalledWith(command, args, {
-      cwd,
-      stdio: 'inherit',
-      shell: false,
+      await promise;
+
+      expect(spawn).toHaveBeenCalledTimes(1);
+      expect(spawn).toHaveBeenCalledWith(command, args, {
+        cwd,
+        stdio: 'inherit',
+        shell: false,
+      });
+    });
+
+    test('Given a command that returns an exit code > 0, the execution should throw an error.', async () => {
+      const promise = executeCommand(command, args, {
+        cwd,
+      });
+
+      callbackClose(faker.number.int({ min: 1 }));
+
+      await expect(promise).rejects.toBeInstanceOf(Error);
+
+      expect(spawn).toHaveBeenCalledTimes(1);
+      expect(spawn).toHaveBeenCalledWith(command, args, {
+        cwd,
+        stdio: 'inherit',
+        shell: false,
+      });
+    });
+
+    test('Given a command that fails during the execution, the execution should throw an error.', async () => {
+      const promise = executeCommand(command, args, {
+        cwd,
+      });
+
+      callbackError(new Error('Test error'));
+
+      await expect(promise).rejects.toBeInstanceOf(Error);
+
+      expect(spawn).toHaveBeenCalledTimes(1);
+      expect(spawn).toHaveBeenCalledWith(command, args, {
+        cwd,
+        stdio: 'inherit',
+        shell: false,
+      });
     });
   });
 
-  test('Given a command that returns an exit code > 0, the execution should throw an error.', async () => {
-    const promise = executeCommand(command, args, {
-      cwd,
+  describe('windows', () => {
+    beforeEach(() => {
+      jest.spyOn(isWindowsModule, 'isWindows').mockImplementation(() => true);
     });
 
-    callbackClose(faker.number.int({ min: 1 }));
+    test('Given a command that returns exit code 0, the execution should be marked as successful.', async () => {
+      const promise = executeCommand(command, args, {
+        cwd,
+      });
 
-    await expect(promise).rejects.toBeInstanceOf(Error);
+      callbackClose(0);
 
-    expect(spawn).toHaveBeenCalledTimes(1);
-    expect(spawn).toHaveBeenCalledWith(command, args, {
-      cwd,
-      stdio: 'inherit',
-      shell: false,
+      await promise;
+
+      expect(spawn).toHaveBeenCalledTimes(1);
+      expect(spawn).toHaveBeenCalledWith(command, args, {
+        cwd,
+        stdio: 'inherit',
+        shell: true,
+      });
     });
-  });
 
-  test('Given a command that fails during the execution, the execution should throw an error.', async () => {
-    const promise = executeCommand(command, args, {
-      cwd,
+    test('Given a command that returns an exit code > 0, the execution should throw an error.', async () => {
+      const promise = executeCommand(command, args, {
+        cwd,
+      });
+
+      callbackClose(faker.number.int({ min: 1 }));
+
+      await expect(promise).rejects.toBeInstanceOf(Error);
+
+      expect(spawn).toHaveBeenCalledTimes(1);
+      expect(spawn).toHaveBeenCalledWith(command, args, {
+        cwd,
+        stdio: 'inherit',
+        shell: true,
+      });
     });
 
-    callbackError(new Error('Test error'));
+    test('Given a command that fails during the execution, the execution should throw an error.', async () => {
+      const promise = executeCommand(command, args, {
+        cwd,
+      });
 
-    await expect(promise).rejects.toBeInstanceOf(Error);
+      callbackError(new Error('Test error'));
 
-    expect(spawn).toHaveBeenCalledTimes(1);
-    expect(spawn).toHaveBeenCalledWith(command, args, {
-      cwd,
-      stdio: 'inherit',
-      shell: false,
+      await expect(promise).rejects.toBeInstanceOf(Error);
+
+      expect(spawn).toHaveBeenCalledTimes(1);
+      expect(spawn).toHaveBeenCalledWith(command, args, {
+        cwd,
+        stdio: 'inherit',
+        shell: true,
+      });
     });
   });
 });
