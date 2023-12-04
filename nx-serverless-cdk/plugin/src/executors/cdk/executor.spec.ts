@@ -68,8 +68,8 @@ describe('cdk', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'npx aws-cdk',
-          options.__unparsed__,
+          'npx',
+          ['aws-cdk', ...options.__unparsed__],
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
           },
@@ -85,8 +85,8 @@ describe('cdk', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'npx aws-cdk',
-          options.__unparsed__,
+          'npx',
+          ['aws-cdk', ...options.__unparsed__],
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
           },
@@ -132,8 +132,8 @@ describe('cdk', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'npx aws-cdk',
-          options.__unparsed__,
+          'npx',
+          ['aws-cdk', ...options.__unparsed__],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },
@@ -149,8 +149,8 @@ describe('cdk', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'npx aws-cdk',
-          options.__unparsed__,
+          'npx',
+          ['aws-cdk', ...options.__unparsed__],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },

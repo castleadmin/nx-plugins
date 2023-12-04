@@ -11,11 +11,11 @@ export const runExecutor = async (
   const projectRootResolved = resolve(context.root, getProjectRoot(context));
 
   const { __unparsed__ } = options;
+  const command = `sam`;
+  const args = ['local', 'generate-event', ...__unparsed__];
+  console.log('Executing command:', command, args.join(' '));
 
-  const command = `sam local generate-event`;
-  console.log('Executing command:', command, __unparsed__.join(' '));
-
-  await executeCommand(command, __unparsed__, {
+  await executeCommand(command, args, {
     cwd: projectRootResolved,
   });
 

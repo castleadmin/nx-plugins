@@ -58,9 +58,13 @@ describe('invoke', () => {
 
       expect(output.success).toBe(true);
       expect(executeCommand).toHaveBeenCalledTimes(1);
-      expect(executeCommand).toHaveBeenCalledWith('sam local invoke', ['-h'], {
-        cwd: '/home/castleadmin/projects/awesome/apps/test',
-      });
+      expect(executeCommand).toHaveBeenCalledWith(
+        'sam',
+        ['local', 'invoke', '-h'],
+        {
+          cwd: '/home/castleadmin/projects/awesome/apps/test',
+        },
+      );
     });
 
     describe('Given a command with 2 arguments,', () => {
@@ -78,8 +82,14 @@ describe('invoke', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke --config-file ../samconfig.toml',
-          options.__unparsed__,
+          'sam',
+          [
+            'local',
+            'invoke',
+            '--config-file',
+            '../samconfig.toml',
+            ...options.__unparsed__,
+          ],
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
           },
@@ -95,8 +105,14 @@ describe('invoke', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke --config-file ../samconfig.toml',
-          options.__unparsed__,
+          'sam',
+          [
+            'local',
+            'invoke',
+            '--config-file',
+            '../samconfig.toml',
+            ...options.__unparsed__,
+          ],
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
           },
@@ -132,9 +148,13 @@ describe('invoke', () => {
 
       expect(output.success).toBe(true);
       expect(executeCommand).toHaveBeenCalledTimes(1);
-      expect(executeCommand).toHaveBeenCalledWith('sam local invoke', ['-h'], {
-        cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
-      });
+      expect(executeCommand).toHaveBeenCalledWith(
+        'sam',
+        ['local', 'invoke', '-h'],
+        {
+          cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
+        },
+      );
     });
 
     describe('Given a command with 2 arguments,', () => {
@@ -152,8 +172,14 @@ describe('invoke', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke --config-file ..\\samconfig.toml',
-          options.__unparsed__,
+          'sam',
+          [
+            'local',
+            'invoke',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...options.__unparsed__,
+          ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },
@@ -169,8 +195,14 @@ describe('invoke', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke --config-file ..\\samconfig.toml',
-          options.__unparsed__,
+          'sam',
+          [
+            'local',
+            'invoke',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...options.__unparsed__,
+          ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },

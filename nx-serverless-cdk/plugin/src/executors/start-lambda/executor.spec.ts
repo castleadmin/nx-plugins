@@ -59,8 +59,8 @@ describe('start-lambda', () => {
       expect(output.success).toBe(true);
       expect(executeCommand).toHaveBeenCalledTimes(1);
       expect(executeCommand).toHaveBeenCalledWith(
-        'sam local start-lambda',
-        ['-h'],
+        'sam',
+        ['local', 'start-lambda', '-h'],
         {
           cwd: '/home/castleadmin/projects/awesome/apps/test',
         },
@@ -82,8 +82,14 @@ describe('start-lambda', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local start-lambda --config-file ../samconfig.toml',
-          options.__unparsed__,
+          'sam',
+          [
+            'local',
+            'start-lambda',
+            '--config-file',
+            '../samconfig.toml',
+            ...options.__unparsed__,
+          ],
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
           },
@@ -99,8 +105,14 @@ describe('start-lambda', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local start-lambda --config-file ../samconfig.toml',
-          options.__unparsed__,
+          'sam',
+          [
+            'local',
+            'start-lambda',
+            '--config-file',
+            '../samconfig.toml',
+            ...options.__unparsed__,
+          ],
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
           },
@@ -137,8 +149,8 @@ describe('start-lambda', () => {
       expect(output.success).toBe(true);
       expect(executeCommand).toHaveBeenCalledTimes(1);
       expect(executeCommand).toHaveBeenCalledWith(
-        'sam local start-lambda',
-        ['-h'],
+        'sam',
+        ['local', 'start-lambda', '-h'],
         {
           cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
         },
@@ -160,8 +172,14 @@ describe('start-lambda', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local start-lambda --config-file ..\\samconfig.toml',
-          options.__unparsed__,
+          'sam',
+          [
+            'local',
+            'start-lambda',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...options.__unparsed__,
+          ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },
@@ -177,8 +195,14 @@ describe('start-lambda', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local start-lambda --config-file ..\\samconfig.toml',
-          options.__unparsed__,
+          'sam',
+          [
+            'local',
+            'start-lambda',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...options.__unparsed__,
+          ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },
