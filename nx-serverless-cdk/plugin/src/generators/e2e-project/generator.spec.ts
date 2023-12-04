@@ -143,6 +143,7 @@ export default {
   },
   coverageReporters: ['lcov', 'text'],
   resetMocks: true,
+  testTimeout: 10000,
 };
 `,
       );
@@ -291,6 +292,7 @@ export default {
   },
   coverageReporters: ['lcov', 'text'],
   resetMocks: true,
+  testTimeout: 10000,
 };
 `,
       );

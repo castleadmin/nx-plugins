@@ -144,6 +144,7 @@ const jestConfigSnippet = `,
   },
   coverageReporters: ['lcov', 'text'],
   resetMocks: true,
+  testTimeout: 10000,
 };
 `;
 
