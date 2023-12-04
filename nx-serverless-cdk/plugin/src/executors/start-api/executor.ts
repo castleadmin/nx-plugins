@@ -2,6 +2,7 @@ import { ExecutorContext } from '@nx/devkit';
 import { resolve } from 'node:path';
 import { executeCommand } from '../../utils/execute-command';
 import { getProjectRoot } from '../../utils/get-project-root';
+import { getSamconfigPath } from '../../utils/get-samconfig-path';
 import { StartApiExecutorSchema } from './schema';
 
 export const runExecutor = async (
@@ -12,7 +13,10 @@ export const runExecutor = async (
 
   const { __unparsed__ } = options;
 
-  const command = `sam local start-api --config-file ../samconfig.toml`;
+  const samconfigPath = getSamconfigPath(__unparsed__, projectRootResolved);
+  const command = `sam local start-api${
+    samconfigPath ? ` --config-file ${samconfigPath}` : ''
+  }`;
   console.log('Executing command:', command, __unparsed__.join(' '));
 
   await executeCommand(command, __unparsed__, {
