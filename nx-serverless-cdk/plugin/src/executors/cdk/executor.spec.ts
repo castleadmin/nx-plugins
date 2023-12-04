@@ -136,7 +136,7 @@ describe('cdk', () => {
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
           'npx',
-          ['"aws-cdk"', ...options.__unparsed__.map((arg) => `"${arg}"`)],
+          ['aws-cdk', ...options.__unparsed__],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },
@@ -153,7 +153,7 @@ describe('cdk', () => {
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
           'npx',
-          ['"aws-cdk"', ...options.__unparsed__.map((arg) => `"${arg}"`)],
+          ['aws-cdk', ...options.__unparsed__],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },

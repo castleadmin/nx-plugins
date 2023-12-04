@@ -2,7 +2,6 @@ import { ExecutorContext } from '@nx/devkit';
 import { resolve } from 'node:path';
 import { executeCommand } from '../../utils/execute-command';
 import { getProjectRoot } from '../../utils/get-project-root';
-import { isWindows } from '../../utils/is-windows';
 import { CdkExecutorSchema } from './schema';
 
 export const runExecutor = async (
@@ -13,9 +12,7 @@ export const runExecutor = async (
 
   const { __unparsed__ } = options;
   const command = `npx`;
-  let args = ['aws-cdk', ...__unparsed__];
-  args = args.map((arg) => (isWindows() ? `"${arg}"` : arg));
-  console.log('Executing command:', command, args.join(' '));
+  const args = ['aws-cdk', ...__unparsed__];
 
   await executeCommand(command, args, {
     cwd: projectRootResolved,

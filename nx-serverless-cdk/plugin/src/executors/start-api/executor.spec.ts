@@ -153,7 +153,7 @@ describe('start-api', () => {
       expect(executeCommand).toHaveBeenCalledTimes(1);
       expect(executeCommand).toHaveBeenCalledWith(
         'sam',
-        ['"local"', '"start-api"', '"-h"'],
+        ['local', 'start-api', '-h'],
         {
           cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
         },
@@ -177,11 +177,11 @@ describe('start-api', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           [
-            '"local"',
-            '"start-api"',
-            '"--config-file"',
-            '"..\\samconfig.toml"',
-            ...options.__unparsed__.map((arg) => `"${arg}"`),
+            'local',
+            'start-api',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...options.__unparsed__,
           ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
@@ -200,11 +200,11 @@ describe('start-api', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           [
-            '"local"',
-            '"start-api"',
-            '"--config-file"',
-            '"..\\samconfig.toml"',
-            ...options.__unparsed__.map((arg) => `"${arg}"`),
+            'local',
+            'start-api',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...options.__unparsed__,
           ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',

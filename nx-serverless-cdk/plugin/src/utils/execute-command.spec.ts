@@ -112,11 +112,15 @@ describe('executeCommand', () => {
       await promise;
 
       expect(spawn).toHaveBeenCalledTimes(1);
-      expect(spawn).toHaveBeenCalledWith(command, args, {
-        cwd,
-        stdio: 'inherit',
-        shell: true,
-      });
+      expect(spawn).toHaveBeenCalledWith(
+        command,
+        args.map((arg) => `"${arg}"`),
+        {
+          cwd,
+          stdio: 'inherit',
+          shell: true,
+        },
+      );
     });
 
     test('Given a command that returns an exit code > 0, the execution should throw an error.', async () => {
@@ -129,11 +133,15 @@ describe('executeCommand', () => {
       await expect(promise).rejects.toBeInstanceOf(Error);
 
       expect(spawn).toHaveBeenCalledTimes(1);
-      expect(spawn).toHaveBeenCalledWith(command, args, {
-        cwd,
-        stdio: 'inherit',
-        shell: true,
-      });
+      expect(spawn).toHaveBeenCalledWith(
+        command,
+        args.map((arg) => `"${arg}"`),
+        {
+          cwd,
+          stdio: 'inherit',
+          shell: true,
+        },
+      );
     });
 
     test('Given a command that fails during the execution, the execution should throw an error.', async () => {
@@ -146,11 +154,15 @@ describe('executeCommand', () => {
       await expect(promise).rejects.toBeInstanceOf(Error);
 
       expect(spawn).toHaveBeenCalledTimes(1);
-      expect(spawn).toHaveBeenCalledWith(command, args, {
-        cwd,
-        stdio: 'inherit',
-        shell: true,
-      });
+      expect(spawn).toHaveBeenCalledWith(
+        command,
+        args.map((arg) => `"${arg}"`),
+        {
+          cwd,
+          stdio: 'inherit',
+          shell: true,
+        },
+      );
     });
   });
 });
