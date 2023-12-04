@@ -11,7 +11,9 @@ export const executeCommand = (
   return new Promise((resolve, reject) => {
     const { cwd } = options;
 
-    const commandProcess = spawn(command, args, {
+    const normalizedArgs = args.map((arg) => (isWindows() ? `"${arg}"` : arg));
+    console.log('Executing command:', command, normalizedArgs.join(' '));
+    const commandProcess = spawn(command, normalizedArgs, {
       cwd,
       stdio: 'inherit',
       shell: isWindows(),

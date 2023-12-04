@@ -153,7 +153,7 @@ describe('invoke', () => {
       expect(executeCommand).toHaveBeenCalledTimes(1);
       expect(executeCommand).toHaveBeenCalledWith(
         'sam',
-        ['"local"', '"invoke"', '"-h"'],
+        ['local', 'invoke', '-h'],
         {
           cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
         },
@@ -177,11 +177,11 @@ describe('invoke', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           [
-            '"local"',
-            '"invoke"',
-            '"--config-file"',
-            '"..\\samconfig.toml"',
-            ...options.__unparsed__.map((arg) => `"${arg}"`),
+            'local',
+            'invoke',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...options.__unparsed__,
           ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
@@ -200,11 +200,11 @@ describe('invoke', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           [
-            '"local"',
-            '"invoke"',
-            '"--config-file"',
-            '"..\\samconfig.toml"',
-            ...options.__unparsed__.map((arg) => `"${arg}"`),
+            'local',
+            'invoke',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...options.__unparsed__,
           ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
