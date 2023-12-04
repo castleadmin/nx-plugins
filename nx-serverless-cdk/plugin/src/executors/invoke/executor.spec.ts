@@ -53,12 +53,22 @@ describe('invoke', () => {
       };
     });
 
+    test('Given the -h arg, the command should be executed successfully.', async () => {
+      const output = await executor({ __unparsed__: ['-h'] }, context);
+
+      expect(output.success).toBe(true);
+      expect(executeCommand).toHaveBeenCalledTimes(1);
+      expect(executeCommand).toHaveBeenCalledWith('sam local invoke', ['-h'], {
+        cwd: '/home/castleadmin/projects/awesome/apps/test',
+      });
+    });
+
     describe('Given a command with 2 arguments,', () => {
       let options: InvokeExecutorSchema;
 
       beforeEach(() => {
         options = {
-          __unparsed__: ['--debug', '--profile="test"'],
+          __unparsed__: ['--debug', '--template=cdk.out/test.template.json'],
         };
       });
 
@@ -117,12 +127,22 @@ describe('invoke', () => {
       };
     });
 
+    test('Given the -h arg, the command should be executed successfully.', async () => {
+      const output = await executor({ __unparsed__: ['-h'] }, context);
+
+      expect(output.success).toBe(true);
+      expect(executeCommand).toHaveBeenCalledTimes(1);
+      expect(executeCommand).toHaveBeenCalledWith('sam local invoke', ['-h'], {
+        cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
+      });
+    });
+
     describe('Given a command with 2 arguments,', () => {
       let options: InvokeExecutorSchema;
 
       beforeEach(() => {
         options = {
-          __unparsed__: ['--debug', '--profile="test"'],
+          __unparsed__: ['--debug', '--template=cdk.out/test.template.json'],
         };
       });
 
@@ -132,7 +152,7 @@ describe('invoke', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke --config-file ../samconfig.toml',
+          'sam local invoke --config-file ..\\samconfig.toml',
           options.__unparsed__,
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
@@ -149,7 +169,7 @@ describe('invoke', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local invoke --config-file ../samconfig.toml',
+          'sam local invoke --config-file ..\\samconfig.toml',
           options.__unparsed__,
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
