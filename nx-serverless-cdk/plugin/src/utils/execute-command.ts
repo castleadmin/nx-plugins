@@ -13,7 +13,7 @@ export const executeCommand = (
     const commandProcess = spawn(command, args, {
       cwd,
       stdio: 'inherit',
-      shell: true,
+      shell: false,
     });
 
     commandProcess.on('close', (code: number | null) => {

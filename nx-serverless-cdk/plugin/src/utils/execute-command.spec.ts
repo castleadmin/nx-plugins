@@ -52,7 +52,7 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
       stdio: 'inherit',
-      shell: true,
+      shell: false,
     });
   });
 
@@ -69,7 +69,7 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
       stdio: 'inherit',
-      shell: true,
+      shell: false,
     });
   });
 
@@ -86,7 +86,7 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
       stdio: 'inherit',
-      shell: true,
+      shell: false,
     });
   });
 });

@@ -68,8 +68,8 @@ describe('generate-event', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local generate-event',
-          options.__unparsed__,
+          'sam',
+          ['local', 'generate-event', ...options.__unparsed__],
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
           },
@@ -85,8 +85,8 @@ describe('generate-event', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local generate-event',
-          options.__unparsed__,
+          'sam',
+          ['local', 'generate-event', ...options.__unparsed__],
           {
             cwd: '/home/castleadmin/projects/awesome/apps/test',
           },
@@ -132,8 +132,8 @@ describe('generate-event', () => {
         expect(output.success).toBe(true);
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local generate-event',
-          options.__unparsed__,
+          'sam',
+          ['local', 'generate-event', ...options.__unparsed__],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },
@@ -149,8 +149,8 @@ describe('generate-event', () => {
 
         expect(executeCommand).toHaveBeenCalledTimes(1);
         expect(executeCommand).toHaveBeenCalledWith(
-          'sam local generate-event',
-          options.__unparsed__,
+          'sam',
+          ['local', 'generate-event', ...options.__unparsed__],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },

@@ -12,14 +12,18 @@ export const runExecutor = async (
   const projectRootResolved = resolve(context.root, getProjectRoot(context));
 
   const { __unparsed__ } = options;
-
   const samconfigPath = getSamconfigPath(__unparsed__, projectRootResolved);
-  const command = `sam local start-api${
-    samconfigPath ? ` --config-file ${samconfigPath}` : ''
-  }`;
-  console.log('Executing command:', command, __unparsed__.join(' '));
+  const command = `sam`;
 
-  await executeCommand(command, __unparsed__, {
+  const args = [...__unparsed__];
+  if (samconfigPath) {
+    args.unshift('--config-file', samconfigPath);
+  }
+  args.unshift('local', 'start-api');
+
+  console.log('Executing command:', command, args.join(' '));
+
+  await executeCommand(command, args, {
     cwd: projectRootResolved,
   });
 
