@@ -31,12 +31,6 @@ export const getSamconfigPath = (
       ) {
         templateValue = argv[i + 1];
       }
-    } else if (arg?.startsWith('-t=')) {
-      const value = arg?.slice('-t='.length);
-
-      if (value) {
-        templateValue = value;
-      }
     }
   }
 
