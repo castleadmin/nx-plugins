@@ -77,30 +77,6 @@ describe('getSamconfigPath', () => {
       expect(result).toBe('../../samconfig.toml');
     });
 
-    test('Given a -t= argument, should return the relative path from the template to the samconfig.toml.', () => {
-      const argv = [
-        '--debug',
-        '-t=cdk.out/abc123DEF.template.json',
-        '--port=8009',
-      ];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe('../samconfig.toml');
-    });
-
-    test('Given a -t= argument where the value contains spaces, should return the relative path from the template to the samconfig.toml.', () => {
-      const argv = [
-        '--debug',
-        '-t=output/cdk out/abc123DEF.template.json',
-        '--port=8009',
-      ];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe('../../samconfig.toml');
-    });
-
     test('Given a -t argument, should return the relative path from the template to the samconfig.toml.', () => {
       const argv = [
         '--debug',
@@ -169,30 +145,6 @@ describe('getSamconfigPath', () => {
 
     test('Given a --template argument without value followed by nothing, should return undefined.', () => {
       const argv = ['--debug', '--template'];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe(undefined);
-    });
-
-    test('Given a -t= argument without value followed by a -- arg, should return undefined.', () => {
-      const argv = ['--debug', '-t=', '--port=8009'];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe(undefined);
-    });
-
-    test('Given a -t= argument without value followed by a - arg, should return undefined.', () => {
-      const argv = ['--debug', '-t=', '-p=8009'];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe(undefined);
-    });
-
-    test('Given a -t= argument without value followed by nothing, should return undefined.', () => {
-      const argv = ['--debug', '-t='];
 
       const result = getSamconfigPath(argv, projectRootResolved);
 
@@ -290,30 +242,6 @@ describe('getSamconfigPath', () => {
       expect(result).toBe('..\\..\\samconfig.toml');
     });
 
-    test('Given a -t= argument, should return the relative path from the template to the samconfig.toml.', () => {
-      const argv = [
-        '--debug',
-        '-t=cdk.out\\abc123DEF.template.json',
-        '--port=8009',
-      ];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe('..\\samconfig.toml');
-    });
-
-    test('Given a -t= argument where the value contains spaces, should return the relative path from the template to the samconfig.toml.', () => {
-      const argv = [
-        '--debug',
-        '-t=output\\cdk out\\abc123DEF.template.json',
-        '--port=8009',
-      ];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe('..\\..\\samconfig.toml');
-    });
-
     test('Given a -t argument, should return the relative path from the template to the samconfig.toml.', () => {
       const argv = [
         '--debug',
@@ -382,30 +310,6 @@ describe('getSamconfigPath', () => {
 
     test('Given a --template argument without value followed by nothing, should return undefined.', () => {
       const argv = ['--debug', '--template'];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe(undefined);
-    });
-
-    test('Given a -t= argument without value followed by a -- arg, should return undefined.', () => {
-      const argv = ['--debug', '-t=', '--port=8009'];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe(undefined);
-    });
-
-    test('Given a -t= argument without value followed by a - arg, should return undefined.', () => {
-      const argv = ['--debug', '-t=', '-p=8009'];
-
-      const result = getSamconfigPath(argv, projectRootResolved);
-
-      expect(result).toBe(undefined);
-    });
-
-    test('Given a -t= argument without value followed by nothing, should return undefined.', () => {
-      const argv = ['--debug', '-t='];
 
       const result = getSamconfigPath(argv, projectRootResolved);
 
