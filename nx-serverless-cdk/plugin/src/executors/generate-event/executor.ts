@@ -2,6 +2,7 @@ import { ExecutorContext } from '@nx/devkit';
 import { resolve } from 'node:path';
 import { executeCommand } from '../../utils/execute-command';
 import { getProjectRoot } from '../../utils/get-project-root';
+import { isWindows } from '../../utils/is-windows';
 import { GenerateEventExecutorSchema } from './schema';
 
 export const runExecutor = async (
@@ -12,7 +13,8 @@ export const runExecutor = async (
 
   const { __unparsed__ } = options;
   const command = `sam`;
-  const args = ['local', 'generate-event', ...__unparsed__];
+  let args = ['local', 'generate-event', ...__unparsed__];
+  args = args.map((arg) => (isWindows() ? `"${arg}"` : arg));
   console.log('Executing command:', command, args.join(' '));
 
   await executeCommand(command, args, {

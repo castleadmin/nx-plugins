@@ -1,5 +1,6 @@
 import { ExecutorContext } from '@nx/devkit';
 import { executeCommand } from '../../utils/execute-command';
+import * as isWindowsModule from '../../utils/is-windows';
 import { useUnixPath, useWindowsPath } from '../../utils/path.mock.spec';
 import executor from './executor';
 import { StartApiExecutorSchema } from './schema';
@@ -36,6 +37,7 @@ describe('start-api', () => {
 
     beforeEach(() => {
       useUnixPath();
+      jest.spyOn(isWindowsModule, 'isWindows').mockImplementation(() => false);
 
       context = {
         root: '/home/castleadmin/projects/awesome',
@@ -126,6 +128,7 @@ describe('start-api', () => {
 
     beforeEach(() => {
       useWindowsPath();
+      jest.spyOn(isWindowsModule, 'isWindows').mockImplementation(() => true);
 
       context = {
         root: 'C:\\Users\\castleadmin\\projects\\awesome',
@@ -150,7 +153,7 @@ describe('start-api', () => {
       expect(executeCommand).toHaveBeenCalledTimes(1);
       expect(executeCommand).toHaveBeenCalledWith(
         'sam',
-        ['local', 'start-api', '-h'],
+        ['"local"', '"start-api"', '"-h"'],
         {
           cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
         },
@@ -174,11 +177,11 @@ describe('start-api', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           [
-            'local',
-            'start-api',
-            '--config-file',
-            '..\\samconfig.toml',
-            ...options.__unparsed__,
+            '"local"',
+            '"start-api"',
+            '"--config-file"',
+            '"..\\samconfig.toml"',
+            ...options.__unparsed__.map((arg) => `"${arg}"`),
           ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
@@ -197,11 +200,11 @@ describe('start-api', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           [
-            'local',
-            'start-api',
-            '--config-file',
-            '..\\samconfig.toml',
-            ...options.__unparsed__,
+            '"local"',
+            '"start-api"',
+            '"--config-file"',
+            '"..\\samconfig.toml"',
+            ...options.__unparsed__.map((arg) => `"${arg}"`),
           ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',

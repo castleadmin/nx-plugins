@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import { isWindows } from './is-windows';
 
 export const executeCommand = (
   command: string,
@@ -13,7 +14,7 @@ export const executeCommand = (
     const commandProcess = spawn(command, args, {
       cwd,
       stdio: 'inherit',
-      shell: false,
+      shell: isWindows(),
     });
 
     commandProcess.on('close', (code: number | null) => {
