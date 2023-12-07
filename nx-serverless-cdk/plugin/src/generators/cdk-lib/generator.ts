@@ -45,11 +45,9 @@ const addJsLibrary = async (
     js: false,
     pascalCaseFiles: false,
     strict: false,
-    buildable: true,
     setParserOptionsProject: false,
     config: 'project',
-    compiler: 'tsc',
-    bundler: 'tsc',
+    bundler: 'esbuild',
     skipTypeCheck: false,
     minimal: false,
     rootProject: false,
@@ -72,17 +70,49 @@ const changeProjectConfiguration = (
 
   config.sourceRoot = joinPathFragments(projectRoot, 'cdk');
 
-  (config.targets as NonNullable<typeof config.targets>)['build'] = {
-    executor: `@nx/js:tsc`,
+  const configTargets = config.targets as NonNullable<typeof config.targets>;
+  configTargets['build-declarations'] = {
+    executor: '@nx/js:tsc',
+    options: {
+      cache: false,
+      clean: true,
+      main: joinPathFragments(projectRoot, 'cdk', 'index.ts'),
+      outputPath: joinPathFragments('dist', projectRoot),
+      tsConfig: joinPathFragments(projectRoot, 'tsconfig.cdk.dts.json'),
+    },
+    dependsOn: ['^build-declarations'],
+  };
+
+  configTargets['build'] = {
+    executor: '@nx/esbuild:esbuild',
     outputs: ['{options.outputPath}'],
     options: {
+      assets: [joinPathFragments(projectRoot, '*.md')],
+      bundle: true,
+      // handled by build-declarations
+      deleteOutputPath: false,
+      format: ['cjs'],
+      main: joinPathFragments(projectRoot, 'cdk', 'index.ts'),
+      minify: true,
       outputPath: joinPathFragments('dist', projectRoot),
-      tsConfig: `${projectRoot}/tsconfig.lib.json`,
-      packageJson: `${projectRoot}/package.json`,
-      main: `${projectRoot}/cdk/index.ts`,
-      assets: [`${projectRoot}/*.md`],
+      platform: 'node',
+      esbuildOptions: {
+        outExtension: {
+          '.js': '.js',
+        },
+        sourcemap: 'inline',
+        sourcesContent: true,
+      },
+      target: 'node20',
+      thirdParty: false,
+      tsConfig: joinPathFragments(projectRoot, 'tsconfig.cdk.json'),
     },
+    dependsOn: ['build-declarations'],
   };
+
+  config.targets = Object.keys(configTargets)
+    .sort()
+    .reduce((acc, key) => ({ ...acc, ...{ [key]: configTargets[key] } }), {});
 
   updateProjectConfiguration(tree, projectName, config);
 };
@@ -103,11 +133,20 @@ const changeSrcDirectory = (
   writeJson(tree, tsConfigBaseFilePath, tsConfigBase);
 };
 
+const removeTsconfigLibJson = (
+  tree: Tree,
+  projectOptions: NormalizedProjectOptionsLibrary,
+): void => {
+  const { projectRoot } = projectOptions;
+
+  tree.delete(joinPathFragments(projectRoot, 'tsconfig.lib.json'));
+};
+
 const jestConfigSnippet = `,
   collectCoverageFrom: [
     'cdk/**/*.ts',
-    '!jest.config.ts',
     '!cdk/index.ts',
+    '!jest.config.ts',
   ],
   coverageThreshold: {
     global: {
@@ -180,6 +219,7 @@ export const cdkLibGenerator = async (
 
   changeProjectConfiguration(tree, projectOptions);
   changeSrcDirectory(tree, projectOptions);
+  removeTsconfigLibJson(tree, projectOptions);
   changeJestConfig(tree, projectOptions);
 
   addFiles(tree, projectOptions, versions);

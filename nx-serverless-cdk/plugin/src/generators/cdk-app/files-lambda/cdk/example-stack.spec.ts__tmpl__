@@ -46,7 +46,7 @@ describe('ExampleStack', () => {
         build: {
           minify: true,
           sourceMapMode: SourceMapMode.EXTERNAL,
-          tsconfig: resolve(__dirname, '../tsconfig.app.json'),
+          tsconfig: resolve(__dirname, '../tsconfig.src.json'),
         },
       });
     });

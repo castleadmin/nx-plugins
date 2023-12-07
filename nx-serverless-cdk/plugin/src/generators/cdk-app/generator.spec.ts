@@ -71,13 +71,13 @@ describe('cdk-app', () => {
       const tsconfig = readJson(tree, `apps/${projectName}/tsconfig.json`);
       expect(tsconfig.references).toEqual([
         {
-          path: './tsconfig.app.json',
-        },
-        {
           path: './tsconfig.cdk.json',
         },
         {
           path: './tsconfig.spec.json',
+        },
+        {
+          path: './tsconfig.src.json',
         },
       ]);
     });
@@ -210,13 +210,13 @@ export default {
       const tsconfig = readJson(tree, `apps/${projectName}/tsconfig.json`);
       expect(tsconfig.references).toEqual([
         {
-          path: './tsconfig.app.json',
-        },
-        {
           path: './tsconfig.cdk.json',
         },
         {
           path: './tsconfig.spec.json',
+        },
+        {
+          path: './tsconfig.src.json',
         },
       ]);
     });

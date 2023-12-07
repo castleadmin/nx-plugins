@@ -12,18 +12,10 @@
     "esModuleInterop": true,
     "importHelpers": true
   },
-  "include": ["cdk/**/*.ts", "shared/**/*.ts"],
+  "include": ["cdk/**/*.ts"],
   "exclude": [
-    "src",
-    "cdk.out",
     "jest.config.ts",
     "cdk/**/*.spec.ts",
-    "cdk/**/*.test.ts",
-    "shared/**/*.spec.ts",
-    "shared/**/*.test.ts"
-  ],
-  "ts-node": {
-    "preferTsExts": true,
-    "require": ["tsconfig-paths/register"]
-  }
+    "cdk/**/*.test.ts"
+  ]
 }

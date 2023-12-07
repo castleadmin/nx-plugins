@@ -161,10 +161,10 @@ These environments are just examples, the environment names as well as their cou
 - `project.json` Nx application configuration
 - `samconfig.toml` AWS SAM configuration
 - `start-cdk.mjs` ignore, this script is used to make the debugging of CDK applications possible
-- `tsconfig.app.json` TypeScript runtime code configuration
 - `tsconfig.cdk.json` TypeScript infrastructure code configuration
 - `tsconfig.json` shared TypeScript configuration
 - `tsconfig.spec.json` TypeScript test code configuration
+- `tsconfig.src.json` TypeScript runtime code configuration
 
 ### Format Application
 
@@ -226,7 +226,7 @@ you can define both via the `.env.cdk` file.
 Please note, if you use SSO for authentication, then you have to be logged in before executing this command!
 
 ```bash
-nx run <AppName>:cdk synth 'Dev/*' --profile <AwsCliDevEnvironmentProfile>
+nx run <AppName>:cdk synth "Dev/*" --profile <AwsCliDevEnvironmentProfile>
 ```
 
 A message is printed out to the console similar to the one below

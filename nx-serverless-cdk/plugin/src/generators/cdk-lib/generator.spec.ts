@@ -1,5 +1,10 @@
 import { faker } from '@faker-js/faker';
-import { readJson, readProjectConfiguration, Tree } from '@nx/devkit';
+import {
+  joinPathFragments,
+  readJson,
+  readProjectConfiguration,
+  Tree,
+} from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import cdkLibGenerator from './generator';
 import { CdkLibSchema } from './schema';
@@ -67,7 +72,7 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/libs/${projectName}',
-  collectCoverageFrom: ['cdk/**/*.ts', '!jest.config.ts', '!cdk/index.ts'],
+  collectCoverageFrom: ['cdk/**/*.ts', '!cdk/index.ts', '!jest.config.ts'],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -96,6 +101,12 @@ export default {
       expect(tree.exists(`libs/${projectName}/src`)).toBe(false);
     });
 
+    test('should not generate a tsconfig.lib.json file.', async () => {
+      await cdkLibGenerator(tree, options);
+
+      expect(tree.exists(`libs/${projectName}/tsconfig.lib.json`)).toBe(false);
+    });
+
     test("should change the project configuration's source root.", async () => {
       await cdkLibGenerator(tree, options);
 
@@ -103,20 +114,56 @@ export default {
       expect(config.sourceRoot).toBe(`libs/${projectName}/cdk`);
     });
 
-    test('should add a build target to the project configuration.', async () => {
+    test('should change the build target of the project configuration.', async () => {
       await cdkLibGenerator(tree, options);
 
       const config = readProjectConfiguration(tree, projectName);
       expect(config.targets?.['build']).toEqual({
-        executor: `@nx/js:tsc`,
+        executor: '@nx/esbuild:esbuild',
         outputs: ['{options.outputPath}'],
         options: {
-          outputPath: `dist/libs/${projectName}`,
-          tsConfig: `libs/${projectName}/tsconfig.lib.json`,
-          packageJson: `libs/${projectName}/package.json`,
-          main: `libs/${projectName}/cdk/index.ts`,
-          assets: [`libs/${projectName}/*.md`],
+          assets: [joinPathFragments('libs', projectName, '*.md')],
+          bundle: true,
+          // handled by build-declarations
+          deleteOutputPath: false,
+          format: ['cjs'],
+          main: joinPathFragments('libs', projectName, 'cdk', 'index.ts'),
+          minify: true,
+          outputPath: joinPathFragments('dist', 'libs', projectName),
+          platform: 'node',
+          esbuildOptions: {
+            outExtension: {
+              '.js': '.js',
+            },
+            sourcemap: 'inline',
+            sourcesContent: true,
+          },
+          target: 'node20',
+          thirdParty: false,
+          tsConfig: joinPathFragments('libs', projectName, 'tsconfig.cdk.json'),
         },
+        dependsOn: ['build-declarations'],
+      });
+    });
+
+    test('should add the build declarations target to the project configuration.', async () => {
+      await cdkLibGenerator(tree, options);
+
+      const config = readProjectConfiguration(tree, projectName);
+      expect(config.targets?.['build-declarations']).toEqual({
+        executor: '@nx/js:tsc',
+        options: {
+          cache: false,
+          clean: true,
+          main: joinPathFragments('libs', projectName, 'cdk', 'index.ts'),
+          outputPath: joinPathFragments('dist', 'libs', projectName),
+          tsConfig: joinPathFragments(
+            'libs',
+            projectName,
+            'tsconfig.cdk.dts.json',
+          ),
+        },
+        dependsOn: ['^build-declarations'],
       });
     });
 
@@ -133,7 +180,10 @@ export default {
       const tsconfig = readJson(tree, `libs/${projectName}/tsconfig.json`);
       expect(tsconfig.references).toEqual([
         {
-          path: './tsconfig.lib.json',
+          path: './tsconfig.cdk.dts.json',
+        },
+        {
+          path: './tsconfig.cdk.json',
         },
         {
           path: './tsconfig.spec.json',
