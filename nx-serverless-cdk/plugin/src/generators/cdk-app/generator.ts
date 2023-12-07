@@ -68,7 +68,7 @@ const addESLint = async (
     project: projectName,
     linter: Linter.EsLint,
     eslintFilePatterns: [`${projectRoot}/**/*.ts`],
-    tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.app.json')],
+    tsConfigPaths: [joinPathFragments(projectRoot, 'tsconfig.cdk.json')],
     skipFormat: true,
     setParserOptionsProject: false,
     skipPackageJson: false,

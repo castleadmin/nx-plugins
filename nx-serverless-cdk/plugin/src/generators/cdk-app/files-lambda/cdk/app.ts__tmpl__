@@ -12,7 +12,7 @@ export const createApp = (): App => {
     The AWS CDK team recommends to declare all stacks of all environments in the source code (Model all production stages in code - https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html#best-practices-apps).
     This guide explains the approach in more detail (https://taimos.de/blog/deploying-your-cdk-app-to-different-stages-and-environments).
     Environment variables are used to fixate the account and region at synthesis time (https://docs.aws.amazon.com/cdk/v2/guide/environments.html).
-    They can be set via the '.env.cdk' file or via the shell in use (Please note that the 'cdk' command is always executed in the 'sh' shell on Unix systems).
+    They can be set via the '.env.cdk' file or via the shell in use.
   */
 
   const app = new App();
@@ -43,7 +43,7 @@ export const createApp = (): App => {
     build: {
       minify: false,
       sourceMapMode: SourceMapMode.INLINE,
-      tsconfig: resolve(__dirname, '../tsconfig.app.json'),
+      tsconfig: resolve(__dirname, '../tsconfig.src.json'),
     },
   });
 
@@ -80,7 +80,7 @@ export const createApp = (): App => {
         4. Run the 'cdk deploy --app cdk.out' command to skip the synthesize step during the deployment.
        */
       sourceMapMode: SourceMapMode.EXTERNAL,
-      tsconfig: resolve(__dirname, '../tsconfig.app.json'),
+      tsconfig: resolve(__dirname, '../tsconfig.src.json'),
     },
   });
 
@@ -117,7 +117,7 @@ export const createApp = (): App => {
         4. Run the 'cdk deploy --app cdk.out' command to skip the synthesize step during the deployment.
        */
       sourceMapMode: SourceMapMode.EXTERNAL,
-      tsconfig: resolve(__dirname, '../tsconfig.app.json'),
+      tsconfig: resolve(__dirname, '../tsconfig.src.json'),
     },
   });
 

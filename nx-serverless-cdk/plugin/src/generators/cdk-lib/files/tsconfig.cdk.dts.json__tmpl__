@@ -7,12 +7,14 @@
     "lib": ["ES2022"],
     "types": ["node"],
     "declaration": true,
-    "sourceMap": false,
-    "inlineSourceMap": true,
-    "inlineSources": true,
+    "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "importHelpers": true
   },
   "include": ["cdk/**/*.ts"],
-  "exclude": ["jest.config.ts", "cdk/**/*.spec.ts", "cdk/**/*.test.ts"]
+  "exclude": [
+    "jest.config.ts",
+    "cdk/**/*.spec.ts",
+    "cdk/**/*.test.ts"
+  ]
 }

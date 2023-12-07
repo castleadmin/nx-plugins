@@ -4,7 +4,10 @@
   "include": [],
   "references": [
     {
-      "path": "./tsconfig.lib.json"
+      "path": "./tsconfig.cdk.dts.json"
+    },
+    {
+      "path": "./tsconfig.cdk.json"
     },
     {
       "path": "./tsconfig.spec.json"
