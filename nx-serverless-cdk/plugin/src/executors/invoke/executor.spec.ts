@@ -121,6 +121,62 @@ describe('invoke', () => {
         );
       });
     });
+
+    describe('Given a command with 2 arguments and 2 predefined arguments,', () => {
+      let options: InvokeExecutorSchema;
+
+      beforeEach(() => {
+        options = {
+          predefinedArguments: ['-e', 'events/sum/sum7.json'],
+          __unparsed__: ['--debug', '--template=cdk.out/test.template.json'],
+        };
+      });
+
+      test('the command should be executed successfully.', async () => {
+        const output = await executor(options, context);
+
+        expect(output.success).toBe(true);
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam',
+          [
+            'local',
+            'invoke',
+            '--config-file',
+            '../samconfig.toml',
+            ...(options.predefinedArguments as string[]),
+            ...options.__unparsed__,
+          ],
+          {
+            cwd: '/home/castleadmin/projects/awesome/apps/test',
+          },
+        );
+      });
+
+      test('should throw an error if the command fails to execute successfully.', async () => {
+        (
+          executeCommand as jest.MockedFunction<typeof executeCommand>
+        ).mockImplementationOnce(() => Promise.reject(new Error('Test error')));
+
+        await expect(executor(options, context)).rejects.toBeInstanceOf(Error);
+
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam',
+          [
+            'local',
+            'invoke',
+            '--config-file',
+            '../samconfig.toml',
+            ...(options.predefinedArguments as string[]),
+            ...options.__unparsed__,
+          ],
+          {
+            cwd: '/home/castleadmin/projects/awesome/apps/test',
+          },
+        );
+      });
+    });
   });
 
   describe('windows', () => {
@@ -204,6 +260,62 @@ describe('invoke', () => {
             'invoke',
             '--config-file',
             '..\\samconfig.toml',
+            ...options.__unparsed__,
+          ],
+          {
+            cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
+          },
+        );
+      });
+    });
+
+    describe('Given a command with 2 arguments and 2 predefined arguments,', () => {
+      let options: InvokeExecutorSchema;
+
+      beforeEach(() => {
+        options = {
+          predefinedArguments: ['-e', 'events/sum/sum7.json'],
+          __unparsed__: ['--debug', '--template=cdk.out/test.template.json'],
+        };
+      });
+
+      test('the command should be executed successfully.', async () => {
+        const output = await executor(options, context);
+
+        expect(output.success).toBe(true);
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam',
+          [
+            'local',
+            'invoke',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...(options.predefinedArguments as string[]),
+            ...options.__unparsed__,
+          ],
+          {
+            cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
+          },
+        );
+      });
+
+      test('should throw an error if the command fails to execute successfully.', async () => {
+        (
+          executeCommand as jest.MockedFunction<typeof executeCommand>
+        ).mockImplementationOnce(() => Promise.reject(new Error('Test error')));
+
+        await expect(executor(options, context)).rejects.toBeInstanceOf(Error);
+
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam',
+          [
+            'local',
+            'invoke',
+            '--config-file',
+            '..\\samconfig.toml',
+            ...(options.predefinedArguments as string[]),
             ...options.__unparsed__,
           ],
           {

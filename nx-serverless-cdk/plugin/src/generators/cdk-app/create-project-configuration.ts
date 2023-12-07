@@ -20,16 +20,124 @@ export const createProjectConfiguration = (
         executor: 'nx-serverless-cdk:cdk',
         options: {},
       },
-      'cdk-ci': {
+      deploy: {
         executor: 'nx-serverless-cdk:cdk',
+        defaultConfiguration: 'dev',
         options: {},
+        configurations: {
+          dev: {
+            predefinedArguments: ['deploy', 'Dev/*'],
+          },
+          stage: {
+            predefinedArguments: ['deploy', 'Stage/*'],
+          },
+          prod: {
+            predefinedArguments: ['deploy', 'Prod/*'],
+          },
+        },
+      },
+      deployAll: {
+        executor: 'nx-serverless-cdk:cdk',
+        defaultConfiguration: 'dev',
         dependsOn: [
           {
             dependencies: true,
-            target: 'cdk-ci',
             params: 'forward',
+            target: 'deployAll',
           },
         ],
+        options: {},
+        configurations: {
+          dev: {
+            predefinedArguments: ['deploy', 'Dev/*'],
+          },
+          stage: {
+            predefinedArguments: ['deploy', 'Stage/*'],
+          },
+          prod: {
+            predefinedArguments: ['deploy', 'Prod/*'],
+          },
+        },
+      },
+      destroy: {
+        executor: 'nx-serverless-cdk:cdk',
+        defaultConfiguration: 'dev',
+        options: {},
+        configurations: {
+          dev: {
+            predefinedArguments: ['destroy', 'Dev/*'],
+          },
+          stage: {
+            predefinedArguments: ['destroy', 'Stage/*'],
+          },
+          prod: {
+            predefinedArguments: ['destroy', 'Prod/*'],
+          },
+        },
+      },
+      diff: {
+        executor: 'nx-serverless-cdk:cdk',
+        defaultConfiguration: 'dev',
+        options: {},
+        configurations: {
+          dev: {
+            predefinedArguments: ['diff', 'Dev/*'],
+          },
+          stage: {
+            predefinedArguments: ['diff', 'Stage/*'],
+          },
+          prod: {
+            predefinedArguments: ['diff', 'Prod/*'],
+          },
+        },
+      },
+      ls: {
+        executor: 'nx-serverless-cdk:cdk',
+        defaultConfiguration: 'dev',
+        options: {},
+        configurations: {
+          dev: {
+            predefinedArguments: ['ls', 'Dev/*'],
+          },
+          stage: {
+            predefinedArguments: ['ls', 'Stage/*'],
+          },
+          prod: {
+            predefinedArguments: ['ls', 'Prod/*'],
+          },
+        },
+      },
+      synth: {
+        executor: 'nx-serverless-cdk:cdk',
+        defaultConfiguration: 'dev',
+        options: {},
+        configurations: {
+          dev: {
+            predefinedArguments: ['synth', 'Dev/*'],
+          },
+          stage: {
+            predefinedArguments: ['synth', 'Stage/*'],
+          },
+          prod: {
+            predefinedArguments: ['synth', 'Prod/*'],
+          },
+        },
+      },
+      watch: {
+        executor: 'nx-serverless-cdk:cdk',
+        defaultConfiguration: 'dev',
+        options: {},
+        configurations: {
+          dev: {
+            predefinedArguments: ['watch', 'Dev/*'],
+          },
+          stage: {
+            predefinedArguments: ['watch', 'Stage/*'],
+          },
+          prod: {
+            predefinedArguments: ['watch', 'Prod/*'],
+          },
+        },
       },
     },
     tags: ['cdk-app'],

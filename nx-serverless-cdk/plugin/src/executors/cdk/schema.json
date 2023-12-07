@@ -5,6 +5,13 @@
   "description": "Wrapper around the 'cdk' command. (https://docs.aws.amazon.com/cdk/v2/guide/cli.html)",
   "type": "object",
   "properties": {
+    "predefinedArguments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Used to predefine arguments that are put at the beginning of the command. Can be used to declare environment-specific arguments in the 'project.json' file."
+    },
     "__unparsed__": {
       "hidden": true,
       "type": "array",

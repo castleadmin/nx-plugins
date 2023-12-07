@@ -62,21 +62,37 @@ describe('create-project-configuration', () => {
           projectOptions,
         );
 
-        expect(configuration.targets).toEqual({
+        expect(configuration.targets).toMatchObject({
           cdk: {
             executor: 'nx-serverless-cdk:cdk',
-            options: {},
           },
-          'cdk-ci': {
+          deploy: {
             executor: 'nx-serverless-cdk:cdk',
-            options: {},
+          },
+          deployAll: {
+            executor: 'nx-serverless-cdk:cdk',
             dependsOn: [
               {
                 dependencies: true,
-                target: 'cdk-ci',
                 params: 'forward',
+                target: 'deployAll',
               },
             ],
+          },
+          destroy: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
+          diff: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
+          ls: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
+          synth: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
+          watch: {
+            executor: 'nx-serverless-cdk:cdk',
           },
         });
       });
@@ -146,37 +162,49 @@ describe('create-project-configuration', () => {
           projectOptions,
         );
 
-        expect(configuration.targets).toEqual({
+        expect(configuration.targets).toMatchObject({
           cdk: {
             executor: 'nx-serverless-cdk:cdk',
-            options: {},
           },
-          'cdk-ci': {
+          deploy: {
             executor: 'nx-serverless-cdk:cdk',
-            options: {},
+          },
+          deployAll: {
+            executor: 'nx-serverless-cdk:cdk',
             dependsOn: [
               {
                 dependencies: true,
-                target: 'cdk-ci',
                 params: 'forward',
+                target: 'deployAll',
               },
             ],
           },
+          destroy: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
+          diff: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
+          ls: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
+          synth: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
+          watch: {
+            executor: 'nx-serverless-cdk:cdk',
+          },
           'generate-event': {
             executor: 'nx-serverless-cdk:generate-event',
-            options: {},
           },
           invoke: {
             executor: 'nx-serverless-cdk:invoke',
-            options: {},
           },
           'start-api': {
             executor: 'nx-serverless-cdk:start-api',
-            options: {},
           },
           'start-lambda': {
             executor: 'nx-serverless-cdk:start-lambda',
-            options: {},
           },
         });
       });

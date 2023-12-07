@@ -11,11 +11,11 @@ export const runExecutor = async (
 ): Promise<{ success: boolean }> => {
   const projectRootResolved = resolve(context.root, getProjectRoot(context));
 
-  const { __unparsed__ } = options;
+  const { predefinedArguments, __unparsed__ } = options;
   const samconfigPath = getSamconfigPath(__unparsed__, projectRootResolved);
   const command = `sam`;
 
-  const args = [...__unparsed__];
+  const args = [...(predefinedArguments ?? []), ...__unparsed__];
   if (samconfigPath) {
     args.unshift('--config-file', samconfigPath);
   }
