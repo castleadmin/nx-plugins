@@ -11,12 +11,14 @@ export const executeCommand = (
   return new Promise((resolve, reject) => {
     const { cwd } = options;
 
-    const normalizedArgs = args.map((arg) => (isWindows() ? `"${arg}"` : arg));
+    const normalizedArgs = args.map((arg) =>
+      isWindows() ? `"${arg}"` : `'${arg}'`,
+    );
     console.log('Executing command:', command, normalizedArgs.join(' '));
     const commandProcess = spawn(command, normalizedArgs, {
       cwd,
       stdio: 'inherit',
-      shell: isWindows(),
+      shell: true,
     });
 
     commandProcess.on('close', (code: number | null) => {

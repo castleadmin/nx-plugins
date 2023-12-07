@@ -16,19 +16,22 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Create an Application](#create-an-application)
   - [Environments](#environments)
   - [Application Structure](#application-structure)
-  - [Format Application](#format-application)
-  - [Lint Application](#lint-application)
-  - [Test Application (with Code Coverage)](#test-application-with-code-coverage)
-  - [Debug Infrastructure Code](#debug-infrastructure-code)
-  - [Execute Application Locally Prerequisites](#execute-application-locally-prerequisites)
-  - [Invoke a Lambda Function Locally](#invoke-a-lambda-function-locally)
+  - [Format Application](#format-an-application)
+  - [Lint Application](#lint-an-application)
+  - [Test Application (with Code Coverage)](#test-an-application-with-code-coverage)
     - [Debug](#debug)
-  - [Start Lambda Functions Locally](#start-lambda-functions-locally)
+  - [Synthesize an Application](#synthesize-an-application)
     - [Debug](#debug-1)
-  - [Start API Gateway Locally](#start-api-gateway-locally)
+  - [Execute Application Locally Prerequisites](#execute-an-application-locally-prerequisites)
+  - [Invoke a Lambda Function Locally](#invoke-a-lambda-function-locally)
     - [Debug](#debug-2)
+  - [Start Lambda Functions Locally](#start-lambda-functions-locally)
+    - [Debug](#debug-3)
+  - [Start API Gateway Locally](#start-api-gateway-locally)
+    - [Debug](#debug-4)
   - [Deploy Application](#deploy-application)
   - [E2E Testing](#e2e-testing)
+    - [Debug](#debug-5)
 - [Construct Library](#construct-library)
   - [Create a Construct Library](#create-a-construct-library)
   - [Construct Library Structure](#construct-library-structure)
@@ -40,6 +43,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
 - [TypeScript Library](#typescript-library)
   - [Create a TypeScript Library](#create-a-typescript-library)
   - [Use TypeScript Library](#use-typescript-library)
+- [Debug in Chrome](#debug-in-chrome)
 - [Generators Reference](#generators-reference)
 - [Executors Reference](#executors-reference)
 
@@ -84,7 +88,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - An empty monorepo can be created with the following command
 
 ```bash
-npx create-nx-workspace@latest --preset "apps" --workspaceType "integrated"
+npx create-nx-workspace@latest --name <WorkspaceName> --preset "apps" --workspaceType "integrated"
 ```
 
 ### Install
@@ -149,11 +153,12 @@ These environments are just examples, the environment names as well as their cou
 - `src` contains the runtime code and tests (e.g. Lambda function handlers)
   - `example-api-handler.ts` entry point of the example API Lambda function
   - `example-handler.ts` entry point of the example Lambda function
-- `.env.cdk` defines the environment variables for the CDK command
-  - Used to enable CDK debug mode
-  - Used to determine the AWS accounts and regions for the deployment at synthesizes time
+- `.env` defines the environment variables for the application commands
+  - Used to enable the CDK debug mode
+  - Used to define the AWS accounts and regions for the deployment
   - As a fallback these values are retrieved from the AWS profile
   - The environment variables can be overridden if needed
+- `.env.test` used to activate the debug mode for the Jest testing framework
 - `.eslintrc.json` ESLint project configuration
 - `.gitignore` defines the files that are excluded from version control
 - `cdk.json` AWS CDK configuration file
@@ -166,7 +171,7 @@ These environments are just examples, the environment names as well as their cou
 - `tsconfig.spec.json` TypeScript test code configuration
 - `tsconfig.src.json` TypeScript runtime code configuration
 
-### Format Application
+### Format an Application
 
 The workspace files that have been changed since the last commit can be formatted with the help of [nx format](https://nx.dev/nx-api/nx/documents/format-write).
 
@@ -180,7 +185,7 @@ To format all workspace files execute
 nx format --all
 ```
 
-### Lint Application
+### Lint an Application
 
 To lint the application execute
 
@@ -194,7 +199,7 @@ or
 nx run <AppName>:lint
 ```
 
-### Test Application (with Code Coverage)
+### Test an Application (with Code Coverage)
 
 To test the application execute
 
@@ -214,20 +219,26 @@ Add the `--codeCoverage` argument to enable code coverage.
 nx run <AppName>:test --codeCoverage
 ```
 
-### Debug Infrastructure Code
+#### Debug
 
-Add the `debugger;` statement to the infrastructure code place where you want to start the debugging session.
-
-In the `.env.cdk` file set `CDK_DEBUG` to true.
+### Synthesize an Application
 
 Execute the following command which synthesizes all Dev environment stacks.
 If your profile doesn't specify the account or region,
-you can define both via the `.env.cdk` file.
+you can define both via the `.env` file.
 Please note, if you use SSO for authentication, then you have to be logged in before executing this command!
 
 ```bash
 nx run <AppName>:cdk synth "Dev/*" --profile <AwsCliDevEnvironmentProfile>
 ```
+
+#### Debug
+
+Add the `debugger;` statement to the infrastructure code place where you want to start the debugging session.
+
+In the `.env` file set `CDK_DEBUG` to true.
+
+[Synthesize all Dev environment stacks](#synthesize-an-application).
 
 A message is printed out to the console similar to the one below
 
@@ -235,35 +246,15 @@ A message is printed out to the console similar to the one below
 Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
 ```
 
-Any Node.js debugger can be used for debugging. In this example, the Chrome browser will be used.
+Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
 
-Open a new tab in the Chrome browser and navigate to `chrome://inspect`.
+### Invoke a Lambda Function Locally
 
-Click on `Open dedicated DevTools for Node` and navigate in the new window to the `Sources` tab.
-
-Wait for the source code to appear and then click on the play button (Resume script execution) in the right panel.
-
-The debugger jumps to the `debugger;` statement that has been added to the source code,
-which represents the start point of the debugging session.
-
-### Execute Application Locally Prerequisites
-
-Execute the following command which synthesizes all Dev environment stacks.
-If your profile doesn't specify the account or region,
-you can define both via the `.env.cdk` file.
-Please note, if you use SSO for authentication, then you have to be logged in before executing this command!
-
-```bash
-nx run <AppName>:cdk synth "Dev/*" --profile <AwsCliDevEnvironmentProfile>
-```
+[Synthesize all Dev environment stacks](#synthesize-an-application).
 
 Open the `<AppName>/cdk.out` directory and search for the Dev environment CloudFormation template,
 which should have a file name similar to `DevAdventialsE766A003.template.json`.
 Copy the file name.
-
-### Invoke a Lambda Function Locally
-
-Execute all steps in [Execute Application Locally Prerequisites](#local-execution-prerequisites).
 
 To invoke the example Lambda function locally with the test event stored in `<AppName>/events/sum/sum7.json` execute
 
@@ -281,7 +272,11 @@ The debug mode can be started
 
 ### Start Lambda Functions Locally
 
-Execute all steps in [Execute Application Locally Prerequisites](#local-execution-prerequisites).
+[Synthesize all Dev environment stacks](#synthesize-an-application).
+
+Open the `<AppName>/cdk.out` directory and search for the Dev environment CloudFormation template,
+which should have a file name similar to `DevAdventialsE766A003.template.json`.
+Copy the file name.
 
 To start all Lambda functions locally execute
 
@@ -344,11 +339,19 @@ const response = await lambdaClient.send(
 
 ### Start API Gateway Locally
 
+[Synthesize all Dev environment stacks](#synthesize-an-application).
+
+Open the `<AppName>/cdk.out` directory and search for the Dev environment CloudFormation template,
+which should have a file name similar to `DevAdventialsE766A003.template.json`.
+Copy the file name.
+
 #### Debug
 
 ### Deploy Application
 
 ### E2E Testing
+
+#### Debug
 
 ## Construct Library
 
@@ -371,6 +374,17 @@ const response = await lambdaClient.send(
 ### Create a TypeScript Library
 
 ### Use TypeScript Library
+
+## Debug in Chrome
+
+Open a new tab in the Chrome browser and navigate to `chrome://inspect`.
+
+Click on `Open dedicated DevTools for Node` and navigate in the new window to the `Sources` tab.
+
+Wait for the source code to appear and then click on the play button (Resume script execution) in the right panel.
+
+The debugger jumps to the `debugger;` statement that has been added to the source code.
+Move from this point onward by using the debugger step commands and additional breakpoints.
 
 ## Generators Reference
 

@@ -95,6 +95,58 @@ describe('generate-event', () => {
         );
       });
     });
+
+    describe('Given a command with 2 arguments and 2 predefined arguments,', () => {
+      let options: GenerateEventExecutorSchema;
+
+      beforeEach(() => {
+        options = {
+          predefinedArguments: ['cloudwatch', 'scheduled-event'],
+          __unparsed__: ['--region', 'eu-central-1'],
+        };
+      });
+
+      test('the command should be executed successfully.', async () => {
+        const output = await executor(options, context);
+
+        expect(output.success).toBe(true);
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam',
+          [
+            'local',
+            'generate-event',
+            ...(options.predefinedArguments as string[]),
+            ...options.__unparsed__,
+          ],
+          {
+            cwd: '/home/castleadmin/projects/awesome/apps/test',
+          },
+        );
+      });
+
+      test('should throw an error if the command fails to execute successfully.', async () => {
+        (
+          executeCommand as jest.MockedFunction<typeof executeCommand>
+        ).mockImplementationOnce(() => Promise.reject(new Error('Test error')));
+
+        await expect(executor(options, context)).rejects.toBeInstanceOf(Error);
+
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam',
+          [
+            'local',
+            'generate-event',
+            ...(options.predefinedArguments as string[]),
+            ...options.__unparsed__,
+          ],
+          {
+            cwd: '/home/castleadmin/projects/awesome/apps/test',
+          },
+        );
+      });
+    });
   });
 
   describe('windows', () => {
@@ -154,6 +206,58 @@ describe('generate-event', () => {
         expect(executeCommand).toHaveBeenCalledWith(
           'sam',
           ['local', 'generate-event', ...options.__unparsed__],
+          {
+            cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
+          },
+        );
+      });
+    });
+
+    describe('Given a command with 2 arguments and 2 predefined arguments,', () => {
+      let options: GenerateEventExecutorSchema;
+
+      beforeEach(() => {
+        options = {
+          predefinedArguments: ['cloudwatch', 'scheduled-event'],
+          __unparsed__: ['--region', 'eu-central-1'],
+        };
+      });
+
+      test('the command should be executed successfully.', async () => {
+        const output = await executor(options, context);
+
+        expect(output.success).toBe(true);
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam',
+          [
+            'local',
+            'generate-event',
+            ...(options.predefinedArguments as string[]),
+            ...options.__unparsed__,
+          ],
+          {
+            cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
+          },
+        );
+      });
+
+      test('should throw an error if the command fails to execute successfully.', async () => {
+        (
+          executeCommand as jest.MockedFunction<typeof executeCommand>
+        ).mockImplementationOnce(() => Promise.reject(new Error('Test error')));
+
+        await expect(executor(options, context)).rejects.toBeInstanceOf(Error);
+
+        expect(executeCommand).toHaveBeenCalledTimes(1);
+        expect(executeCommand).toHaveBeenCalledWith(
+          'sam',
+          [
+            'local',
+            'generate-event',
+            ...(options.predefinedArguments as string[]),
+            ...options.__unparsed__,
+          ],
           {
             cwd: 'C:\\Users\\castleadmin\\projects\\awesome\\apps\\test',
           },

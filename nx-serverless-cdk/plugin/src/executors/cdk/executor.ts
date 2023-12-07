@@ -10,9 +10,9 @@ export const runExecutor = async (
 ): Promise<{ success: boolean }> => {
   const projectRootResolved = resolve(context.root, getProjectRoot(context));
 
-  const { __unparsed__ } = options;
+  const { predefinedArguments, __unparsed__ } = options;
   const command = `npx`;
-  const args = ['aws-cdk', ...__unparsed__];
+  const args = ['aws-cdk', ...(predefinedArguments ?? []), ...__unparsed__];
 
   await executeCommand(command, args, {
     cwd: projectRootResolved,
