@@ -36,14 +36,14 @@ export const createProjectConfiguration = (
           },
         },
       },
-      deployAll: {
+      'deploy-all': {
         executor: 'nx-serverless-cdk:cdk',
         defaultConfiguration: 'dev',
         dependsOn: [
           {
             dependencies: true,
             params: 'forward',
-            target: 'deployAll',
+            target: 'deploy-all',
           },
         ],
         options: {},

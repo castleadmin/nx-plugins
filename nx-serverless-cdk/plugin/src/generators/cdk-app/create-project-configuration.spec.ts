@@ -69,13 +69,13 @@ describe('create-project-configuration', () => {
           deploy: {
             executor: 'nx-serverless-cdk:cdk',
           },
-          deployAll: {
+          'deploy-all': {
             executor: 'nx-serverless-cdk:cdk',
             dependsOn: [
               {
                 dependencies: true,
                 params: 'forward',
-                target: 'deployAll',
+                target: 'deploy-all',
               },
             ],
           },
@@ -169,13 +169,13 @@ describe('create-project-configuration', () => {
           deploy: {
             executor: 'nx-serverless-cdk:cdk',
           },
-          deployAll: {
+          'deploy-all': {
             executor: 'nx-serverless-cdk:cdk',
             dependsOn: [
               {
                 dependencies: true,
                 params: 'forward',
-                target: 'deployAll',
+                target: 'deploy-all',
               },
             ],
           },
