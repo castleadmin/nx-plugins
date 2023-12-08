@@ -1,3 +1,5 @@
+[!nx-serverless-cdk logo](https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/logo.png)
+
 # nx-serverless-cdk
 
 **nx-serverless-cdk** is an **Nx plugin** for creating **AWS CDK applications** and **libraries** inside an [**Nx monorepo**](https://nx.dev/concepts/more-concepts/why-monorepos).
@@ -21,7 +23,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Lint the Application](#lint-the-application)
   - [Test the Application (with Code Coverage)](#test-the-application-with-code-coverage)
     - [Debug](#debug)
-  - [Synthesize the Application](#synthesize-the-application)
+  - [Synthesize CloudFormation Stacks](#synthesize-cloudformation-stacks)
     - [Debug](#debug-1)
   - [Invoke a Lambda Function Locally](#invoke-a-lambda-function-locally)
     - [Debug](#debug-2)
@@ -30,8 +32,12 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Start an API Gateway Locally](#start-an-api-gateway-locally)
     - [Debug](#debug-4)
   - [Deploy the Application](#deploy-the-application)
+    - [Bootstrap](#bootstrap)
+    - [Deploy](#deploy)
     - [Deploy the Application and its Dependencies](#deploy-the-application-and-its-dependencies)
   - [E2E Testing](#e2e-testing)
+    - [Testing in the Cloud](#testing-in-the-cloud)
+    - [Execute the E2E Tests](#execute-the-e2e-tests)
     - [Debug](#debug-5)
   - [Application Commands](#application-commands)
 - [Construct Library](#construct-library)
@@ -79,7 +85,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
 
 ### Prerequisites
 
-- Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) for authentication
+- Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to authenticate
   - SSO via the AWS IAM Identity Center is currently not handled correctly
     if a separate sso-session section exists in the AWS CLI configuration.
     This issue can be [solved by](https://github.com/aws/aws-cdk/issues/27265) merging the sso-session section into the profile section.
@@ -238,7 +244,7 @@ nx run <AppName>:test --codeCoverage
 
 #### Debug
 
-Add the `debugger;` statement to the code place where you want to start the debugging session.
+Add the `debugger;` statement to the code at the location where the debugging session should start.
 
 In the `.env.test` file uncomment the `NODE_OPTIONS` variable.
 
@@ -256,7 +262,7 @@ Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
 
 Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
 
-### Synthesize the Application
+### Synthesize CloudFormation Stacks
 
 Execute the following command to synthesize all Dev environment stacks
 
@@ -281,18 +287,18 @@ If the environment variables aren't defined,
 the account and region are retrieved from the AWS CLI profile.
 Please note that the AWS CLI profile values might vary per user.
 
-The synthesized CloudFormation templates are stored in `cdk.out`.
+The synthesized CloudFormation stacks are stored in `cdk.out`.
 
 > [!NOTE]
-> Please note, if you use SSO for authentication, then you have to be logged in before executing this command.
+> If SSO is used to authenticate, then it is required to log in before executing this command.
 
 #### Debug
 
-Add the `debugger;` statement to the infrastructure code place where you want to start the debugging session.
+Add the `debugger;` statement to the infrastructure code at the location where the debugging session should start.
 
 In the `.env` file set `CDK_DEBUG` to true.
 
-[Synthesize all Dev environment stacks](#synthesize-the-application).
+[Synthesize all Dev environment stacks](#synthesize-cloudformation-stacks).
 
 A message is printed out to the console similar to the one below
 
@@ -304,7 +310,7 @@ Any Node.js debugger can be used for debugging. In this example, [the Chrome bro
 
 ### Invoke a Lambda Function Locally
 
-[Synthesize all Dev environment stacks](#synthesize-the-application).
+[Synthesize all Dev environment stacks](#synthesize-cloudformation-stacks).
 
 Open the `cdk.out` directory and search for the Dev environment CloudFormation template,
 which should have a file name similar to `DevAdventialsE766A003.template.json`.
@@ -322,9 +328,9 @@ it might take a while since the Lambda Docker image has to be pulled first.
 
 #### Debug
 
-Add the `debugger;` statement to the runtime code place where you want to start the debugging session.
+Add the `debugger;` statement to the runtime code at the location where the debugging session should start.
 
-[Synthesize all Dev environment stacks](#synthesize-the-application).
+[Synthesize all Dev environment stacks](#synthesize-cloudformation-stacks).
 
 In the `samconfig.toml` file uncomment the `debug_port` variable of the `[default.local_invoke.parameters]` section.
 
@@ -340,7 +346,7 @@ Any Node.js debugger can be used for debugging. In this example, [the Chrome bro
 
 ### Start all Lambda Functions Locally
 
-[Synthesize all Dev environment stacks](#synthesize-the-application).
+[Synthesize all Dev environment stacks](#synthesize-cloudformation-stacks).
 
 Open the `cdk.out` directory and search for the Dev environment CloudFormation template,
 which should have a file name similar to `DevAdventialsE766A003.template.json`.
@@ -405,21 +411,135 @@ const response = await lambdaClient.send(
 
 #### Debug
 
+Add the `debugger;` statement to the runtime code at the location where the debugging session should start.
+
+[Synthesize all Dev environment stacks](#synthesize-cloudformation-stacks).
+
+In the `samconfig.toml` file uncomment the `debug_port` variable of the `[default.local_start_lambda.parameters]` section.
+
+[Start all Lambda functions and invoke a single Lambda function locally](#start-all-lambda-functions-locally).
+
+A message is printed out to the console similar to the one below
+
+```
+Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
+```
+
+Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
+
 ### Start an API Gateway Locally
 
-[Synthesize all Dev environment stacks](#synthesize-the-application).
+[Synthesize all Dev environment stacks](#synthesize-cloudformation-stacks).
 
 Open the `cdk.out` directory and search for the Dev environment CloudFormation template,
 which should have a file name similar to `DevAdventialsE766A003.template.json`.
 Copy the file name.
 
+To start an API Gateway locally execute
+
+```bash
+nx run <AppName>:start-api -t cdk.out/<DevTemplateJson>
+```
+
+If this command is executed for the first time,
+it might take a while since the Lambda Docker image has to be pulled first.
+The following message is printed out to the console
+
+```
+ * Running on http://127.0.0.1:3000
+```
+
+To call the endpoint `product` execute the following command
+
+```bash
+curl -i "http://127.0.0.1:3000/product?a=5&b=7"
+```
+
+The result `{"product":35}` is printed out to the console.
+
 #### Debug
 
+Add the `debugger;` statement to the runtime code at the location where the debugging session should start.
+
+[Synthesize all Dev environment stacks](#synthesize-cloudformation-stacks).
+
+In the `samconfig.toml` file uncomment the `debug_port` variable of the `[default.local_start_api.parameters]` section.
+
+[Start an API Gateway locally and call an endpoint](#start-an-api-gateway-locally).
+
+A message is printed out to the console similar to the one below
+
+```
+Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
+```
+
+Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
+
 ### Deploy the Application
+
+#### Bootstrap
+
+The AWS CDK bootstraps an account and region combination by deploying
+a predefined bootstrap CloudFormation stack to it.
+
+The bootstrap stack has to be deployed only once before multiple deployments can take place.
+If no bootstrap resources are required, an account and region combination doesn't have to be bootstrapped.
+
+Execute the following command for every account and region combination that should be bootstrapped
+
+```bash
+nx run <AppName>:cdk bootstrap "<AwsAccountNumber>/<AwsRegion>" --profile <AwsCliEnvironmentProfile>
+```
+
+Re-run this command to update the bootstrap CloudFormation stack in place.
+
+#### Deploy
+
+Execute the following command to deploy all Dev environment stacks
+
+```bash
+nx run <AppName>:cdk deploy "Dev/*" --profile <AwsCliDevEnvironmentProfile>
+```
+
+or use the shorthand command
+
+```bash
+nx run <AppName>:deploy -c dev --profile <AwsCliDevEnvironmentProfile>
+```
+
+or
+
+```bash
+nx run <AppName>:deploy:dev --profile <AwsCliDevEnvironmentProfile>
+```
+
+Execute the following command to deploy all Stage environment stacks
+
+```bash
+nx run <AppName>:deploy:stage --profile <AwsCliStageEnvironmentProfile>
+```
+
+Execute the following command to deploy all Prod environment stacks
+
+```bash
+nx run <AppName>:deploy:prod --profile <AwsCliProdEnvironmentProfile>
+```
+
+Use the `.env` file to define the AWS accounts and regions for the environments.
+If the environment variables aren't defined,
+the account and region are retrieved from the AWS CLI profile.
+Please note that the AWS CLI profile values might vary per user.
+
+> [!NOTE]
+> If SSO is used to authenticate, then it is required to log in before executing this command.
 
 #### Deploy the Application and its Dependencies
 
 ### E2E Testing
+
+#### Testing in the Cloud
+
+#### Execute the E2E Tests
 
 #### Debug
 
