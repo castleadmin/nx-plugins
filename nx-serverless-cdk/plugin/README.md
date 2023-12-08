@@ -11,38 +11,42 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
 - [AWS CDK Features](#aws-cdk-features)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
+    - [Create a new Nx Monorepo](#create-a-new-nx-monorepo)
   - [Install](#install)
 - [Application](#application)
   - [Create an Application](#create-an-application)
   - [Environments](#environments)
   - [Application Structure](#application-structure)
-  - [Format Application](#format-an-application)
-  - [Lint Application](#lint-an-application)
-  - [Test Application (with Code Coverage)](#test-an-application-with-code-coverage)
+  - [Format the Application](#format-the-application)
+  - [Lint the Application](#lint-the-application)
+  - [Test the Application (with Code Coverage)](#test-the-application-with-code-coverage)
     - [Debug](#debug)
-  - [Synthesize an Application](#synthesize-an-application)
+  - [Synthesize the Application](#synthesize-the-application)
     - [Debug](#debug-1)
-  - [Execute Application Locally Prerequisites](#execute-an-application-locally-prerequisites)
   - [Invoke a Lambda Function Locally](#invoke-a-lambda-function-locally)
     - [Debug](#debug-2)
-  - [Start Lambda Functions Locally](#start-lambda-functions-locally)
+  - [Start all Lambda Functions Locally](#start-all-lambda-functions-locally)
     - [Debug](#debug-3)
-  - [Start API Gateway Locally](#start-api-gateway-locally)
+  - [Start an API Gateway Locally](#start-an-api-gateway-locally)
     - [Debug](#debug-4)
-  - [Deploy Application](#deploy-application)
+  - [Deploy the Application](#deploy-the-application)
+    - [Deploy the Application and its Dependencies](#deploy-the-application-and-its-dependencies)
   - [E2E Testing](#e2e-testing)
     - [Debug](#debug-5)
+  - [Application Commands](#application-commands)
 - [Construct Library](#construct-library)
   - [Create a Construct Library](#create-a-construct-library)
   - [Construct Library Structure](#construct-library-structure)
-  - [Format Construct Library](#format-construct-library)
-  - [Lint Construct Library](#lint-construct-library)
-  - [Test Construct Library (with Code Coverage)](#test-construct-library-with-code-coverage)
-  - [Use Construct Library](#use-construct-library)
+  - [Format the Construct Library](#format-the-construct-library)
+  - [Lint the Construct Library](#lint-the-construct-library)
+  - [Test the Construct Library (with Code Coverage)](#test-the-construct-library-with-code-coverage)
+    - [Debug](#debug-6)
+  - [Use the Construct Library](#use-the-construct-library)
   - [Publish to npm](#publish-to-npm)
+  - [Construct Library Commands](#construct-library-commands)
 - [TypeScript Library](#typescript-library)
   - [Create a TypeScript Library](#create-a-typescript-library)
-  - [Use TypeScript Library](#use-typescript-library)
+  - [Use the TypeScript Library](#use-the-typescript-library)
 - [Debug in Chrome](#debug-in-chrome)
 - [Generators Reference](#generators-reference)
 - [Executors Reference](#executors-reference)
@@ -66,7 +70,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
 - **Use programming languages** to model your system design
 - Employ practices such as code reviews, unit tests, and source control to **make your infrastructure more robust**
 - **Connect your AWS resources** together (even across stacks)
-- Grant permissions using **simple, intent-oriented APIs**
+- **Grant permissions** using **simple, intent-oriented APIs**
 - **Import existing** AWS CloudFormation **templates** to give your resources a CDK API
 - Perform **infrastructure deployments** predictably and repeatedly, **with rollback on error**
 - Easily **share infrastructure design patterns** among teams within your organization or even with the public
@@ -75,34 +79,38 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
 
 ### Prerequisites
 
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) for authentication
+- Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) for authentication
   - SSO via the AWS IAM Identity Center is currently not handled correctly
     if a separate sso-session section exists in the AWS CLI configuration.
     This issue can be [solved by](https://github.com/aws/aws-cdk/issues/27265) merging the sso-session section into the profile section.
-- [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) for local testing and debugging
-- [Docker](https://www.docker.com/get-started/) to run your Lambda functions locally (Docker Desktop or Docker Engine)
-
+- Install the [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) for local testing and debugging
+- Install [Docker](https://www.docker.com/get-started/) to run your Lambda functions locally (Docker Desktop or Docker Engine)
   - Please note, if you want to test Lambda functions locally on a different instruction set architecture than your host machine, [additional steps are necessary](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html)
+- Use an existing Nx monorepo or follow the steps below to create a new Nx monorepo
 
-- An Nx monorepo
-  - An empty monorepo can be created with the following command
+#### Create a new Nx Monorepo
+
+An empty monorepo can be created with the following command
 
 ```bash
 npx create-nx-workspace@latest --name <WorkspaceName> --preset "apps" --workspaceType "integrated"
 ```
 
+The package manager can be chosen freely by using the `--packageManager` argument (e.g. choose `pnpm` or `yarn`).
+The default is `npm` which is used for the following sections.
+
+Change the working directory to the workspace root of the Nx monorepo
+
+```bash
+cd <WorkspaceName>
+```
+
 ### Install
 
-Run the following command in the workspace root of the Nx monorepo
+Run the following command in the workspace root directory to install the `nx-serverless-cdk` plugin
 
 ```bash
 npm install --save-dev nx-serverless-cdk
-```
-
-or
-
-```bash
-yarn add --dev nx-serverless-cdk
 ```
 
 ## Application
@@ -110,7 +118,6 @@ yarn add --dev nx-serverless-cdk
 ### Create an Application
 
 To create a serverless application run the following command inside the Nx workspace
-(Use `npx nx`, if the `nx` command isn't found or install the `nx` package globally)
 
 ```bash
 nx g nx-serverless-cdk:cdk-app <AppName> --type lambda
@@ -122,25 +129,28 @@ If the application should only contain infrastructure definitions (generic appli
 nx g nx-serverless-cdk:cdk-app <AppName> --type generic
 ```
 
-A generic application can be upgraded to a serverless application at any time by adding the relevant executors to the `project.json` file.
-
 These commands will create an `<AppName>` directory in the root of the Nx workspace.
+Use the `--directory` argument to define another directory for the application.
+Please note that the created directory is relative to the current working directory.
+
+> [!NOTE]
+> Use `npx nx`, if the `nx` command isn't found or install the `nx` package globally.
 
 ### Environments
 
 The generated example code has support for 3 environments
 
 - Dev
-  - Used to test new features during the development
+  - Test new features and bugfixes during the development
 - Stage
-  - Used for quality assurance
+  - Quality assurance
   - Test upcoming releases
   - Mimics the production environment
 - Prod
-  - The Production environment
-  - Make the application available to its consumers
+  - The production environment
+  - Makes the application available to its consumers
 
-These environments are just examples, the environment names as well as their count can be changed according to the project needs.
+These **environments** are **just examples**, the environment names as well as their count can be changed according to the project needs.
 
 ### Application Structure
 
@@ -151,41 +161,48 @@ These environments are just examples, the environment names as well as their cou
 - `events` used store generated or manually created events for local and E2E testing
 - `shared` contains the shared code which is used by the infrastructure and runtime code
 - `src` contains the runtime code and tests (e.g. Lambda function handlers)
-  - `example-api-handler.ts` entry point of the example API Lambda function
-  - `example-handler.ts` entry point of the example Lambda function
+  - `example-api-handler.ts`<sup>\*</sup> entry point of the example API Lambda function
+  - `example-handler.ts`<sup>\*</sup> entry point of the example Lambda function
 - `.env` defines the environment variables for the application commands
   - Used to enable the CDK debug mode
   - Used to define the AWS accounts and regions for the deployment
-  - As a fallback these values are retrieved from the AWS profile
   - The environment variables can be overridden if needed
 - `.env.test` used to activate the debug mode for the Jest testing framework
-- `.eslintrc.json` ESLint project configuration
+- `.eslintrc.json` ESLint configuration
 - `.gitignore` defines the files that are excluded from version control
-- `cdk.json` AWS CDK configuration file
+- `cdk.json` AWS CDK configuration
 - `jest.config.ts` Jest testing framework configuration
 - `project.json` Nx application configuration
-- `samconfig.toml` AWS SAM configuration
-- `start-cdk.mjs` ignore, this script is used to make the debugging of CDK applications possible
+- `samconfig.toml`<sup>\*</sup> AWS SAM configuration
+- `start-cdk.mjs` ignore this script, it is used to make the debugging of CDK applications possible
 - `tsconfig.cdk.json` TypeScript infrastructure code configuration
-- `tsconfig.json` shared TypeScript configuration
+- `tsconfig.json` common TypeScript application configuration
 - `tsconfig.spec.json` TypeScript test code configuration
 - `tsconfig.src.json` TypeScript runtime code configuration
 
-### Format an Application
+<sup>\*</sup>Is created for serverless applications
 
-The workspace files that have been changed since the last commit can be formatted with the help of [nx format](https://nx.dev/nx-api/nx/documents/format-write).
+### Format the Application
+
+The projects (applications and libraries) that have been changed since the last commit can be formatted with the help of [nx format](https://nx.dev/nx-api/nx/documents/format-write).
 
 ```bash
 nx format
 ```
 
-To format all workspace files execute
+To format all projects execute
 
 ```bash
 nx format --all
 ```
 
-### Lint an Application
+To format only the application execute
+
+```bash
+nx format --projects <AppName>
+```
+
+### Lint the Application
 
 To lint the application execute
 
@@ -199,7 +216,7 @@ or
 nx run <AppName>:lint
 ```
 
-### Test an Application (with Code Coverage)
+### Test the Application (with Code Coverage)
 
 To test the application execute
 
@@ -221,16 +238,53 @@ nx run <AppName>:test --codeCoverage
 
 #### Debug
 
-### Synthesize an Application
+Add the `debugger;` statement to the code place where you want to start the debugging session.
 
-Execute the following command which synthesizes all Dev environment stacks.
-If your profile doesn't specify the account or region,
-you can define both via the `.env` file.
-Please note, if you use SSO for authentication, then you have to be logged in before executing this command!
+In the `.env.test` file uncomment the `NODE_OPTIONS` variable.
+
+Execute the test command
+
+```bash
+nx run <AppName>:test
+```
+
+A message is printed out to the console similar to the one below
+
+```
+Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
+```
+
+Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
+
+### Synthesize the Application
+
+Execute the following command to synthesize all Dev environment stacks
 
 ```bash
 nx run <AppName>:cdk synth "Dev/*" --profile <AwsCliDevEnvironmentProfile>
 ```
+
+or use the shorthand command
+
+```bash
+nx run <AppName>:synth -c dev --profile <AwsCliDevEnvironmentProfile>
+```
+
+or
+
+```bash
+nx run <AppName>:synth:dev --profile <AwsCliDevEnvironmentProfile>
+```
+
+Use the `.env` file to define the AWS accounts and regions for the environments.
+If the environment variables aren't defined,
+the account and region are retrieved from the AWS CLI profile.
+Please note that the AWS CLI profile values might vary per user.
+
+The synthesized CloudFormation templates are stored in `cdk.out`.
+
+> [!NOTE]
+> Please note, if you use SSO for authentication, then you have to be logged in before executing this command.
 
 #### Debug
 
@@ -238,7 +292,7 @@ Add the `debugger;` statement to the infrastructure code place where you want to
 
 In the `.env` file set `CDK_DEBUG` to true.
 
-[Synthesize all Dev environment stacks](#synthesize-an-application).
+[Synthesize all Dev environment stacks](#synthesize-the-application).
 
 A message is printed out to the console similar to the one below
 
@@ -250,13 +304,13 @@ Any Node.js debugger can be used for debugging. In this example, [the Chrome bro
 
 ### Invoke a Lambda Function Locally
 
-[Synthesize all Dev environment stacks](#synthesize-an-application).
+[Synthesize all Dev environment stacks](#synthesize-the-application).
 
-Open the `<AppName>/cdk.out` directory and search for the Dev environment CloudFormation template,
+Open the `cdk.out` directory and search for the Dev environment CloudFormation template,
 which should have a file name similar to `DevAdventialsE766A003.template.json`.
 Copy the file name.
 
-To invoke the example Lambda function locally with the test event stored in `<AppName>/events/sum/sum7.json` execute
+To invoke the example Lambda function locally with the test event stored in `events/sum/sum7.json` execute
 
 ```bash
 nx run <AppName>:invoke ExampleFunction -t cdk.out/<DevTemplateJson> -e "events/sum/sum7.json"
@@ -264,17 +318,31 @@ nx run <AppName>:invoke ExampleFunction -t cdk.out/<DevTemplateJson> -e "events/
 
 The Lambda function result `{"sum": 7}` is printed out to the console.
 If this command is executed for the first time,
-it may take a while since the Lambda Docker image has to be pulled first.
+it might take a while since the Lambda Docker image has to be pulled first.
 
 #### Debug
 
-The debug mode can be started
+Add the `debugger;` statement to the runtime code place where you want to start the debugging session.
 
-### Start Lambda Functions Locally
+[Synthesize all Dev environment stacks](#synthesize-the-application).
 
-[Synthesize all Dev environment stacks](#synthesize-an-application).
+In the `samconfig.toml` file uncomment the `debug_port` variable of the `[default.local_invoke.parameters]` section.
 
-Open the `<AppName>/cdk.out` directory and search for the Dev environment CloudFormation template,
+[Invoke a Lambda function locally](#invoke-a-lambda-function-locally).
+
+A message is printed out to the console similar to the one below
+
+```
+Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
+```
+
+Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
+
+### Start all Lambda Functions Locally
+
+[Synthesize all Dev environment stacks](#synthesize-the-application).
+
+Open the `cdk.out` directory and search for the Dev environment CloudFormation template,
 which should have a file name similar to `DevAdventialsE766A003.template.json`.
 Copy the file name.
 
@@ -285,7 +353,7 @@ nx run <AppName>:start-lambda -t cdk.out/<DevTemplateJson>
 ```
 
 If this command is executed for the first time,
-it may take a while since the Lambda Docker image has to be pulled first.
+it might take a while since the Lambda Docker image has to be pulled first.
 The following message is printed out to the console
 
 ```
@@ -337,21 +405,25 @@ const response = await lambdaClient.send(
 
 #### Debug
 
-### Start API Gateway Locally
+### Start an API Gateway Locally
 
-[Synthesize all Dev environment stacks](#synthesize-an-application).
+[Synthesize all Dev environment stacks](#synthesize-the-application).
 
-Open the `<AppName>/cdk.out` directory and search for the Dev environment CloudFormation template,
+Open the `cdk.out` directory and search for the Dev environment CloudFormation template,
 which should have a file name similar to `DevAdventialsE766A003.template.json`.
 Copy the file name.
 
 #### Debug
 
-### Deploy Application
+### Deploy the Application
+
+#### Deploy the Application and its Dependencies
 
 ### E2E Testing
 
 #### Debug
+
+### Application Commands
 
 ## Construct Library
 
@@ -359,21 +431,25 @@ Copy the file name.
 
 ### Construct Library Structure
 
-### Format Construct Library
+### Format the Construct Library
 
-### Lint Construct Library
+### Lint the Construct Library
 
-### Test Construct Library (with Code Coverage)
+### Test the Construct Library (with Code Coverage)
 
-### Use Construct Library
+#### Debug
+
+### Use the Construct Library
 
 ### Publish to npm
+
+### Construct Library Commands
 
 ## TypeScript Library
 
 ### Create a TypeScript Library
 
-### Use TypeScript Library
+### Use the TypeScript Library
 
 ## Debug in Chrome
 
