@@ -1,4 +1,4 @@
-[!nx-serverless-cdk logo](https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/logo.png)
+![nx-serverless-cdk logo](https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/logo.png)
 
 # nx-serverless-cdk
 
