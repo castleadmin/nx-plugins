@@ -4,11 +4,14 @@ version = 0.1
 
 [default.local_invoke.parameters]
 debug = false
+#debug_port=9229
 
 [default.local_start_api.parameters]
 debug = false
+#debug_port=9229
 port = 3000
 
 [default.local_start_lambda.parameters]
 debug = false
+#debug_port=9229
 port = 3001
