@@ -6,8 +6,8 @@
     "target": "es2022",
     "lib": ["ES2022"],
     "types": ["jest", "node"],
-    "sourceMap": false,
-    "inlineSourceMap": true,
+    "sourceMap": true,
+    "inlineSourceMap": false,
     "inlineSources": true,
     "esModuleInterop": true,
     "importHelpers": true

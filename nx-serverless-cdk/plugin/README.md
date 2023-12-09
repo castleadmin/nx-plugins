@@ -248,10 +248,10 @@ Add the `debugger;` statement to the code at the location where the debugging se
 
 In the `.env.test` file uncomment the `NODE_OPTIONS` variable.
 
-Execute the test command
+Execute the test command with the `--runInBand` argument
 
 ```bash
-nx run <AppName>:test
+nx run <AppName>:test --runInBand
 ```
 
 A message is printed out to the console similar to the one below
@@ -535,13 +535,113 @@ Please note that the AWS CLI profile values might vary per user.
 
 #### Deploy the Application and its Dependencies
 
+The situation might arise that a cloud resource is needed by multiple CloudFormation stacks of the same application.
+In this case, the cloud resource could be easily shared between the stacks by [introducing a shared stack](https://docs.aws.amazon.com/cdk/v2/guide/resources.html#resource_stack).
+
+If the cloud resource is needed by multiple CDK applications, then it makes sense to introduce a shared application.
+The shared application should be deployed before the applications that depend on it.
+
+Nx automatically deduces the source code dependencies between an application and the libraries that are used.
+If multiple applications depend on a shared application, then they have to declare this dependency explicitly.
+Every application that depends on the shared application has to set the following property in their `project.json` file.
+
+```json
+"implicitDependencies": [<SharedAppName>],
+```
+
+The dependencies between applications and libraries can be checked via the following command
+
+```bash
+nx graph
+```
+
+If an application and all the applications it depends on should be deployed to the Dev environment,
+then the following command can be executed
+
+```bash
+nx run <AppName>:deploy-all:dev --profile <AwsCliDevEnvironmentProfile> --verbose
+```
+
+A similar command could be executed for the Stage and Prod environment.
+This command uses the Nx dependency graph to determine the deployment order.
+The given command-line arguments are used for every application deployment in the dependency chain.
+
+The following command could be used in a CI/CD pipeline to deploy all applications that have been changed and
+the applications they depend on
+
+```bash
+nx affected -t deploy-all -c dev --profile Dev --verbose --require-approval never --ci
+```
+
+Nx determines if an application has changed by a given git commit range.
+Please consult the [Nx documentation](https://nx.dev/nx-api/nx/documents/affected) for further details.
+
+> [!NOTE]
+> If SSO is used to authenticate, then it is required to log in before executing this command.
+
 ### E2E Testing
 
 #### Testing in the Cloud
 
+[Testing serverless applications in the cloud](https://docs.aws.amazon.com/lambda/latest/dg/testing-guide.html) is the testing technique that is preferred by AWS.
+It offers the following benefits
+
+> - You can test every available service.
+> - You are always using the most recent service APIs and return values.
+> - A cloud test environment closely resembles your production environment.
+> - Tests can cover security policies, service quotas, configurations and infrastructure specific parameters.
+> - Every developer can quickly create one or more testing environments in the cloud.
+> - Cloud tests increase confidence your code will run correctly in production.
+
+The AWS CDK support this testing technique with its watch mode.
+The AWS CDK watch mode offers direct AWS resource updates and
+as a fallback CloudFormation deployments without rollback.
+These features significantly speed up the deployment of incremental changes during the development.
+
+> [!NOTE]
+> The AWS CDK watch mode is meant for development deployments and shouldn't be used to deploy production resources.
+
 #### Execute the E2E Tests
 
+This plugin supports testing in the cloud by creating an E2E test application for every CDK application.
+The E2E tests are used to ensure that the cloud application works as expected.
+
+Please set the environment-specific profile and region in the `.env.e2e` file of the E2E test application.
+Use the `E2E_ENVIRONMENT` environment variable to specify the environment that should be tested.
+
+[Deploy the application into the specified environment](#deploy).
+
+Execute the following command to run the E2E tests against the specified environment
+
+```bash
+nx run <AppName>-e2e:e2e
+```
+
+Add the `--codeCoverage` argument to enable code coverage.
+
+```bash
+nx run <AppName>-e2e:e2e --codeCoverage
+```
+
 #### Debug
+
+Add the `debugger;` statement to the code at the location where the debugging session should start.
+
+In the `.env.e2e` file uncomment the `NODE_OPTIONS` variable.
+
+Execute the E2E test command with the `--runInBand` argument
+
+```bash
+nx run <AppName>-e2e:e2e --runInBand
+```
+
+A message is printed out to the console similar to the one below
+
+```
+Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
+```
+
+Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
 
 ### Application Commands
 
