@@ -67,8 +67,14 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Test the Construct Library (with Code Coverage)](#test-the-construct-library-with-code-coverage)
     - [Debug](#debug-6)
   - [Use the Construct Library](#use-the-construct-library)
+  - [Build the construct library](#build-the-construct-library)
   - [Publish to npm](#publish-to-npm)
-  - [Construct Library Commands](#construct-library-commands)
+  - [Construct Library Commands Reference](#construct-library-commands-reference)
+    - [lint](#lint-2)
+    - [test](#test-1)
+    - [build](#build)
+    - [build-declarations](#build-declarations)
+    - [publish](#publish)
 - [TypeScript Library](#typescript-library)
   - [Create a TypeScript Library](#create-a-typescript-library)
   - [Use the TypeScript Library](#use-the-typescript-library)
@@ -78,7 +84,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
 ## Plugin Features
 
 - Define your **infrastructure as code** (IaC)
-- Put your [**infrastructure, application code, and configuration all in one place**](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html) and evolve them together
+- The **infrastructure** and **application code** as well as the **configurations** are evolved together [**in one place**](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
 - **Test** and **debug** your infrastructure and application code **locally**
   - Test and debug API Gateway routes that are handled by Lambda functions locally
 - Use **E2E tests** to verify the correctness of your cloud applications
@@ -138,6 +144,14 @@ npm install --save-dev nx-serverless-cdk
 ```
 
 ## Application
+
+A CDK application consists of the infrastructure and application code as well as the configurations
+that together form a cloud application.
+
+Constructs are the basic building blocks of a CDK application.
+They represent either individual cloud resources or a set of cloud resources
+that has been interconnected to fulfil a concrete purpose.
+Inside the application, the constructs are combined into deployable units called stacks.
 
 ### Create an Application
 
@@ -397,29 +411,20 @@ The Lambda function result `{"sum": 7}` is stored in the `<WorkspaceRoot>/respon
 The [@aws-sdk/client-lambda](https://www.npmjs.com/package/@aws-sdk/client-lambda) package can also be used to invoke a Lambda function
 
 ```typescript
- const lambdaClient = new LambdaClient({
+const lambdaClient = new LambdaClient({
   credentials: fromSSO({
-    profile: <DevProfile>,
+    profile: '<DevProfile>',
   }),
-  region: <DevRegion>,
+  region: '<DevRegion>',
   endpoint: 'http://127.0.0.1:3001',
   maxAttempts: 3,
 });
 
-const payload = await readFile(
-  resolve(
-    join(
-      <WorkspaceRoot>,
-      <AppName>,
-      'events/sum/sum7.json',
-    ),
-  ),
-  { encoding: 'utf-8' },
-);
+const payload = await readFile(resolve(join('<WorkspaceRoot>', '<AppName>', 'events/sum/sum7.json')), { encoding: 'utf-8' });
 
 const response = await lambdaClient.send(
   new InvokeCommand({
-    FunctionName: <ExampleFunctionResourceName>,
+    FunctionName: '<ExampleFunctionResourceName>',
     InvocationType: InvocationType.RequestResponse,
     LogType: LogType.None,
     Payload: payload,
@@ -435,7 +440,7 @@ Add the `debugger;` statement to the runtime code at the location where the debu
 
 In the `samconfig.toml` file uncomment the `debug_port` variable of the `[default.local_start_lambda.parameters]` section.
 
-[Start all Lambda functions and invoke a single Lambda function locally](#start-all-lambda-functions-locally).
+[Start all Lambda functions and invoke an individual Lambda function locally](#start-all-lambda-functions-locally).
 
 A message is printed out to the console similar to the one below
 
@@ -561,10 +566,14 @@ The shared application should be deployed before the applications that depend on
 
 Nx automatically deduces the source code dependencies between an application and the libraries that are used.
 If multiple applications depend on a shared application, then they have to declare this dependency explicitly.
-Every application that depends on the shared application has to set the following property in their `project.json` file.
+Every application that depends on the shared application has to set the following property in their `project.json` file
 
 ```json
-"implicitDependencies": ["<SharedAppName>"],
+{
+  ...
+  "implicitDependencies": ["<SharedAppName>"],
+  ...
+}
 ```
 
 The dependencies between applications and libraries can be checked via the following command
@@ -695,7 +704,7 @@ nx run <AppName>:lint [Options]
 
 The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
 is used to lint the application with ESLint (see [Lint the Application](#lint-the-application)).
-Append `--help` to display a list of command options.
+Append `--help` to display the command options.
 
 #### test
 
@@ -705,7 +714,7 @@ nx run <AppName>:test [Options]
 
 The [test](https://nx.dev/nx-api/jest/executors/jest) command
 is used to execute the test cases with Jest (see [Test the Application (with Code Coverage)](#test-the-application-with-code-coverage)).
-Append `--help` to display a list of command options.
+Append `--help` to display the command options.
 
 #### cdk
 
@@ -715,7 +724,7 @@ nx run <AppName>:cdk [Options]
 
 The [cdk](https://docs.aws.amazon.com/cdk/v2/guide/cli.html) command
 is used to interact with the AWS CDK.
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 Configuration Options:
 
@@ -731,7 +740,7 @@ nx run <AppName>:deploy:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk deploy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
 Deploys one or more specified stacks (see [Deploy the Application](#deploy-the-application)).
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
 can be adjusted according to the project needs.
@@ -744,7 +753,7 @@ nx run <AppName>:deploy-all:<EnvironmentConfiguration> --verbose [Options]
 
 Shorthand command for [cdk deploy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
 Deploys one or more specified stacks.
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 The command is executed for the application and
 for every application in the application's dependency tree.
@@ -762,7 +771,7 @@ nx run <AppName>:destroy:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk destroy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-commands).
 Destroys one or more specified stacks.
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
 can be adjusted according to the project needs.
@@ -775,7 +784,7 @@ nx run <AppName>:diff:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk diff](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-diff).
 Compares the specified stacks and its dependencies with the deployed stacks.
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
 can be adjusted according to the project needs.
@@ -788,7 +797,7 @@ nx run <AppName>:ls:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk ls](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-list).
 Lists the IDs of the specified stacks.
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
 can be adjusted according to the project needs.
@@ -801,7 +810,7 @@ nx run <AppName>:synth:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk synth](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-synth).
 Synthesizes the specified stacks into CloudFormation templates (see [Synthesize CloudFormation Stacks](#synthesize-cloudformation-stacks)).
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
 can be adjusted according to the project needs.
@@ -815,7 +824,7 @@ nx run <AppName>:watch:<EnvironmentConfiguration> [Options]
 Shorthand command for [cdk watch](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
 Continuously monitors the application's source files and assets for changes.
 It immediately performs a deployment of the specified stacks when a change is detected.
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
 can be adjusted according to the project needs.
@@ -828,7 +837,7 @@ nx run <AppName>:generate-event [Options]
 
 The [generate-event](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html) command
 is used to generate AWS service-specific mock events (see [Generate an Event](#generate-an-event)).
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 Configuration Options:
 
@@ -844,7 +853,7 @@ nx run <AppName>:invoke [Options]
 
 The [invoke](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html) command
 is used to invoke a Lambda function locally (see [Invoke a Lambda Function Locally](#invoke-a-lambda-function-locally)).
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 Configuration Options:
 
@@ -860,7 +869,7 @@ nx run <AppName>:start-api [Options]
 
 The [start-api](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html) command
 is used to start an API Gateway locally (see [Start an API Gateway Locally](#start-an-api-gateway-locally)).
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 Configuration Options:
 
@@ -876,7 +885,7 @@ nx run <AppName>:start-lambda [Options]
 
 The [start-lambda](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html) command
 is used to start all Lambda functions locally (see [Start all Lambda Functions Locally](#start-all-lambda-functions-locally)).
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 Configuration Options:
 
@@ -894,7 +903,7 @@ nx run <AppName>-e2e:lint [Options]
 
 The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
 is used to lint the application with ESLint (see [Lint the Application](#lint-the-application)).
-Append `--help` to display a list of command options.
+Append `--help` to display the command options.
 
 #### e2e
 
@@ -904,7 +913,7 @@ nx run <AppName>-e2e:e2e [Options]
 
 The [e2e](https://nx.dev/nx-api/jest/executors/jest) command
 is used to execute the E2E tests with Jest (see [E2E Testing](#e2e-testing)).
-Append `--help` to display a list of command options.
+Append `--help` to display the command options.
 
 #### generate-event
 
@@ -914,7 +923,7 @@ nx run <AppName>-e2e:generate-event [Options]
 
 The [generate-event](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html) command
 is used to generate AWS service-specific mock events (see [Generate an Event](#generate-an-event)).
-Append `-h` to display a list of command options.
+Append `-h` to display the command options.
 
 Configuration Options:
 
@@ -924,23 +933,234 @@ Configuration Options:
 
 ## Construct Library
 
+Constructs are the basic building blocks of a CDK application.
+They represent either individual cloud resources or a set of cloud resources
+that has been interconnected to fulfil a concrete purpose.
+
+Constructs can be composed of self-written or third-party constructs.
+The [AWS Construct Library](https://docs.aws.amazon.com/cdk/v2/guide/constructs.html#constructs_lib)
+contains the constructs for AWS resources. Its constructs can be categorized into 3 levels
+
+- L1 constructs
+  - Represent CloudFormation resources
+  - Are automatically generated
+- L2 constructs
+  - Represent AWS resources
+  - Intent-based API
+- L3 constructs
+  - Patterns
+  - Often involve multiple resources
+
+A vast collection of third-party open source
+construct libraries can be found on [Construct Hub](https://constructs.dev/).
+
+Constructs are a great way to define organization or project standards.
+They can be grouped together in a construct library and shared between multiple CDK applications.
+
 ### Create a Construct Library
+
+To create a construct library run the following command inside the Nx workspace
+
+```bash
+nx g nx-serverless-cdk:cdk-lib <LibName> --importPath <LibPackageName>
+```
+
+The `--importPath` option defines the construct library's package name.
+The construct library can be imported into other construct libraries or CDK applications
+inside the Nx monorepo.
+
+In order to use it outside the monorepo, it can be published to a npm repository.
+Execute the following command to create a publishable construct library that uses the value
+of `--importPath` as npm package name
+
+```bash
+nx g nx-serverless-cdk:cdk-lib <LibName> --importPath <LibPackageName> --publishable
+```
+
+These commands will create an `<LibName>` directory in the root of the Nx workspace.
+Use the `--directory` option to define another directory for the construct library.
+Please note that the created directory is relative to the current working directory.
+
+> [!NOTE]
+> Use `npx nx`, if the `nx` command isn't found or install the `nx` package globally.
 
 ### Construct Library Structure
 
+- `cdk` contains the infrastructure code and tests
+  - `index.ts` entry point of the construct library
+- `.env.test` used to activate the debug mode for the Jest testing framework
+- `.eslintrc.json` ESLint configuration
+- `jest.config.ts` Jest testing framework configuration
+- `package.json` npm package configuration
+  - Used to configure the construct library's npm package that is published to a npm repository
+  - To install dependencies that are used inside the monorepo, use the workspace `package.json` file instead
+- `project.json` Nx library configuration
+- `README.md` construct library documentation
+- `tsconfig.cdk.dts.json` TypeScript infrastructure declarations configuration
+- `tsconfig.cdk.json` TypeScript infrastructure code configuration
+- `tsconfig.json` common TypeScript construct library configuration
+- `tsconfig.spec.json` TypeScript test code configuration
+
 ### Format the Construct Library
+
+The projects (applications and libraries) that have been changed since the last commit can be formatted with the help of [nx format](https://nx.dev/nx-api/nx/documents/format-write).
+
+```bash
+nx format
+```
+
+To format all projects execute
+
+```bash
+nx format --all
+```
+
+To format only the construct library execute
+
+```bash
+nx format --projects <LibName>
+```
 
 ### Lint the Construct Library
 
+To lint the construct library execute
+
+```bash
+nx lint <LibName>
+```
+
+or
+
+```bash
+nx run <LibName>:lint
+```
+
 ### Test the Construct Library (with Code Coverage)
+
+To test the construct library execute
+
+```bash
+nx test <LibName>
+```
+
+or
+
+```bash
+nx run <LibName>:test
+```
+
+Add the `--codeCoverage` option to enable code coverage.
+
+```bash
+nx run <LibName>:test --codeCoverage
+```
 
 #### Debug
 
+Add the `debugger;` statement to the code at the location where the debugging session should start.
+
+In the `.env.test` file uncomment the `NODE_OPTIONS` variable.
+
+Execute the test command with the `--runInBand` option
+
+```bash
+nx run <LibName>:test --runInBand
+```
+
+A message is printed out to the console similar to the one below
+
+```
+Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
+```
+
+Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
+
 ### Use the Construct Library
+
+The construct library can be imported into other construct libraries or CDK applications.
+Use the following code snippet to import the `ExampleConstruct`
+
+```typescript
+import { ExampleConstruct } from '<LibPackageName>';
+```
+
+Please note that the construct library doesn't have to be built in order to import it.
+
+### Build the construct library
+
+Execute the following command to build the construct library
+
+```bash
+nx run <LibName>:build
+```
+
+The build output is written to `<WorkspaceRoot>/dist/<LibName>`.
 
 ### Publish to npm
 
-### Construct Library Commands
+Execute the following command to publish the construct library to npm
+
+```bash
+nx run <LibName>:publish --ver <LibVersion> --tag <LibVersionTag>
+```
+
+### Construct Library Commands Reference
+
+#### lint
+
+```bash
+nx run <LibName>:lint [Options]
+```
+
+The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
+is used to lint the construct library with ESLint (see [Lint the Construct Library](#lint-the-construct-library)).
+Append `--help` to display the command options.
+
+#### test
+
+```bash
+nx run <LibName>:test [Options]
+```
+
+The [test](https://nx.dev/nx-api/jest/executors/jest) command
+is used to execute the test cases with Jest (see [Test the Construct Library (with Code Coverage)](#test-the-construct-library-with-code-coverage)).
+Append `--help` to display the command options.
+
+#### build
+
+```bash
+nx run <LibName>:build [Options]
+```
+
+The [build](https://nx.dev/nx-api/esbuild/executors/esbuild) command
+is used to build the construct library with esbuild (see [Build the construct library](#build-the-construct-library)).
+Append `--help` to display the command options.
+The build-declarations command is always executed before the build command.
+
+#### build-declarations
+
+```bash
+nx run <LibName>:build-declarations [Options]
+```
+
+The [build-declarations](https://nx.dev/nx-api/js/executors/tsc) command
+is used to create the construct library's TypeScript declarations with the TypeScript compiler (see [Build the construct library](#build-the-construct-library)).
+Append `--help` to display the command options.
+
+#### publish
+
+```bash
+nx run <LibName>:publish [Options]
+```
+
+The publish command is used to publish the construct library to a npm repository (see [Publish to npm](#publish-to-npm)).
+
+Options:
+
+- --ver
+  - Construct library version
+- --tag
+  - Tag of the version (e.g. `latest`)
 
 ## TypeScript Library
 
