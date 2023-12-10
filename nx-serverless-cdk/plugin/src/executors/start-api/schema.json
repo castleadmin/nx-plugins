@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "sam local start-api",
-  "description": "Wrapper around the 'sam local start-api' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)",
+  "description": "Used to start an API Gateway locally. Wrapper around the 'sam local start-api' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)",
   "type": "object",
   "properties": {
     "predefinedArguments": {
