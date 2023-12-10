@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "cdk",
-  "description": "Wrapper around the 'cdk' command. (https://docs.aws.amazon.com/cdk/v2/guide/cli.html)",
+  "description": "Used to interact with the AWS CDK. Wrapper around the 'cdk' command. (https://docs.aws.amazon.com/cdk/v2/guide/cli.html)",
   "type": "object",
   "properties": {
     "predefinedArguments": {

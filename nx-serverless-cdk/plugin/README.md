@@ -39,7 +39,26 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
     - [Testing in the Cloud](#testing-in-the-cloud)
     - [Execute the E2E Tests](#execute-the-e2e-tests)
     - [Debug](#debug-5)
-  - [Application Commands](#application-commands)
+  - [Generate an Event](#generate-an-event)
+  - [Application Commands Reference](#application-commands-reference)
+    - [lint](#lint)
+    - [test](#test)
+    - [cdk](#cdk)
+    - [deploy](#deploy-1)
+    - [deploy-all](#deploy-all)
+    - [destroy](#destroy)
+    - [diff](#diff)
+    - [ls](#ls)
+    - [synth](#synth)
+    - [watch](#watch)
+    - [generate-event](#generate-event)
+    - [invoke](#invoke)
+    - [start-api](#start-api)
+    - [start-lambda](#start-lambda)
+  - [E2E Application Commands Reference](#e2e-application-commands-reference)
+    - [lint](#lint-1)
+    - [e2e](#e2e)
+    - [generate-event](#generate-event-1)
 - [Construct Library](#construct-library)
   - [Create a Construct Library](#create-a-construct-library)
   - [Construct Library Structure](#construct-library-structure)
@@ -55,7 +74,6 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Use the TypeScript Library](#use-the-typescript-library)
 - [Debug in Chrome](#debug-in-chrome)
 - [Generators Reference](#generators-reference)
-- [Executors Reference](#executors-reference)
 
 ## Plugin Features
 
@@ -102,7 +120,7 @@ An empty monorepo can be created with the following command
 npx create-nx-workspace@latest --name <WorkspaceName> --preset "apps" --workspaceType "integrated"
 ```
 
-The package manager can be chosen freely by using the `--packageManager` argument (e.g. choose `pnpm` or `yarn`).
+The package manager can be chosen freely by using the `--packageManager` option (e.g. choose `pnpm` or `yarn`).
 The default is `npm` which is used for the following sections.
 
 Change the working directory to the workspace root of the Nx monorepo
@@ -136,7 +154,7 @@ nx g nx-serverless-cdk:cdk-app <AppName> --type generic
 ```
 
 These commands will create an `<AppName>` directory in the root of the Nx workspace.
-Use the `--directory` argument to define another directory for the application.
+Use the `--directory` option to define another directory for the application.
 Please note that the created directory is relative to the current working directory.
 
 > [!NOTE]
@@ -236,7 +254,7 @@ or
 nx run <AppName>:test
 ```
 
-Add the `--codeCoverage` argument to enable code coverage.
+Add the `--codeCoverage` option to enable code coverage.
 
 ```bash
 nx run <AppName>:test --codeCoverage
@@ -248,7 +266,7 @@ Add the `debugger;` statement to the code at the location where the debugging se
 
 In the `.env.test` file uncomment the `NODE_OPTIONS` variable.
 
-Execute the test command with the `--runInBand` argument
+Execute the test command with the `--runInBand` option
 
 ```bash
 nx run <AppName>:test --runInBand
@@ -546,7 +564,7 @@ If multiple applications depend on a shared application, then they have to decla
 Every application that depends on the shared application has to set the following property in their `project.json` file.
 
 ```json
-"implicitDependencies": [<SharedAppName>],
+"implicitDependencies": ["<SharedAppName>"],
 ```
 
 The dependencies between applications and libraries can be checked via the following command
@@ -603,10 +621,10 @@ These features significantly speed up the deployment of incremental changes duri
 
 #### Execute the E2E Tests
 
-This plugin supports testing in the cloud by creating an E2E test application for every CDK application.
+This plugin supports testing in the cloud by creating an E2E application for every CDK application.
 The E2E tests are used to ensure that the cloud application works as expected.
 
-Please set the environment-specific profile and region in the `.env.e2e` file of the E2E test application.
+Please set the environment-specific profile and region in the `.env.e2e` file of the E2E application.
 Use the `E2E_ENVIRONMENT` environment variable to specify the environment that should be tested.
 
 [Deploy the application into the specified environment](#deploy).
@@ -617,7 +635,7 @@ Execute the following command to run the E2E tests against the specified environ
 nx run <AppName>-e2e:e2e
 ```
 
-Add the `--codeCoverage` argument to enable code coverage.
+Add the `--codeCoverage` option to enable code coverage.
 
 ```bash
 nx run <AppName>-e2e:e2e --codeCoverage
@@ -629,7 +647,7 @@ Add the `debugger;` statement to the code at the location where the debugging se
 
 In the `.env.e2e` file uncomment the `NODE_OPTIONS` variable.
 
-Execute the E2E test command with the `--runInBand` argument
+Execute the E2E test command with the `--runInBand` option
 
 ```bash
 nx run <AppName>-e2e:e2e --runInBand
@@ -643,7 +661,266 @@ Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
 
 Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
 
-### Application Commands
+### Generate an Event
+
+Lambda functions are invoked with events.
+These events are either AWS service-specific events or custom events.
+
+Mock events are regularly needed for local and E2E testing.
+They can be stored inside the `events` directory of the CDK application or E2E application.
+
+The `generate-event` command can be used to create AWS service-specific mock events.
+In the following example, a mock event is created
+for a Lambda function that is invoked on a regular schedule
+
+```bash
+nx run <AppName>:generate-event cloudwatch scheduled-event --region eu-central-1
+```
+
+For the E2E application the following command has to be executed
+
+```bash
+nx run <AppName>-e2e:generate-event cloudwatch scheduled-event --region eu-central-1
+```
+
+The generated event is printed out to the console. It can be copied and stored in a new file inside the `events` directory.
+
+### Application Commands Reference
+
+#### lint
+
+```bash
+nx run <AppName>:lint [Options]
+```
+
+The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
+is used to lint the application with ESLint (see [Lint the Application](#lint-the-application)).
+Append `--help` to display a list of command options.
+
+#### test
+
+```bash
+nx run <AppName>:test [Options]
+```
+
+The [test](https://nx.dev/nx-api/jest/executors/jest) command
+is used to execute the test cases with Jest (see [Test the Application (with Code Coverage)](#test-the-application-with-code-coverage)).
+Append `--help` to display a list of command options.
+
+#### cdk
+
+```bash
+nx run <AppName>:cdk [Options]
+```
+
+The [cdk](https://docs.aws.amazon.com/cdk/v2/guide/cli.html) command
+is used to interact with the AWS CDK.
+Append `-h` to display a list of command options.
+
+Configuration Options:
+
+- predefinedArguments
+  - Used to predefine arguments that are put at the beginning of the command.
+    Can be used to declare environment-specific arguments in the `project.json` file.
+
+#### deploy
+
+```bash
+nx run <AppName>:deploy:<EnvironmentConfiguration> [Options]
+```
+
+Shorthand command for [cdk deploy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
+Deploys one or more specified stacks (see [Deploy the Application](#deploy-the-application)).
+Append `-h` to display a list of command options.
+
+The environment configurations `dev`, `stage` and `prod` have been predefined and
+can be adjusted according to the project needs.
+
+#### deploy-all
+
+```bash
+nx run <AppName>:deploy-all:<EnvironmentConfiguration> --verbose [Options]
+```
+
+Shorthand command for [cdk deploy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
+Deploys one or more specified stacks.
+Append `-h` to display a list of command options.
+
+The command is executed for the application and
+for every application in the application's dependency tree.
+The individual commands are executed in dependency order
+starting with the leaves of the dependency tree (see [Deploy the Application and its Dependencies](#deploy-the-application-and-its-dependencies)).
+
+The environment configurations `dev`, `stage` and `prod` have been predefined and
+can be adjusted according to the project needs.
+
+#### destroy
+
+```bash
+nx run <AppName>:destroy:<EnvironmentConfiguration> [Options]
+```
+
+Shorthand command for [cdk destroy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-commands).
+Destroys one or more specified stacks.
+Append `-h` to display a list of command options.
+
+The environment configurations `dev`, `stage` and `prod` have been predefined and
+can be adjusted according to the project needs.
+
+#### diff
+
+```bash
+nx run <AppName>:diff:<EnvironmentConfiguration> [Options]
+```
+
+Shorthand command for [cdk diff](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-diff).
+Compares the specified stacks and its dependencies with the deployed stacks.
+Append `-h` to display a list of command options.
+
+The environment configurations `dev`, `stage` and `prod` have been predefined and
+can be adjusted according to the project needs.
+
+#### ls
+
+```bash
+nx run <AppName>:ls:<EnvironmentConfiguration> [Options]
+```
+
+Shorthand command for [cdk ls](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-list).
+Lists the IDs of the specified stacks.
+Append `-h` to display a list of command options.
+
+The environment configurations `dev`, `stage` and `prod` have been predefined and
+can be adjusted according to the project needs.
+
+#### synth
+
+```bash
+nx run <AppName>:synth:<EnvironmentConfiguration> [Options]
+```
+
+Shorthand command for [cdk synth](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-synth).
+Synthesizes the specified stacks into CloudFormation templates (see [Synthesize CloudFormation Stacks](#synthesize-cloudformation-stacks)).
+Append `-h` to display a list of command options.
+
+The environment configurations `dev`, `stage` and `prod` have been predefined and
+can be adjusted according to the project needs.
+
+#### watch
+
+```bash
+nx run <AppName>:watch:<EnvironmentConfiguration> [Options]
+```
+
+Shorthand command for [cdk watch](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
+Continuously monitors the application's source files and assets for changes.
+It immediately performs a deployment of the specified stacks when a change is detected.
+Append `-h` to display a list of command options.
+
+The environment configurations `dev`, `stage` and `prod` have been predefined and
+can be adjusted according to the project needs.
+
+#### generate-event
+
+```bash
+nx run <AppName>:generate-event [Options]
+```
+
+The [generate-event](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html) command
+is used to generate AWS service-specific mock events (see [Generate an Event](#generate-an-event)).
+Append `-h` to display a list of command options.
+
+Configuration Options:
+
+- predefinedArguments
+  - Used to predefine arguments that are put at the beginning of the command.
+    Can be used to declare environment-specific arguments in the `project.json` file.
+
+#### invoke
+
+```bash
+nx run <AppName>:invoke [Options]
+```
+
+The [invoke](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html) command
+is used to invoke a Lambda function locally (see [Invoke a Lambda Function Locally](#invoke-a-lambda-function-locally)).
+Append `-h` to display a list of command options.
+
+Configuration Options:
+
+- predefinedArguments
+  - Used to predefine arguments that are put at the beginning of the command.
+    Can be used to declare environment-specific arguments in the `project.json` file.
+
+#### start-api
+
+```bash
+nx run <AppName>:start-api [Options]
+```
+
+The [start-api](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html) command
+is used to start an API Gateway locally (see [Start an API Gateway Locally](#start-an-api-gateway-locally)).
+Append `-h` to display a list of command options.
+
+Configuration Options:
+
+- predefinedArguments
+  - Used to predefine arguments that are put at the beginning of the command.
+    Can be used to declare environment-specific arguments in the `project.json` file.
+
+#### start-lambda
+
+```bash
+nx run <AppName>:start-lambda [Options]
+```
+
+The [start-lambda](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html) command
+is used to start all Lambda functions locally (see [Start all Lambda Functions Locally](#start-all-lambda-functions-locally)).
+Append `-h` to display a list of command options.
+
+Configuration Options:
+
+- predefinedArguments
+  - Used to predefine arguments that are put at the beginning of the command.
+    Can be used to declare environment-specific arguments in the `project.json` file.
+
+### E2E Application Commands Reference
+
+#### lint
+
+```bash
+nx run <AppName>-e2e:lint [Options]
+```
+
+The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
+is used to lint the application with ESLint (see [Lint the Application](#lint-the-application)).
+Append `--help` to display a list of command options.
+
+#### e2e
+
+```bash
+nx run <AppName>-e2e:e2e [Options]
+```
+
+The [e2e](https://nx.dev/nx-api/jest/executors/jest) command
+is used to execute the E2E tests with Jest (see [E2E Testing](#e2e-testing)).
+Append `--help` to display a list of command options.
+
+#### generate-event
+
+```bash
+nx run <AppName>-e2e:generate-event [Options]
+```
+
+The [generate-event](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html) command
+is used to generate AWS service-specific mock events (see [Generate an Event](#generate-an-event)).
+Append `-h` to display a list of command options.
+
+Configuration Options:
+
+- predefinedArguments
+  - Used to predefine arguments that are put at the beginning of the command.
+    Can be used to declare environment-specific arguments in the `project.json` file.
 
 ## Construct Library
 
@@ -683,5 +960,3 @@ The debugger jumps to the `debugger;` statement that has been added to the sourc
 Move from this point onward by using the debugger step commands and additional breakpoints.
 
 ## Generators Reference
-
-## Executors Reference

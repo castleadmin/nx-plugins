@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "sam local generate-event",
-  "description": "Wrapper around the 'sam local generate-event' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)",
+  "description": "Used to generate AWS service-specific mock events. Wrapper around the 'sam local generate-event' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)",
   "type": "object",
   "properties": {
     "predefinedArguments": {

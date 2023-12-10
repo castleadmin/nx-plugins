@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema",
   "version": 2,
   "title": "sam local start-lambda",
-  "description": "Wrapper around the 'sam local start-lambda' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html)",
+  "description": "Used to start all Lambda functions locally. Wrapper around the 'sam local start-lambda' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html)",
   "type": "object",
   "properties": {
     "predefinedArguments": {

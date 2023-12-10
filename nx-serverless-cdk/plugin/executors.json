@@ -3,27 +3,27 @@
     "cdk": {
       "implementation": "./src/executors/cdk/executor",
       "schema": "./src/executors/cdk/schema.json",
-      "description": "Wrapper around the 'cdk' command. (https://docs.aws.amazon.com/cdk/v2/guide/cli.html)"
+      "description": "Used to interact with the AWS CDK. Wrapper around the 'cdk' command. (https://docs.aws.amazon.com/cdk/v2/guide/cli.html)"
     },
     "generate-event": {
       "implementation": "./src/executors/generate-event/executor",
       "schema": "./src/executors/generate-event/schema.json",
-      "description": "Wrapper around the 'sam local generate-event' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)"
+      "description": "Used to generate AWS service-specific mock events. Wrapper around the 'sam local generate-event' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html)"
     },
     "invoke": {
       "implementation": "./src/executors/invoke/executor",
       "schema": "./src/executors/invoke/schema.json",
-      "description": "Wrapper around the 'sam local invoke' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)"
+      "description": "Used to invoke a Lambda function locally. Wrapper around the 'sam local invoke' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)"
     },
     "start-api": {
       "implementation": "./src/executors/start-api/executor",
       "schema": "./src/executors/start-api/schema.json",
-      "description": "Wrapper around the 'sam local start-api' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)"
+      "description": "Used to start an API Gateway locally. Wrapper around the 'sam local start-api' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)"
     },
     "start-lambda": {
       "implementation": "./src/executors/start-lambda/executor",
       "schema": "./src/executors/start-lambda/schema.json",
-      "description": "Wrapper around the 'sam local start-lambda' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html)"
+      "description": "Used to start all Lambda functions locally. Wrapper around the 'sam local start-lambda' command. (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html)"
     }
   }
 }
