@@ -22,6 +22,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Format the CDK Application](#format-the-cdk-application)
   - [Lint the CDK Application](#lint-the-cdk-application)
   - [Test the CDK Application (with Code Coverage)](#test-the-cdk-application-with-code-coverage)
+    - [Watch](#watch)
     - [Debug](#debug)
   - [Synthesize CloudFormation Stacks](#synthesize-cloudformation-stacks)
     - [Debug](#debug-1)
@@ -34,10 +35,12 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Deploy the CDK Application](#deploy-the-cdk-application)
     - [Bootstrap](#bootstrap)
     - [Deploy](#deploy)
+    - [Watch](#watch-1)
     - [Deploy the CDK Application and its Dependencies](#deploy-the-cdk-application-and-its-dependencies)
   - [E2E Testing](#e2e-testing)
     - [Testing in the Cloud](#testing-in-the-cloud)
     - [Execute the E2E Tests](#execute-the-e2e-tests)
+    - [Watch](#watch-2)
     - [Debug](#debug-5)
   - [Generate an Event](#generate-an-event)
   - [CDK Application Commands Reference](#cdk-application-commands-reference)
@@ -65,6 +68,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Format the Construct Library](#format-the-construct-library)
   - [Lint the Construct Library](#lint-the-construct-library)
   - [Test the Construct Library (with Code Coverage)](#test-the-construct-library-with-code-coverage)
+    - [Watch](#watch-3)
     - [Debug](#debug-6)
   - [Use the Construct Library](#use-the-construct-library)
   - [Build the construct library](#build-the-construct-library)
@@ -272,6 +276,14 @@ Add the `--codeCoverage` option to enable code coverage.
 
 ```bash
 nx run <AppName>:test --codeCoverage
+```
+
+#### Watch
+
+To automatically rerun the application tests after a file has been changed, execute
+
+```bash
+nx run <AppName>:test --watch
 ```
 
 #### Debug
@@ -556,6 +568,25 @@ Please note that the AWS CLI profile values might vary per user.
 > [!NOTE]
 > If SSO is used to authenticate, then it is required to log in before executing this command.
 
+#### Watch
+
+To automatically rerun the deployment after a file has been changed, execute
+
+```bash
+nx run <AppName>:watch:dev --profile <AwsCliDevEnvironmentProfile>
+```
+
+The AWS CDK CLI will try to directly update the affected services (hotswap).
+By appending the `--hotswap-fallback` option, a CloudFormation deployment
+will be performed if a direct service update isn't feasible.
+
+```bash
+nx run <AppName>:watch:dev --profile <AwsCliDevEnvironmentProfile> --hotswap-fallback
+```
+
+> [!NOTE]
+> The AWS CDK watch mode is meant for development deployments and shouldn't be used to deploy production resources.
+
 #### Deploy the CDK Application and its Dependencies
 
 The situation might arise that a cloud resource is needed by multiple CloudFormation stacks of the same application.
@@ -648,6 +679,14 @@ Add the `--codeCoverage` option to enable code coverage.
 
 ```bash
 nx run <AppName>-e2e:e2e --codeCoverage
+```
+
+#### Watch
+
+To automatically rerun the E2E tests after a file has been changed, execute
+
+```bash
+nx run <AppName>-e2e:e2e --watch
 ```
 
 #### Debug
@@ -1053,6 +1092,14 @@ Add the `--codeCoverage` option to enable code coverage.
 
 ```bash
 nx run <LibName>:test --codeCoverage
+```
+
+#### Watch
+
+To automatically rerun the construct library tests after a file has been changed, execute
+
+```bash
+nx run <LibName>:test --watch
 ```
 
 #### Debug

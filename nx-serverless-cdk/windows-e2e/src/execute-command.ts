@@ -14,8 +14,8 @@ export const executeCommand = (
 
     const commandProcess = spawn(command, args, {
       cwd,
-      stdio: 'pipe',
       shell: true,
+      stdio: 'pipe',
     });
 
     commandProcess.stdout.on('data', (chunk) => {
