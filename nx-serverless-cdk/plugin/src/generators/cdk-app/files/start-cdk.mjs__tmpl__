@@ -8,6 +8,7 @@ if (process.env['CDK_DEBUG'] === 'true') {
   ] = `--inspect-brk=${process.env['CDK_DEBUG_HOST']}:${process.env['CDK_DEBUG_PORT']}`;
 }
 
-await spawn('node', ['--require', 'ts-node/register', 'cdk/main.ts'], {
+spawn('node', ['"--require"', '"ts-node/register"', '"cdk/main.ts"'], {
+  shell: true,
   stdio: 'inherit',
 });

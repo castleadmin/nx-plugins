@@ -60,8 +60,8 @@ describe('executeCommand', () => {
         args.map((arg) => `'${arg}'`),
         {
           cwd,
-          stdio: 'inherit',
           shell: true,
+          stdio: 'inherit',
         },
       );
     });
@@ -81,8 +81,8 @@ describe('executeCommand', () => {
         args.map((arg) => `'${arg}'`),
         {
           cwd,
-          stdio: 'inherit',
           shell: true,
+          stdio: 'inherit',
         },
       );
     });
@@ -102,8 +102,8 @@ describe('executeCommand', () => {
         args.map((arg) => `'${arg}'`),
         {
           cwd,
-          stdio: 'inherit',
           shell: true,
+          stdio: 'inherit',
         },
       );
     });
@@ -129,8 +129,8 @@ describe('executeCommand', () => {
         args.map((arg) => `"${arg}"`),
         {
           cwd,
-          stdio: 'inherit',
           shell: true,
+          stdio: 'inherit',
         },
       );
     });
@@ -150,8 +150,8 @@ describe('executeCommand', () => {
         args.map((arg) => `"${arg}"`),
         {
           cwd,
-          stdio: 'inherit',
           shell: true,
+          stdio: 'inherit',
         },
       );
     });
@@ -171,8 +171,8 @@ describe('executeCommand', () => {
         args.map((arg) => `"${arg}"`),
         {
           cwd,
-          stdio: 'inherit',
           shell: true,
+          stdio: 'inherit',
         },
       );
     });

@@ -63,8 +63,8 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledTimes(1);
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
-      stdio: 'pipe',
       shell: true,
+      stdio: 'pipe',
     });
   });
 
@@ -80,8 +80,8 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledTimes(1);
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
-      stdio: 'pipe',
       shell: true,
+      stdio: 'pipe',
     });
   });
 
@@ -97,8 +97,8 @@ describe('executeCommand', () => {
     expect(spawn).toHaveBeenCalledTimes(1);
     expect(spawn).toHaveBeenCalledWith(command, args, {
       cwd,
-      stdio: 'pipe',
       shell: true,
+      stdio: 'pipe',
     });
   });
 });

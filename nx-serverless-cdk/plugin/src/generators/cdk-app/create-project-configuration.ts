@@ -65,13 +65,13 @@ export const createProjectConfiguration = (
         options: {},
         configurations: {
           dev: {
-            predefinedArguments: ['destroy', 'Dev/*'],
+            predefinedArguments: ['destroy', 'Dev/*', '--force'],
           },
           stage: {
-            predefinedArguments: ['destroy', 'Stage/*'],
+            predefinedArguments: ['destroy', 'Stage/*', '--force'],
           },
           prod: {
-            predefinedArguments: ['destroy', 'Prod/*'],
+            predefinedArguments: ['destroy', 'Prod/*', '--force'],
           },
         },
       },

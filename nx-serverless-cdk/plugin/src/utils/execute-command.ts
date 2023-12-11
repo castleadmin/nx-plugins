@@ -17,8 +17,8 @@ export const executeCommand = (
     console.log('Executing command:', command, normalizedArgs.join(' '));
     const commandProcess = spawn(command, normalizedArgs, {
       cwd,
-      stdio: 'inherit',
       shell: true,
+      stdio: 'inherit',
     });
 
     commandProcess.on('close', (code: number | null) => {
