@@ -74,8 +74,8 @@ These **environments** are **just examples**, the environment names as well as t
 - `events` used store generated or manually created events for local and E2E testing
 - `shared` contains the shared code which is used by the infrastructure and runtime code
 - `src` contains the runtime code and tests (e.g. Lambda function handlers)
-  - `example-api-handler.ts`<sup>\*</sup> entry point of the example API Lambda function
-  - `example-handler.ts`<sup>\*</sup> entry point of the example Lambda function
+  - `example-api-handler.ts` entry point of the example API Lambda function
+  - `example-handler.ts` entry point of the example Lambda function
 - `.env` defines the environment variables for the application commands
   - Used to enable the CDK debug mode
   - Used to define the AWS accounts and regions for the deployment
@@ -86,14 +86,12 @@ These **environments** are **just examples**, the environment names as well as t
 - `cdk.json` AWS CDK configuration
 - `jest.config.ts` Jest testing framework configuration
 - `project.json` Nx application configuration
-- `samconfig.toml`<sup>\*</sup> AWS SAM configuration
+- `samconfig.toml`AWS SAM configuration
 - `start-cdk.mjs` ignore this script, it is used to make the debugging of CDK applications possible
 - `tsconfig.cdk.json` TypeScript infrastructure code configuration
 - `tsconfig.json` common TypeScript CDK application configuration
 - `tsconfig.spec.json` TypeScript test code configuration
 - `tsconfig.src.json` TypeScript runtime code configuration
-
-<sup>\*</sup>Is created for serverless CDK applications
 
 ### Format the CDK Application
 
