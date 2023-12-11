@@ -43,15 +43,7 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": [
-          "nx-serverless-cdk/plugin/**/*.ts",
-          "nx-serverless-cdk/plugin/package.json",
-          "nx-serverless-cdk/plugin/generators.json",
-          "nx-serverless-cdk/plugin/executors.json"
-        ]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
