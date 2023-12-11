@@ -1,4 +1,6 @@
-![nx-serverless-cdk logo](https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/logo.png)
+<p style="text-align: center;">
+  <img alt="nx-serverless-cdk" src="https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/logo.png">
+</p>
 
 [![License](https://img.shields.io/npm/l/nx-serverless-cdk?style=flat)](https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/LICENSE)
 [![NPM Version](https://badge.fury.io/js/nx-serverless-cdk.svg)](https://badge.fury.io/js/nx-serverless-cdk)
@@ -6,10 +8,10 @@
 
 # nx-serverless-cdk
 
-**nx-serverless-cdk** is an **Nx plugin** for creating **AWS CDK applications** and **libraries** inside an [**Nx monorepo**](https://nx.dev/concepts/more-concepts/why-monorepos).
-It offers the possibility to **test** and **debug** CDK applications as well as AWS Lambda functions **locally**.
-The plugin provides the **full flexibility** of the **AWS CDK CLI** and the local **AWS SAM CLI** commands.
-It aims to make the **usage** of these tools **as easy as possible** inside an **Nx monorepo**.
+nx-serverless-cdk is an Nx plugin for creating AWS CDK applications and libraries inside an [Nx monorepo](https://nx.dev/concepts/more-concepts/why-monorepos).
+It offers the possibility to test and debug CDK applications as well as AWS Lambda functions locally.
+The plugin provides the full flexibility of the AWS CDK CLI and the local AWS SAM CLI commands.
+It aims to make the usage of these tools as easy as possible inside an Nx monorepo.
 
 ## Table of Contents
 
@@ -179,7 +181,7 @@ These commands will create an `<AppName>` directory in the root of the Nx worksp
 Use the `--directory` option to define another directory for the application.
 Please note that the created directory is relative to the current working directory.
 
-> [!NOTE]
+> **Note:**
 > Use `npx nx`, if the `nx` command isn't found or install the `nx` package globally.
 
 ### Environments
@@ -337,7 +339,7 @@ Please note that the AWS CLI profile values might vary per user.
 
 The synthesized CloudFormation stacks are stored in `cdk.out`.
 
-> [!NOTE]
+> **Note:**
 > If SSO is used to authenticate, then it is required to log in before executing this command.
 
 #### Debug
@@ -574,7 +576,7 @@ If the environment variables aren't defined,
 the account and region are retrieved from the AWS CLI profile.
 Please note that the AWS CLI profile values might vary per user.
 
-> [!NOTE]
+> **Note:**
 > If SSO is used to authenticate, then it is required to log in before executing this command.
 
 #### Watch
@@ -593,7 +595,7 @@ will be performed if a direct service update isn't feasible.
 nx run <AppName>:watch:dev --profile <AwsCliDevEnvironmentProfile> --hotswap-fallback
 ```
 
-> [!NOTE]
+> **Note:**
 > The AWS CDK watch mode is meant for development deployments and shouldn't be used to deploy production resources.
 
 #### Deploy the CDK Application and its Dependencies
@@ -642,7 +644,7 @@ nx affected -t deploy-all -c dev --profile Dev --verbose --require-approval neve
 Nx determines if an application has changed by a given git commit range.
 Please consult the [Nx documentation](https://nx.dev/nx-api/nx/documents/affected) for further details.
 
-> [!NOTE]
+> **Note:**
 > If SSO is used to authenticate, then it is required to log in before executing this command.
 
 ### E2E Testing
@@ -664,7 +666,7 @@ The AWS CDK watch mode offers direct AWS resource updates and
 as a fallback CloudFormation deployments without rollback.
 These features significantly speed up the deployment of incremental changes during the development.
 
-> [!NOTE]
+> **Note:**
 > The AWS CDK watch mode is meant for development deployments and shouldn't be used to deploy production resources.
 
 #### Execute the E2E Tests
@@ -1083,7 +1085,7 @@ These commands will create an `<LibName>` directory in the root of the Nx worksp
 Use the `--directory` option to define another directory for the construct library.
 Please note that the created directory is relative to the current working directory.
 
-> [!NOTE]
+> **Note:**
 > Use `npx nx`, if the `nx` command isn't found or install the `nx` package globally.
 
 ### Construct Library Structure
@@ -1319,7 +1321,7 @@ Please note that the created directory is relative to the current working direct
 
 Adjust the TypeScript configurations (`tsconfig*.json`) according to the project standards.
 
-> [!NOTE]
+> **Note:**
 > Use `npx nx`, if the `nx` command isn't found or install the `nx` package globally.
 
 ### Use the TypeScript Library

@@ -202,7 +202,7 @@ Please note that the AWS CLI profile values might vary per user.
 
 The synthesized CloudFormation stacks are stored in `cdk.out`.
 
-> [!NOTE]
+> **Note:**
 > If SSO is used to authenticate, then it is required to log in before executing this command.
 
 #### Debug
@@ -439,7 +439,7 @@ If the environment variables aren't defined,
 the account and region are retrieved from the AWS CLI profile.
 Please note that the AWS CLI profile values might vary per user.
 
-> [!NOTE]
+> **Note:**
 > If SSO is used to authenticate, then it is required to log in before executing this command.
 
 #### Watch
@@ -458,7 +458,7 @@ will be performed if a direct service update isn't feasible.
 nx run <%= projectName %>:watch:dev --profile <AwsCliDevEnvironmentProfile> --hotswap-fallback
 ```
 
-> [!NOTE]
+> **Note:**
 > The AWS CDK watch mode is meant for development deployments and shouldn't be used to deploy production resources.
 
 #### Deploy the CDK Application and its Dependencies
@@ -507,7 +507,7 @@ nx affected -t deploy-all -c dev --profile Dev --verbose --require-approval neve
 Nx determines if an application has changed by a given git commit range.
 Please consult the [Nx documentation](https://nx.dev/nx-api/nx/documents/affected) for further details.
 
-> [!NOTE]
+> **Note:**
 > If SSO is used to authenticate, then it is required to log in before executing this command.
 
 ### E2E Testing
@@ -529,7 +529,7 @@ The AWS CDK watch mode offers direct AWS resource updates and
 as a fallback CloudFormation deployments without rollback.
 These features significantly speed up the deployment of incremental changes during the development.
 
-> [!NOTE]
+> **Note:**
 > The AWS CDK watch mode is meant for development deployments and shouldn't be used to deploy production resources.
 
 #### Execute the E2E Tests

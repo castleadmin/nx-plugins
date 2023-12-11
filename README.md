@@ -82,7 +82,7 @@ Add the `--codeCoverage` option to enable code coverage.
 nx run <PluginName>-unix-e2e:e2e --codeCoverage
 ```
 
-> [!NOTE]
+> **Note:**
 > The Unix E2E tests must be executed on a Unix system.
 
 ### Run the Windows E2E tests
@@ -100,5 +100,5 @@ Add the `--codeCoverage` option to enable code coverage.
 nx run <PluginName>-windows-e2e:e2e --codeCoverage
 ```
 
-> [!NOTE]
+> **Note:**
 > The Windows E2E tests must be executed on a Windows system.
