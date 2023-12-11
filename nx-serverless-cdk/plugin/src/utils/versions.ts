@@ -27,29 +27,29 @@ export interface Versions {
 
 export const getVersions = (): Versions => {
   // CDK dependencies
-  const awsCdkLib = '^2.110.0';
+  const awsCdkLib = '^2.114.1';
   const constructs = '^10.3.0';
   const sourceMapSupport = '^0.5.21';
   // CDK development dependencies
-  const awsCdk = '^2.110.0';
+  const awsCdk = '^2.114.1';
   const tsconfigPaths = '^4.2.0';
-  const tsNode = '^10.9.1';
+  const tsNode = '^10.9.2';
   // Lambda dependencies
-  const powertoolsLogger = '^1.16.0';
+  const powertoolsLogger = '^1.17.0';
   // Lambda development dependencies
-  const typesAwsLambda = '^8.10.126';
-  const esbuild = '^0.19.5';
+  const typesAwsLambda = '^8.10.130';
+  const esbuild = '^0.19.9';
   // TypeScript dependencies
   const tslib = '^2.6.2';
   // TypeScript development dependencies
-  const typesNode = '^20.9.1';
+  const typesNode = '^20.10.4';
   // E2E common
-  const awsSdkCredentialProviders = '^3.458.0';
-  const awsSdkClientSsm = '^3.458.0';
+  const awsSdkCredentialProviders = '^3.470.0';
+  const awsSdkClientSsm = '^3.470.0';
   // E2E generic dependencies
-  const awsSdkClientSqs = '^3.458.0';
+  const awsSdkClientSqs = '^3.470.0';
   // E2E lambda dependencies
-  const awsSdkClientLambda = '^3.458.0';
+  const awsSdkClientLambda = '^3.470.0';
 
   return {
     // CDK dependencies
