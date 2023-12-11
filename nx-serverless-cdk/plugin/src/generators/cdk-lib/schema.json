@@ -2,13 +2,13 @@
   "$schema": "http://json-schema.org/schema",
   "$id": "cdk-lib",
   "title": "cdk-lib",
-  "description": "Creates an AWS CDK constructs library.",
+  "description": "Creates an AWS CDK construct library.",
   "type": "object",
   "properties": {
     "name": {
       "type": "string",
       "pattern": "(?:^@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*\\/[a-zA-Z0-9-~][a-zA-Z0-9-._~]*|^[a-zA-Z][^:]*)$",
-      "description": "Constructs library name",
+      "description": "Construct library name",
       "$default": {
         "$source": "argv",
         "index": 0
@@ -16,21 +16,21 @@
       "x-prompt": "What name would you like to use for the newly generated constructs library?"
     },
     "directory": {
-      "description": "The project's directory path relative to the current working directory.",
+      "description": "The construct library's directory path relative to the current working directory.",
       "type": "string",
       "x-priority": "important"
     },
     "importPath": {
       "type": "string",
-      "description": "Define the npm package name (e.g. 'example-lib' or '@example-org/example-lib')."
+      "description": "Defines the npm package name (e.g. 'example-lib' or '@example-org/example-lib')."
     },
     "publishable": {
       "type": "boolean",
-      "description": "Create a publishable library.",
+      "description": "Creates a construct library that can be published to a npm repository.",
       "x-priority": "important"
     },
     "skipFormat": {
-      "description": "Skip formatting files.",
+      "description": "Skips the formatting after the construct library has been created.",
       "type": "boolean",
       "default": false
     }

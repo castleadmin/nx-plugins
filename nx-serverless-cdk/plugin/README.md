@@ -15,13 +15,13 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
   - [Prerequisites](#prerequisites)
     - [Create a new Nx Monorepo](#create-a-new-nx-monorepo)
   - [Install](#install)
-- [Application](#application)
-  - [Create an Application](#create-an-application)
+- [CDK Application](#cdk-application)
+  - [Create a CDK Application](#create-a-cdk-application)
   - [Environments](#environments)
-  - [Application Structure](#application-structure)
-  - [Format the Application](#format-the-application)
-  - [Lint the Application](#lint-the-application)
-  - [Test the Application (with Code Coverage)](#test-the-application-with-code-coverage)
+  - [CDK Application Structure](#cdk-application-structure)
+  - [Format the CDK Application](#format-the-cdk-application)
+  - [Lint the CDK Application](#lint-the-cdk-application)
+  - [Test the CDK Application (with Code Coverage)](#test-the-cdk-application-with-code-coverage)
     - [Debug](#debug)
   - [Synthesize CloudFormation Stacks](#synthesize-cloudformation-stacks)
     - [Debug](#debug-1)
@@ -31,16 +31,16 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
     - [Debug](#debug-3)
   - [Start an API Gateway Locally](#start-an-api-gateway-locally)
     - [Debug](#debug-4)
-  - [Deploy the Application](#deploy-the-application)
+  - [Deploy the CDK Application](#deploy-the-cdk-application)
     - [Bootstrap](#bootstrap)
     - [Deploy](#deploy)
-    - [Deploy the Application and its Dependencies](#deploy-the-application-and-its-dependencies)
+    - [Deploy the CDK Application and its Dependencies](#deploy-the-cdk-application-and-its-dependencies)
   - [E2E Testing](#e2e-testing)
     - [Testing in the Cloud](#testing-in-the-cloud)
     - [Execute the E2E Tests](#execute-the-e2e-tests)
     - [Debug](#debug-5)
   - [Generate an Event](#generate-an-event)
-  - [Application Commands Reference](#application-commands-reference)
+  - [CDK Application Commands Reference](#cdk-application-commands-reference)
     - [lint](#lint)
     - [test](#test)
     - [cdk](#cdk)
@@ -143,7 +143,7 @@ Run the following command in the workspace root directory to install the `nx-ser
 npm install --save-dev nx-serverless-cdk
 ```
 
-## Application
+## CDK Application
 
 A CDK application consists of the infrastructure and application code as well as the configurations
 that together form a cloud application.
@@ -153,7 +153,7 @@ They represent either individual cloud resources or a set of cloud resources
 that has been interconnected to fulfil a concrete purpose.
 Inside the application, the constructs are combined into deployable units called stacks.
 
-### Create an Application
+### Create a CDK Application
 
 To create a serverless application run the following command inside the Nx workspace
 
@@ -190,7 +190,7 @@ The generated example code has support for 3 environments
 
 These **environments** are **just examples**, the environment names as well as their count can be changed according to the project needs.
 
-### Application Structure
+### CDK Application Structure
 
 - `cdk` contains the infrastructure code and tests
   - `main.ts` entry point of the CDK application
@@ -214,13 +214,13 @@ These **environments** are **just examples**, the environment names as well as t
 - `samconfig.toml`<sup>\*</sup> AWS SAM configuration
 - `start-cdk.mjs` ignore this script, it is used to make the debugging of CDK applications possible
 - `tsconfig.cdk.json` TypeScript infrastructure code configuration
-- `tsconfig.json` common TypeScript application configuration
+- `tsconfig.json` common TypeScript CDK application configuration
 - `tsconfig.spec.json` TypeScript test code configuration
 - `tsconfig.src.json` TypeScript runtime code configuration
 
-<sup>\*</sup>Is created for serverless applications
+<sup>\*</sup>Is created for serverless CDK applications
 
-### Format the Application
+### Format the CDK Application
 
 The projects (applications and libraries) that have been changed since the last commit can be formatted with the help of [nx format](https://nx.dev/nx-api/nx/documents/format-write).
 
@@ -240,7 +240,7 @@ To format only the application execute
 nx format --projects <AppName>
 ```
 
-### Lint the Application
+### Lint the CDK Application
 
 To lint the application execute
 
@@ -254,7 +254,7 @@ or
 nx run <AppName>:lint
 ```
 
-### Test the Application (with Code Coverage)
+### Test the CDK Application (with Code Coverage)
 
 To test the application execute
 
@@ -498,7 +498,7 @@ Debugger listening on ws://127.0.0.1:9229/15755f9f-6e5d-4c5e-917b-d2b8e9dec5d2
 
 Any Node.js debugger can be used for debugging. In this example, [the Chrome browser will be used](#debug-in-chrome).
 
-### Deploy the Application
+### Deploy the CDK Application
 
 #### Bootstrap
 
@@ -556,7 +556,7 @@ Please note that the AWS CLI profile values might vary per user.
 > [!NOTE]
 > If SSO is used to authenticate, then it is required to log in before executing this command.
 
-#### Deploy the Application and its Dependencies
+#### Deploy the CDK Application and its Dependencies
 
 The situation might arise that a cloud resource is needed by multiple CloudFormation stacks of the same application.
 In this case, the cloud resource could be easily shared between the stacks by [introducing a shared stack](https://docs.aws.amazon.com/cdk/v2/guide/resources.html#resource_stack).
@@ -694,7 +694,7 @@ nx run <AppName>-e2e:generate-event cloudwatch scheduled-event --region eu-centr
 
 The generated event is printed out to the console. It can be copied and stored in a new file inside the `events` directory.
 
-### Application Commands Reference
+### CDK Application Commands Reference
 
 #### lint
 
@@ -703,7 +703,7 @@ nx run <AppName>:lint [Options]
 ```
 
 The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
-is used to lint the application with ESLint (see [Lint the Application](#lint-the-application)).
+is used to lint the application with ESLint (see [Lint the CDK Application](#lint-the-cdk-application)).
 Append `--help` to display the command options.
 
 #### test
@@ -713,7 +713,7 @@ nx run <AppName>:test [Options]
 ```
 
 The [test](https://nx.dev/nx-api/jest/executors/jest) command
-is used to execute the test cases with Jest (see [Test the Application (with Code Coverage)](#test-the-application-with-code-coverage)).
+is used to execute the test cases with Jest (see [Test the CDK Application (with Code Coverage)](#test-the-cdk-application-with-code-coverage)).
 Append `--help` to display the command options.
 
 #### cdk
@@ -739,7 +739,7 @@ nx run <AppName>:deploy:<EnvironmentConfiguration> [Options]
 ```
 
 Shorthand command for [cdk deploy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
-Deploys one or more specified stacks (see [Deploy the Application](#deploy-the-application)).
+Deploys one or more specified stacks (see [Deploy the CDK Application](#deploy-the-cdk-application)).
 Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
@@ -758,7 +758,7 @@ Append `-h` to display the command options.
 The command is executed for the application and
 for every application in the application's dependency tree.
 The individual commands are executed in dependency order
-starting with the leaves of the dependency tree (see [Deploy the Application and its Dependencies](#deploy-the-application-and-its-dependencies)).
+starting with the leaves of the dependency tree (see [Deploy the CDK Application and its Dependencies](#deploy-the-cdk-application-and-its-dependencies)).
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
 can be adjusted according to the project needs.
@@ -902,7 +902,7 @@ nx run <AppName>-e2e:lint [Options]
 ```
 
 The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
-is used to lint the application with ESLint (see [Lint the Application](#lint-the-application)).
+is used to lint the application with ESLint.
 Append `--help` to display the command options.
 
 #### e2e
@@ -969,7 +969,7 @@ The `--importPath` option defines the construct library's package name.
 The construct library can be imported into other construct libraries or CDK applications
 inside the Nx monorepo.
 
-In order to use it outside the monorepo, it can be published to a npm repository.
+It can be published to a npm repository in order to use it outside the monorepo.
 Execute the following command to create a publishable construct library that uses the value
 of `--importPath` as npm package name
 
@@ -1084,7 +1084,7 @@ Use the following code snippet to import the `ExampleConstruct`
 import { ExampleConstruct } from '<LibPackageName>';
 ```
 
-Please note that the construct library doesn't have to be built in order to import it.
+Please note that the construct library doesn't have to be built to be imported by its consumers.
 
 ### Build the construct library
 
@@ -1164,9 +1164,48 @@ Options:
 
 ## TypeScript Library
 
+A pure TypeScript library can be created with Nx and shared between construct libraries
+and CDK applications.
+
 ### Create a TypeScript Library
 
+To [create a TypeScript library](https://nx.dev/nx-api/js/generators/library) run the following command inside the Nx workspace
+
+```bash
+nx g @nx/js:library <LibName> --importPath <LibPackageName> --bundler tsc --unitTestRunner jest
+```
+
+The `--importPath` option defines the TypeScript library's package name.
+The TypeScript library can be imported into construct libraries or CDK applications
+inside the Nx monorepo.
+
+It can be published to a npm repository in order to use it outside the monorepo.
+Execute the following command to create a publishable TypeScript library that uses the value
+of `--importPath` as npm package name
+
+```bash
+nx g @nx/js:library <LibName> --importPath <LibPackageName> --publishable --bundler tsc --unitTestRunner jest
+```
+
+These commands will create an `<LibName>` directory in the root of the Nx workspace.
+Use the `--directory` option to define another directory for the TypeScript library.
+Please note that the created directory is relative to the current working directory.
+
+Adjust the TypeScript configurations (`tsconfig*.json`) according to the project standards.
+
+> [!NOTE]
+> Use `npx nx`, if the `nx` command isn't found or install the `nx` package globally.
+
 ### Use the TypeScript Library
+
+The TypeScript library can be imported into construct libraries or CDK applications.
+Use the following code snippet to import it
+
+```typescript
+import { ... } from '<LibPackageName>';
+```
+
+Please note that the TypeScript library doesn't have to be built to be imported by its consumers.
 
 ## Debug in Chrome
 
@@ -1180,3 +1219,45 @@ The debugger jumps to the `debugger;` statement that has been added to the sourc
 Move from this point onward by using the debugger step commands and additional breakpoints.
 
 ## Generators Reference
+
+### cdk-app
+
+```bash
+nx g nx-serverless-cdk:cdk-app <AppName> --type <AppType>
+```
+
+The cdk-app generator is used to create an AWS CDK application (see [Create a CDK Application](#create-a-cdk-application)).
+
+Options:
+
+- --name _(required)_
+  - CDK application name
+- --directory
+  - The CDK application's directory path relative to the current working directory
+- --type _(required)_
+  - The CDK application type can be `generic` or `lambda`
+  - Choose type `generic` for general purpose applications
+  - Choose type `lambda` for serverless applications
+- --skipFormat _(default: false)_
+  - Skips the formatting after the CDK application has been created
+
+### cdk-lib
+
+```bash
+nx g nx-serverless-cdk:cdk-lib <LibName> --importPath <LibPackageName>
+```
+
+The cdk-lib generator is used to create an AWS CDK construct library (see [Create a Construct Library](#create-a-construct-library)).
+
+Options:
+
+- --name _(required)_
+  - Construct library name
+- --directory
+  - The construct library's directory path relative to the current working directory
+- --importPath
+  - Defines the npm package name (e.g. `example-lib` or `@example-org/example-lib`)
+- --publishable
+  - Creates a construct library that can be published to a npm repository
+- --skipFormat _(default: false)_
+  - Skips the formatting after the construct library has been created

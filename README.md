@@ -13,7 +13,8 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
 
 ### Lint a plugin
 
-To lint a plugin execute
+The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
+is used to lint a plugin with ESLint.
 
 ```bash
 nx run <PluginName>:lint
@@ -21,7 +22,8 @@ nx run <PluginName>:lint
 
 ### Test a plugin
 
-To test a plugin execute
+The [test](https://nx.dev/nx-api/jest/executors/jest) command
+is used to execute the test cases with Jest.
 
 ```bash
 nx run <PluginName>:test
@@ -35,7 +37,8 @@ nx run <PluginName>:test --codeCoverage
 
 ### Build a plugin
 
-To build a plugin execute
+The [build](https://nx.dev/nx-api/js/executors/tsc) command
+is used to build a plugin with the TypeScript compiler.
 
 ```bash
 nx run <PluginName>:build
@@ -51,15 +54,23 @@ npm run pre:commit
 
 ### Publish a plugin
 
-To publish a plugin to npm execute
+The publish command is used to publish a plugin to npm.
 
 ```bash
 nx run <PluginName>:publish --ver <PluginVersion> --tag <PluginVersionTag>
 ```
 
+Options:
+
+- --ver
+  - Plugin version
+- --tag
+  - Tag of the version (e.g. `latest`)
+
 ### Run the Unix E2E tests
 
-To run the Unix E2E tests of a plugin execute
+The [e2e](https://nx.dev/nx-api/jest/executors/jest) command
+is used to execute the Unix E2E tests with Jest.
 
 ```bash
 nx run <PluginName>-unix-e2e:e2e
@@ -76,7 +87,8 @@ nx run <PluginName>-unix-e2e:e2e --codeCoverage
 
 ### Run the Windows E2E tests
 
-To run the Windows E2E tests of a plugin execute
+The [e2e](https://nx.dev/nx-api/jest/executors/jest) command
+is used to execute the Windows E2E tests with Jest.
 
 ```bash
 nx run <PluginName>-windows-e2e:e2e

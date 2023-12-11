@@ -8,7 +8,7 @@
     "name": {
       "type": "string",
       "pattern": "(?:^@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*\\/[a-zA-Z0-9-~][a-zA-Z0-9-._~]*|^[a-zA-Z][^:]*)$",
-      "description": "Application name",
+      "description": "CDK application name",
       "$default": {
         "$source": "argv",
         "index": 0
@@ -16,14 +16,14 @@
       "x-prompt": "What name would you like to use for the newly generated application?"
     },
     "directory": {
-      "description": "The project's directory path relative to the current working directory.",
+      "description": "The CDK application's directory path relative to the current working directory.",
       "type": "string",
       "x-priority": "important"
     },
     "type": {
       "type": "string",
       "enum": ["generic", "lambda"],
-      "description": "Application type",
+      "description": "CDK application type",
       "x-prompt": {
         "message": "Which application type would you like to use?",
         "type": "list",
@@ -40,7 +40,7 @@
       }
     },
     "skipFormat": {
-      "description": "Skip formatting files.",
+      "description": "Skips the formatting after the CDK application has been created.",
       "type": "boolean",
       "default": false
     }
