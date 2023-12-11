@@ -71,7 +71,7 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
     - [Watch](#watch-3)
     - [Debug](#debug-6)
   - [Use the Construct Library](#use-the-construct-library)
-  - [Build the construct library](#build-the-construct-library)
+  - [Build the Construct Library](#build-the-construct-library)
   - [Publish to npm](#publish-to-npm)
   - [Construct Library Commands Reference](#construct-library-commands-reference)
     - [lint](#lint-2)
@@ -87,11 +87,11 @@ It aims to make the **usage** of these tools **as easy as possible** inside an *
 
 ## Plugin Features
 
-- Define your **infrastructure as code** (IaC)
+- Define the **infrastructure as code** (IaC)
 - The **infrastructure** and **application code** as well as the **configurations** are evolved together [**in one place**](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
-- **Test** and **debug** your infrastructure and application code **locally**
+- **Test** and **debug** the infrastructure and application code **locally**
   - Test and debug API Gateway routes that are handled by Lambda functions locally
-- Use **E2E tests** to verify the correctness of your cloud applications
+- Use **E2E tests** to verify the correctness of the cloud applications
 - Create and share **reusable infrastructure** definitions (Construct Libraries)
   - Publish libraries to npm
 - **Generate** test **events** for Lambda functions
@@ -308,7 +308,7 @@ Any Node.js debugger can be used for debugging. In this example, [the Chrome bro
 
 ### Synthesize CloudFormation Stacks
 
-Execute the following command to synthesize all Dev environment stacks
+To synthesize all Dev environment stacks execute
 
 ```bash
 nx run <AppName>:cdk synth "Dev/*" --profile <AwsCliDevEnvironmentProfile>
@@ -412,7 +412,7 @@ The following message is printed out to the console
 
 Find the example function resource name in the `cdk.out/<DevTemplateJson>`, which should be similar to `ExampleFunctionB28997EC`.
 
-To invoke the example Lambda function execute the following command
+To invoke the example Lambda function execute
 
 ```bash
 aws lambda invoke response.json --function-name <ExampleFunctionResourceName> --endpoint-url "http://127.0.0.1:3001" --payload "fileb://<AppName>/events/sum/sum7.json" --region <DevRegion> --profile <DevProfile>
@@ -423,6 +423,11 @@ The Lambda function result `{"sum": 7}` is stored in the `<WorkspaceRoot>/respon
 The [@aws-sdk/client-lambda](https://www.npmjs.com/package/@aws-sdk/client-lambda) package can also be used to invoke a Lambda function
 
 ```typescript
+import { InvocationType, InvokeCommand, LambdaClient, LogType } from '@aws-sdk/client-lambda';
+import { fromSSO } from '@aws-sdk/credential-providers';
+import { readFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+
 const lambdaClient = new LambdaClient({
   credentials: fromSSO({
     profile: '<DevProfile>',
@@ -484,7 +489,7 @@ The following message is printed out to the console
  * Running on http://127.0.0.1:3000
 ```
 
-To call the endpoint `product` execute the following command
+To call the endpoint `product` execute
 
 ```bash
 curl -i "http://127.0.0.1:3000/product?a=5&b=7"
@@ -530,7 +535,7 @@ Re-run this command to update the bootstrap CloudFormation stack in place.
 
 #### Deploy
 
-Execute the following command to deploy all Dev environment stacks
+To deploy all Dev environment stacks execute
 
 ```bash
 nx run <AppName>:cdk deploy "Dev/*" --profile <AwsCliDevEnvironmentProfile>
@@ -548,13 +553,13 @@ or
 nx run <AppName>:deploy:dev --profile <AwsCliDevEnvironmentProfile>
 ```
 
-Execute the following command to deploy all Stage environment stacks
+To deploy all Stage environment stacks execute
 
 ```bash
 nx run <AppName>:deploy:stage --profile <AwsCliStageEnvironmentProfile>
 ```
 
-Execute the following command to deploy all Prod environment stacks
+To deploy all Prod environment stacks execute
 
 ```bash
 nx run <AppName>:deploy:prod --profile <AwsCliProdEnvironmentProfile>
@@ -595,7 +600,6 @@ In this case, the cloud resource could be easily shared between the stacks by [i
 If the cloud resource is needed by multiple CDK applications, then it makes sense to introduce a shared application.
 The shared application should be deployed before the applications that depend on it.
 
-Nx automatically deduces the source code dependencies between an application and the libraries that are used.
 If multiple applications depend on a shared application, then they have to declare this dependency explicitly.
 Every application that depends on the shared application has to set the following property in their `project.json` file
 
@@ -669,7 +673,7 @@ Use the `E2E_ENVIRONMENT` environment variable to specify the environment that s
 
 [Deploy the application into the specified environment](#deploy).
 
-Execute the following command to run the E2E tests against the specified environment
+To run the E2E tests against the specified environment execute
 
 ```bash
 nx run <AppName>-e2e:e2e
@@ -743,7 +747,11 @@ nx run <AppName>:lint [Options]
 
 The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
 is used to lint the application with ESLint (see [Lint the CDK Application](#lint-the-cdk-application)).
-Append `--help` to display the command options.
+
+Options:
+
+- --help
+  - Displays the command options
 
 #### test
 
@@ -753,7 +761,11 @@ nx run <AppName>:test [Options]
 
 The [test](https://nx.dev/nx-api/jest/executors/jest) command
 is used to execute the test cases with Jest (see [Test the CDK Application (with Code Coverage)](#test-the-cdk-application-with-code-coverage)).
-Append `--help` to display the command options.
+
+Options:
+
+- --help
+  - Displays the command options
 
 #### cdk
 
@@ -763,13 +775,16 @@ nx run <AppName>:cdk [Options]
 
 The [cdk](https://docs.aws.amazon.com/cdk/v2/guide/cli.html) command
 is used to interact with the AWS CDK.
-Append `-h` to display the command options.
+
+Options:
+
+- -h
+  - Displays the command options
 
 Configuration Options:
 
 - predefinedArguments
-  - Used to predefine arguments that are put at the beginning of the command.
-    Can be used to declare environment-specific arguments in the `project.json` file.
+  - Used to predefine arguments that are put at the beginning of the command
 
 #### deploy
 
@@ -779,10 +794,13 @@ nx run <AppName>:deploy:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk deploy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
 Deploys one or more specified stacks (see [Deploy the CDK Application](#deploy-the-cdk-application)).
-Append `-h` to display the command options.
 
-The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project's needs.
+The environment configuration is `dev`, `stage` or `prod` (can be adjusted).
+
+Options:
+
+- -h
+  - Displays the command options
 
 #### deploy-all
 
@@ -792,15 +810,18 @@ nx run <AppName>:deploy-all:<EnvironmentConfiguration> --verbose [Options]
 
 Shorthand command for [cdk deploy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
 Deploys one or more specified stacks.
-Append `-h` to display the command options.
 
 The command is executed for the application and
 every application in the application's dependency tree.
 The individual commands are executed in dependency order
 starting with the leaves of the dependency tree (see [Deploy the CDK Application and its Dependencies](#deploy-the-cdk-application-and-its-dependencies)).
 
-The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project's needs.
+The environment configuration is `dev`, `stage` or `prod` (can be adjusted).
+
+Options:
+
+- -h
+  - Displays the command options
 
 #### destroy
 
@@ -810,10 +831,13 @@ nx run <AppName>:destroy:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk destroy](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-commands).
 Destroys one or more specified stacks.
-Append `-h` to display the command options.
 
-The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project's needs.
+The environment configuration is `dev`, `stage` or `prod` (can be adjusted).
+
+Options:
+
+- -h
+  - Displays the command options
 
 #### diff
 
@@ -823,10 +847,13 @@ nx run <AppName>:diff:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk diff](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-diff).
 Compares the specified stacks and its dependencies with the deployed stacks.
-Append `-h` to display the command options.
 
-The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project's needs.
+The environment configuration is `dev`, `stage` or `prod` (can be adjusted).
+
+Options:
+
+- -h
+  - Displays the command options
 
 #### ls
 
@@ -836,10 +863,13 @@ nx run <AppName>:ls:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk ls](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-list).
 Lists the IDs of the specified stacks.
-Append `-h` to display the command options.
 
-The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project's needs.
+The environment configuration is `dev`, `stage` or `prod` (can be adjusted).
+
+Options:
+
+- -h
+  - Displays the command options
 
 #### synth
 
@@ -849,10 +879,13 @@ nx run <AppName>:synth:<EnvironmentConfiguration> [Options]
 
 Shorthand command for [cdk synth](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-synth).
 Synthesizes the specified stacks into CloudFormation templates (see [Synthesize CloudFormation Stacks](#synthesize-cloudformation-stacks)).
-Append `-h` to display the command options.
 
-The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project's needs.
+The environment configuration is `dev`, `stage` or `prod` (can be adjusted).
+
+Options:
+
+- -h
+  - Displays the command options
 
 #### watch
 
@@ -863,10 +896,13 @@ nx run <AppName>:watch:<EnvironmentConfiguration> [Options]
 Shorthand command for [cdk watch](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-deploy).
 Continuously monitors the application's source files and assets for changes.
 It immediately performs a deployment of the specified stacks when a change is detected.
-Append `-h` to display the command options.
 
-The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project's needs.
+The environment configuration is `dev`, `stage` or `prod` (can be adjusted).
+
+Options:
+
+- -h
+  - Displays the command options
 
 #### generate-event
 
@@ -876,13 +912,16 @@ nx run <AppName>:generate-event [Options]
 
 The [generate-event](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html) command
 is used to generate AWS service-specific mock events (see [Generate an Event](#generate-an-event)).
-Append `-h` to display the command options.
+
+Options:
+
+- -h
+  - Displays the command options
 
 Configuration Options:
 
 - predefinedArguments
-  - Used to predefine arguments that are put at the beginning of the command.
-    Can be used to declare environment-specific arguments in the `project.json` file.
+  - Used to predefine arguments that are put at the beginning of the command
 
 #### invoke
 
@@ -892,13 +931,16 @@ nx run <AppName>:invoke [Options]
 
 The [invoke](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html) command
 is used to invoke a Lambda function locally (see [Invoke a Lambda Function Locally](#invoke-a-lambda-function-locally)).
-Append `-h` to display the command options.
+
+Options:
+
+- -h
+  - Displays the command options
 
 Configuration Options:
 
 - predefinedArguments
-  - Used to predefine arguments that are put at the beginning of the command.
-    Can be used to declare environment-specific arguments in the `project.json` file.
+  - Used to predefine arguments that are put at the beginning of the command
 
 #### start-api
 
@@ -908,13 +950,16 @@ nx run <AppName>:start-api [Options]
 
 The [start-api](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html) command
 is used to start an API Gateway locally (see [Start an API Gateway Locally](#start-an-api-gateway-locally)).
-Append `-h` to display the command options.
+
+Options:
+
+- -h
+  - Displays the command options
 
 Configuration Options:
 
 - predefinedArguments
-  - Used to predefine arguments that are put at the beginning of the command.
-    Can be used to declare environment-specific arguments in the `project.json` file.
+  - Used to predefine arguments that are put at the beginning of the command
 
 #### start-lambda
 
@@ -924,13 +969,16 @@ nx run <AppName>:start-lambda [Options]
 
 The [start-lambda](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html) command
 is used to start all Lambda functions locally (see [Start all Lambda Functions Locally](#start-all-lambda-functions-locally)).
-Append `-h` to display the command options.
+
+Options:
+
+- -h
+  - Displays the command options
 
 Configuration Options:
 
 - predefinedArguments
-  - Used to predefine arguments that are put at the beginning of the command.
-    Can be used to declare environment-specific arguments in the `project.json` file.
+  - Used to predefine arguments that are put at the beginning of the command
 
 ### E2E Application Commands Reference
 
@@ -942,7 +990,11 @@ nx run <AppName>-e2e:lint [Options]
 
 The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
 is used to lint the application with ESLint.
-Append `--help` to display the command options.
+
+Options:
+
+- --help
+  - Displays the command options
 
 #### e2e
 
@@ -952,7 +1004,11 @@ nx run <AppName>-e2e:e2e [Options]
 
 The [e2e](https://nx.dev/nx-api/jest/executors/jest) command
 is used to execute the E2E tests with Jest (see [E2E Testing](#e2e-testing)).
-Append `--help` to display the command options.
+
+Options:
+
+- --help
+  - Displays the command options
 
 #### generate-event
 
@@ -962,13 +1018,16 @@ nx run <AppName>-e2e:generate-event [Options]
 
 The [generate-event](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html) command
 is used to generate AWS service-specific mock events (see [Generate an Event](#generate-an-event)).
-Append `-h` to display the command options.
+
+Options:
+
+- -h
+  - Displays the command options
 
 Configuration Options:
 
 - predefinedArguments
-  - Used to predefine arguments that are put at the beginning of the command.
-    Can be used to declare environment-specific arguments in the `project.json` file.
+  - Used to predefine arguments that are put at the beginning of the command
 
 ## Construct Library
 
@@ -1133,9 +1192,9 @@ import { ExampleConstruct } from '<LibPackageName>';
 
 Please note that the construct library doesn't have to be built to be imported by its consumers.
 
-### Build the construct library
+### Build the Construct Library
 
-Execute the following command to build the construct library
+To build the construct library execute
 
 ```bash
 nx run <LibName>:build
@@ -1145,7 +1204,7 @@ The build output is written to `<WorkspaceRoot>/dist/<LibName>`.
 
 ### Publish to npm
 
-Execute the following command to publish the construct library to npm
+To publish the construct library to npm execute
 
 ```bash
 nx run <LibName>:publish --ver <LibVersion> --tag <LibVersionTag>
@@ -1161,7 +1220,11 @@ nx run <LibName>:lint [Options]
 
 The [lint](https://nx.dev/nx-api/eslint/executors/lint) command
 is used to lint the construct library with ESLint (see [Lint the Construct Library](#lint-the-construct-library)).
-Append `--help` to display the command options.
+
+Options:
+
+- --help
+  - Displays the command options
 
 #### test
 
@@ -1171,7 +1234,11 @@ nx run <LibName>:test [Options]
 
 The [test](https://nx.dev/nx-api/jest/executors/jest) command
 is used to execute the test cases with Jest (see [Test the Construct Library (with Code Coverage)](#test-the-construct-library-with-code-coverage)).
-Append `--help` to display the command options.
+
+Options:
+
+- --help
+  - Displays the command options
 
 #### build
 
@@ -1180,9 +1247,13 @@ nx run <LibName>:build [Options]
 ```
 
 The [build](https://nx.dev/nx-api/esbuild/executors/esbuild) command
-is used to build the construct library with esbuild (see [Build the construct library](#build-the-construct-library)).
-Append `--help` to display the command options.
+is used to build the construct library with esbuild (see [Build the Construct Library](#build-the-construct-library)).
 The build-declarations command is always executed before the build command.
+
+Options:
+
+- --help
+  - Displays the command options
 
 #### build-declarations
 
@@ -1191,8 +1262,12 @@ nx run <LibName>:build-declarations [Options]
 ```
 
 The [build-declarations](https://nx.dev/nx-api/js/executors/tsc) command
-is used to create the construct library's TypeScript declarations with the TypeScript compiler (see [Build the construct library](#build-the-construct-library)).
-Append `--help` to display the command options.
+is used to create the construct library's TypeScript declarations with the TypeScript compiler (see [Build the Construct Library](#build-the-construct-library)).
+
+Options:
+
+- --help
+  - Displays the command options
 
 #### publish
 
