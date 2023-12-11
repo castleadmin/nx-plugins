@@ -154,7 +154,7 @@ that together form a cloud application.
 
 Constructs are the basic building blocks of a CDK application.
 They represent either individual cloud resources or a set of cloud resources
-that has been interconnected to fulfil a concrete purpose.
+that have been interconnected to fulfill a concrete purpose.
 Inside the application, the constructs are combined into deployable units called stacks.
 
 ### Create a CDK Application
@@ -192,7 +192,7 @@ The generated example code has support for 3 environments
   - The production environment
   - Makes the application available to its consumers
 
-These **environments** are **just examples**, the environment names as well as their count can be changed according to the project needs.
+These **environments** are **just examples**, the environment names as well as their count can be changed according to the project's needs.
 
 ### CDK Application Structure
 
@@ -647,11 +647,11 @@ It offers the following benefits
 > - You can test every available service.
 > - You are always using the most recent service APIs and return values.
 > - A cloud test environment closely resembles your production environment.
-> - Tests can cover security policies, service quotas, configurations and infrastructure specific parameters.
+> - Tests can cover security policies, service quotas, configurations and infrastructure-specific parameters.
 > - Every developer can quickly create one or more testing environments in the cloud.
 > - Cloud tests increase confidence your code will run correctly in production.
 
-The AWS CDK support this testing technique with its watch mode.
+The AWS CDK supports this testing technique with its watch mode.
 The AWS CDK watch mode offers direct AWS resource updates and
 as a fallback CloudFormation deployments without rollback.
 These features significantly speed up the deployment of incremental changes during the development.
@@ -725,7 +725,7 @@ for a Lambda function that is invoked on a regular schedule
 nx run <AppName>:generate-event cloudwatch scheduled-event --region eu-central-1
 ```
 
-For the E2E application the following command has to be executed
+The following command has to be executed for the E2E application
 
 ```bash
 nx run <AppName>-e2e:generate-event cloudwatch scheduled-event --region eu-central-1
@@ -782,7 +782,7 @@ Deploys one or more specified stacks (see [Deploy the CDK Application](#deploy-t
 Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project needs.
+can be adjusted according to the project's needs.
 
 #### deploy-all
 
@@ -795,12 +795,12 @@ Deploys one or more specified stacks.
 Append `-h` to display the command options.
 
 The command is executed for the application and
-for every application in the application's dependency tree.
+every application in the application's dependency tree.
 The individual commands are executed in dependency order
 starting with the leaves of the dependency tree (see [Deploy the CDK Application and its Dependencies](#deploy-the-cdk-application-and-its-dependencies)).
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project needs.
+can be adjusted according to the project's needs.
 
 #### destroy
 
@@ -813,7 +813,7 @@ Destroys one or more specified stacks.
 Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project needs.
+can be adjusted according to the project's needs.
 
 #### diff
 
@@ -826,7 +826,7 @@ Compares the specified stacks and its dependencies with the deployed stacks.
 Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project needs.
+can be adjusted according to the project's needs.
 
 #### ls
 
@@ -839,7 +839,7 @@ Lists the IDs of the specified stacks.
 Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project needs.
+can be adjusted according to the project's needs.
 
 #### synth
 
@@ -852,7 +852,7 @@ Synthesizes the specified stacks into CloudFormation templates (see [Synthesize 
 Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project needs.
+can be adjusted according to the project's needs.
 
 #### watch
 
@@ -866,7 +866,7 @@ It immediately performs a deployment of the specified stacks when a change is de
 Append `-h` to display the command options.
 
 The environment configurations `dev`, `stage` and `prod` have been predefined and
-can be adjusted according to the project needs.
+can be adjusted according to the project's needs.
 
 #### generate-event
 
@@ -974,7 +974,7 @@ Configuration Options:
 
 Constructs are the basic building blocks of a CDK application.
 They represent either individual cloud resources or a set of cloud resources
-that has been interconnected to fulfil a concrete purpose.
+that have been interconnected to fulfill a concrete purpose.
 
 Constructs can be composed of self-written or third-party constructs.
 The [AWS Construct Library](https://docs.aws.amazon.com/cdk/v2/guide/constructs.html#constructs_lib)
@@ -990,11 +990,11 @@ contains the constructs for AWS resources. Its constructs can be categorized int
   - Patterns
   - Often involve multiple resources
 
-A vast collection of third-party open source
+A vast collection of third-party open-source
 construct libraries can be found on [Construct Hub](https://constructs.dev/).
 
 Constructs are a great way to define organization or project standards.
-They can be grouped together in a construct library and shared between multiple CDK applications.
+They can be grouped in a construct library and shared between multiple CDK applications.
 
 ### Create a Construct Library
 
@@ -1008,9 +1008,9 @@ The `--importPath` option defines the construct library's package name.
 The construct library can be imported into other construct libraries or CDK applications
 inside the Nx monorepo.
 
-It can be published to a npm repository in order to use it outside the monorepo.
+To use the construct library outside the monorepo, it can be published to an npm repository.
 Execute the following command to create a publishable construct library that uses the value
-of `--importPath` as npm package name
+of `--importPath` as the npm package name
 
 ```bash
 nx g nx-serverless-cdk:cdk-lib <LibName> --importPath <LibPackageName> --publishable
@@ -1031,7 +1031,7 @@ Please note that the created directory is relative to the current working direct
 - `.eslintrc.json` ESLint configuration
 - `jest.config.ts` Jest testing framework configuration
 - `package.json` npm package configuration
-  - Used to configure the construct library's npm package that is published to a npm repository
+  - Used to configure the construct library's npm package that is published to an npm repository
   - To install dependencies that are used inside the monorepo, use the workspace `package.json` file instead
 - `project.json` Nx library configuration
 - `README.md` construct library documentation
@@ -1200,7 +1200,7 @@ Append `--help` to display the command options.
 nx run <LibName>:publish [Options]
 ```
 
-The publish command is used to publish the construct library to a npm repository (see [Publish to npm](#publish-to-npm)).
+The publish command is used to publish the construct library to an npm repository (see [Publish to npm](#publish-to-npm)).
 
 Options:
 
@@ -1226,9 +1226,9 @@ The `--importPath` option defines the TypeScript library's package name.
 The TypeScript library can be imported into construct libraries or CDK applications
 inside the Nx monorepo.
 
-It can be published to a npm repository in order to use it outside the monorepo.
+To use the TypeScript library outside the monorepo, it can be published to an npm repository.
 Execute the following command to create a publishable TypeScript library that uses the value
-of `--importPath` as npm package name
+of `--importPath` as the npm package name
 
 ```bash
 nx g @nx/js:library <LibName> --importPath <LibPackageName> --publishable --bundler tsc --unitTestRunner jest
@@ -1283,8 +1283,8 @@ Options:
   - The CDK application's directory path relative to the current working directory
 - --type _(required)_
   - The CDK application type can be `generic` or `lambda`
-  - Choose type `generic` for general purpose applications
-  - Choose type `lambda` for serverless applications
+  - Choose the type `generic` for general-purpose applications
+  - Choose the type `lambda` for serverless applications
 - --skipFormat _(default: false)_
   - Skips the formatting after the CDK application has been created
 
@@ -1305,6 +1305,6 @@ Options:
 - --importPath
   - Defines the npm package name (e.g. `example-lib` or `@example-org/example-lib`)
 - --publishable
-  - Creates a construct library that can be published to a npm repository
+  - Creates a construct library that can be published to an npm repository
 - --skipFormat _(default: false)_
   - Skips the formatting after the construct library has been created
