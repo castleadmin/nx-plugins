@@ -1,7 +1,8 @@
 ![nx-serverless-cdk logo](https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/logo.png)
 
-![License](https://img.shields.io/npm/l/nx-serverless-cdk?style=flat)
+[![License](https://img.shields.io/npm/l/nx-serverless-cdk?style=flat)](https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/LICENSE)
 [![NPM Version](https://badge.fury.io/js/nx-serverless-cdk.svg)](https://badge.fury.io/js/nx-serverless-cdk)
+[![Static Badge](https://img.shields.io/badge/code%20coverage-100%25-green?style=flat)](https://castleadmin.github.io/nx-plugins/nx-serverless-cdk/plugin/lcov-report)
 
 # nx-serverless-cdk
 

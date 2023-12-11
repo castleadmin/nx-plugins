@@ -12,6 +12,7 @@
         "main": "nx-serverless-cdk/plugin/src/index.ts",
         "tsConfig": "nx-serverless-cdk/plugin/tsconfig.lib.json",
         "assets": [
+          "nx-serverless-cdk/plugin/LICENSE",
           "nx-serverless-cdk/plugin/*.md",
           {
             "input": "./nx-serverless-cdk/plugin/src",
