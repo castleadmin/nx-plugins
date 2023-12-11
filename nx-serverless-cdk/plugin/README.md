@@ -1,5 +1,8 @@
 ![nx-serverless-cdk logo](https://raw.githubusercontent.com/castleadmin/nx-plugins/main/nx-serverless-cdk/plugin/logo.png)
 
+![License](https://img.shields.io/npm/l/nx-serverless-cdk?style=flat)
+[![NPM Version](https://badge.fury.io/js/nx-serverless-cdk.svg)](https://badge.fury.io/js/nx-serverless-cdk)
+
 # nx-serverless-cdk
 
 **nx-serverless-cdk** is an **Nx plugin** for creating **AWS CDK applications** and **libraries** inside an [**Nx monorepo**](https://nx.dev/concepts/more-concepts/why-monorepos).
