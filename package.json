@@ -1,8 +1,8 @@
 {
   "name": "@nx-plugins/source",
   "version": "0.0.0",
-  "author": "Tobias Willig",
   "license": "MIT",
+  "author": "Tobias Willig",
   "scripts": {
     "prepare": "husky install",
     "pre:commit": "./pre-commit.sh"

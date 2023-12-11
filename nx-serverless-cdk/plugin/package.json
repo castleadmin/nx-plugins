@@ -1,8 +1,41 @@
 {
   "name": "nx-serverless-cdk",
   "version": "0.0.1",
-  "author": "Tobias Willig",
+  "description": "nx-serverless-cdk is an Nx plugin for creating AWS CDK applications and libraries inside an Nx monorepo. It offers the possibility to test and debug CDK applications as well as AWS Lambda functions locally. The plugin provides the full flexibility of the AWS CDK CLI and the local AWS SAM CLI commands. It aims to make the usage of these tools as easy as possible inside an Nx monorepo.",
+  "keywords": [
+    "nx",
+    "serverless",
+    "cdk",
+    "awscdk",
+    "plugin",
+    "aws",
+    "lambda",
+    "sam",
+    "monorepo",
+    "iac",
+    "infrastructure as code",
+    "cli",
+    "test",
+    "debug",
+    "e2e",
+    "typescript"
+  ],
+  "homepage": "https://github.com/castleadmin/nx-plugins/tree/main/nx-serverless-cdk/plugin",
+  "bugs": {
+    "url": "https://github.com/castleadmin/nx-plugins/issues"
+  },
   "license": "MIT",
+  "author": "Tobias Willig",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "generators": "./generators.json",
+  "executors": "./executors.json",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/castleadmin/nx-plugins.git",
+    "directory": "nx-serverless-cdk/plugin"
+  },
   "dependencies": {
     "@nx/devkit": "^17.1.3",
     "@nx/eslint": "^17.1.3",
@@ -10,10 +43,5 @@
     "@nx/js": "^17.1.3",
     "@nx/workspace": "^17.1.3",
     "tslib": "^2.6.2"
-  },
-  "type": "commonjs",
-  "main": "./src/index.js",
-  "typings": "./src/index.d.ts",
-  "generators": "./generators.json",
-  "executors": "./executors.json"
+  }
 }
