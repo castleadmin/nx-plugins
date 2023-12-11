@@ -160,7 +160,6 @@ const addFiles = (
   const { projectName, projectRoot } = projectOptions;
 
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    projectName,
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
