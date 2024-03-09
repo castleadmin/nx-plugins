@@ -403,7 +403,7 @@ describe('Windows', () => {
       });
 
       test('should generate an event successfully.', async () => {
-        let output: string = '';
+        let output = '';
         const appendToOutput = (data: string): void => {
           output += data;
         };
