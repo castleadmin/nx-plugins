@@ -53,17 +53,18 @@ const addConfiguration = (
   const defaultEnvironment = 'Dev';
   const environments = ['Dev', 'Stage', 'Prod'];
 
-  // TODO create minimal project configuration
+  const useInferredTasks = process.env['NX_ADD_PLUGINS'] !== 'false';
 
   addProjectConfiguration(
     tree,
     projectName,
-    createProjectConfiguration(
+    createProjectConfiguration({
       options,
       projectOptions,
       defaultEnvironment,
       environments,
-    ),
+      useInferredTasks,
+    }),
   );
 };
 
@@ -171,6 +172,7 @@ const addFiles = (
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    type: options.type,
     tmpl: '',
   });
   if (options.type === AppType.generic) {
