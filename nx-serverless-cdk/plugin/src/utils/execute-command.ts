@@ -1,3 +1,4 @@
+import { logger } from '@nx/devkit';
 import { spawn } from 'node:child_process';
 import { isWindows } from './is-windows';
 
@@ -14,7 +15,7 @@ export const executeCommand = (
     const normalizedArgs = args.map((arg) =>
       isWindows() ? `"${arg}"` : `'${arg}'`,
     );
-    console.log('Executing command:', command, normalizedArgs.join(' '));
+    logger.log('Executing command:', command, normalizedArgs.join(' '));
     const commandProcess = spawn(command, normalizedArgs, {
       cwd,
       shell: true,
