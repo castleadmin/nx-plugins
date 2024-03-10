@@ -209,8 +209,6 @@ describe('create-project-configuration', () => {
       let projectRoot: string;
       let options: CdkAppSchema;
       let projectOptions: NormalizedProjectOptionsApplication;
-      let defaultEnvironment: string;
-      let environments: string[];
 
       beforeEach(() => {
         const projectName = faker.word.sample().toUpperCase();
@@ -219,6 +217,8 @@ describe('create-project-configuration', () => {
           name: projectName,
           directory: `apps/${projectName}`,
           type: AppType.generic,
+          defaultEnvironment: 'Dev',
+          environments: ['Dev', 'Stage', 'Prod'],
           skipFormat: true,
         };
         projectOptions = {
@@ -226,16 +226,12 @@ describe('create-project-configuration', () => {
           projectRoot,
           projectFileName: projectName,
         };
-        defaultEnvironment = 'Dev';
-        environments = ['Dev', 'Stage', 'Prod'];
       });
 
       test('should create a project configuration.', () => {
         const configuration = createProjectConfiguration({
           options,
           projectOptions,
-          defaultEnvironment,
-          environments,
           useInferredTasks: true,
         });
 
@@ -254,8 +250,6 @@ describe('create-project-configuration', () => {
       let projectRoot: string;
       let options: CdkAppSchema;
       let projectOptions: NormalizedProjectOptionsApplication;
-      let defaultEnvironment: string;
-      let environments: string[];
 
       beforeEach(() => {
         const projectName = faker.word.sample().toUpperCase();
@@ -264,6 +258,8 @@ describe('create-project-configuration', () => {
           name: projectName,
           directory: `apps/${projectName}`,
           type: AppType.generic,
+          defaultEnvironment: 'Dev',
+          environments: ['Dev', 'Stage', 'Prod'],
           skipFormat: true,
         };
         projectOptions = {
@@ -271,16 +267,12 @@ describe('create-project-configuration', () => {
           projectRoot,
           projectFileName: projectName,
         };
-        defaultEnvironment = 'Dev';
-        environments = ['Dev', 'Stage', 'Prod'];
       });
 
       test('should create a project configuration.', () => {
         const configuration = createProjectConfiguration({
           options,
           projectOptions,
-          defaultEnvironment,
-          environments,
           useInferredTasks: false,
         });
 
@@ -437,8 +429,6 @@ describe('create-project-configuration', () => {
       let projectRoot: string;
       let options: CdkAppSchema;
       let projectOptions: NormalizedProjectOptionsApplication;
-      let defaultEnvironment: string;
-      let environments: string[];
 
       beforeEach(() => {
         const projectName = faker.word.sample().toUpperCase();
@@ -447,6 +437,8 @@ describe('create-project-configuration', () => {
           name: projectName,
           directory: `apps/${projectName}`,
           type: AppType.lambda,
+          defaultEnvironment: 'Dev',
+          environments: ['Dev', 'Stage', 'Prod'],
           skipFormat: true,
         };
         projectOptions = {
@@ -454,16 +446,12 @@ describe('create-project-configuration', () => {
           projectRoot,
           projectFileName: projectName,
         };
-        defaultEnvironment = 'Dev';
-        environments = ['Dev', 'Stage', 'Prod'];
       });
 
       test('should create a project configuration.', () => {
         const configuration = createProjectConfiguration({
           options,
           projectOptions,
-          defaultEnvironment,
-          environments,
           useInferredTasks: true,
         });
 
@@ -482,8 +470,6 @@ describe('create-project-configuration', () => {
       let projectRoot: string;
       let options: CdkAppSchema;
       let projectOptions: NormalizedProjectOptionsApplication;
-      let defaultEnvironment: string;
-      let environments: string[];
 
       beforeEach(() => {
         const projectName = faker.word.sample().toUpperCase();
@@ -492,6 +478,8 @@ describe('create-project-configuration', () => {
           name: projectName,
           directory: `apps/${projectName}`,
           type: AppType.lambda,
+          defaultEnvironment: 'Dev',
+          environments: ['Dev', 'Stage', 'Prod'],
           skipFormat: true,
         };
         projectOptions = {
@@ -499,16 +487,12 @@ describe('create-project-configuration', () => {
           projectRoot,
           projectFileName: projectName,
         };
-        defaultEnvironment = 'Dev';
-        environments = ['Dev', 'Stage', 'Prod'];
       });
 
       test('should create a project configuration.', () => {
         const configuration = createProjectConfiguration({
           options,
           projectOptions,
-          defaultEnvironment,
-          environments,
           useInferredTasks: false,
         });
 

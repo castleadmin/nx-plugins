@@ -4,5 +4,7 @@ export interface CdkAppSchema {
   name: string;
   directory?: string;
   type: AppType;
+  defaultEnvironment: string;
+  environments: string[];
   skipFormat?: boolean;
 }
