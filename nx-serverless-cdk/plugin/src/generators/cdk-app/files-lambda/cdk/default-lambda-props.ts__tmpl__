@@ -28,8 +28,6 @@ export const createDefaultLambdaProps = (options: {
       sourceMap: true,
       sourceMapMode,
       tsconfig,
-      // TODO Should be bundled once v2 with ESM support is released. Alternatively, the pre-built Lambda layer could be used.
-      nodeModules: ['@aws-lambda-powertools/logger'],
     },
     environment: {
       ENVIRONMENT: environment,

@@ -18,58 +18,36 @@ export const createApp = (): App => {
   const app = new App();
   const serviceName = '<%= projectName %>';
 
-  const devAccount =
-    process.env['CDK_DEV_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'];
-  if (!devAccount) {
+<% environments.forEach((environment) => { %>
+  const <%= environment.toLowerCase() %>Account =
+    process.env['CDK_<%= environment.toUpperCase() %>_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'];
+  if (!<%= environment.toLowerCase() %>Account) {
     throw new Error(
-      `The Dev account isn't defined. Please set it via the '.env' file in the project directory.`,
-    );
-  }
-  const devRegion =
-    process.env['CDK_DEV_REGION'] ?? process.env['CDK_DEFAULT_REGION'];
-  if (!devRegion) {
-    throw new Error(
-      `The Dev region isn't defined. Please set it via the '.env' file in the project directory.`,
+      `The <%= environment %> account isn't defined. Please set it via the '.env' file in the project directory.`,
     );
   }
 
-  new EnvironmentStacks(app, Environment.Dev, {
-    environment: Environment.Dev,
+  const <%= environment.toLowerCase() %>Region =
+    process.env['CDK_<%= environment.toUpperCase() %>_REGION'] ?? process.env['CDK_DEFAULT_REGION'];
+  if (!<%= environment.toLowerCase() %>Region) {
+    throw new Error(
+      `The <%= environment %> region isn't defined. Please set it via the '.env' file in the project directory.`,
+    );
+  }
+
+  new EnvironmentStacks(app, Environment.<%= environment %>, {
+    environment: Environment.<%= environment %>,
     serviceName,
     env: {
-      account: devAccount,
-      region: devRegion,
+      account: <%= environment.toLowerCase() %>Account,
+      region: <%= environment.toLowerCase() %>Region,
     },
     build: {
+    <% if (environment === defaultEnvironment) { %>
       minify: false,
       sourceMapMode: SourceMapMode.INLINE,
       tsconfig: resolve(__dirname, '../tsconfig.src.json'),
-    },
-  });
-
-  const stageAccount =
-    process.env['CDK_STAGE_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'];
-  if (!stageAccount) {
-    throw new Error(
-      `The Stage account isn't defined. Please set it via the '.env' file in the project directory.`,
-    );
-  }
-  const stageRegion =
-    process.env['CDK_STAGE_REGION'] ?? process.env['CDK_DEFAULT_REGION'];
-  if (!stageRegion) {
-    throw new Error(
-      `The Stage region isn't defined. Please set it via the '.env' file in the project directory.`,
-    );
-  }
-
-  new EnvironmentStacks(app, Environment.Stage, {
-    environment: Environment.Stage,
-    serviceName,
-    env: {
-      account: stageAccount,
-      region: stageRegion,
-    },
-    build: {
+    <% } else { %>
       minify: true,
       /*
         Source maps bloat the Lambda bundle, which leads to longer cold start times.
@@ -81,45 +59,10 @@ export const createApp = (): App => {
        */
       sourceMapMode: SourceMapMode.EXTERNAL,
       tsconfig: resolve(__dirname, '../tsconfig.src.json'),
+    <% } %>
     },
   });
-
-  const prodAccount =
-    process.env['CDK_PROD_ACCOUNT'] ?? process.env['CDK_DEFAULT_ACCOUNT'];
-  if (!prodAccount) {
-    throw new Error(
-      `The Prod account isn't defined. Please set it via the '.env' file in the project directory.`,
-    );
-  }
-  const prodRegion =
-    process.env['CDK_PROD_REGION'] ?? process.env['CDK_DEFAULT_REGION'];
-  if (!prodRegion) {
-    throw new Error(
-      `The Prod region isn't defined. Please set it via the '.env' file in the project directory.`,
-    );
-  }
-
-  new EnvironmentStacks(app, Environment.Prod, {
-    environment: Environment.Prod,
-    serviceName,
-    env: {
-      account: prodAccount,
-      region: prodRegion,
-    },
-    build: {
-      minify: true,
-      /*
-        Source maps bloat the Lambda bundle, which leads to longer cold start times.
-        Therefore, it is preferable to
-        1. Run the 'cdk synth' command.
-        2. Upload the source maps to an error monitoring tool like Sentry.
-        3. Remove the source maps.
-        4. Run the 'cdk deploy --app cdk.out' command to skip the synthesize step during the deployment.
-       */
-      sourceMapMode: SourceMapMode.EXTERNAL,
-      tsconfig: resolve(__dirname, '../tsconfig.src.json'),
-    },
-  });
+<% }); %>
 
   return app;
 };

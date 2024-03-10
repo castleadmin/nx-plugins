@@ -22,6 +22,8 @@ describe('cdk-app', () => {
         name: projectName,
         directory: `apps/${projectName}`,
         type: AppType.generic,
+        defaultEnvironment: 'Dev',
+        environments: ['Dev', 'Stage', 'Prod'],
         skipFormat: true,
       };
     });
@@ -160,6 +162,8 @@ export default {
         name: projectName,
         directory: `apps/${projectName}`,
         type: AppType.lambda,
+        defaultEnvironment: 'Dev',
+        environments: ['Dev', 'Stage', 'Prod'],
         skipFormat: true,
       };
     });

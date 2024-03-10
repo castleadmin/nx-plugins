@@ -211,14 +211,10 @@ export const createTargets = ({
 export const createProjectConfiguration = ({
   options,
   projectOptions,
-  defaultEnvironment,
-  environments,
   useInferredTasks,
 }: {
   options: CdkAppSchema;
   projectOptions: NormalizedProjectOptionsApplication;
-  defaultEnvironment: string;
-  environments: string[];
   useInferredTasks: boolean;
 }): ProjectConfiguration => {
   const { projectRoot } = projectOptions;
@@ -231,8 +227,8 @@ export const createProjectConfiguration = ({
     targets: useInferredTasks
       ? {}
       : createTargets({
-          defaultEnvironment,
-          environments,
+          defaultEnvironment: options.defaultEnvironment,
+          environments: options.environments,
           type: options.type,
           customTargetNames: {},
         }),

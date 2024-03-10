@@ -39,6 +39,19 @@
         ]
       }
     },
+    "defaultEnvironment": {
+      "description": "The CDK application's default development environment.",
+      "type": "string",
+      "default": "Dev"
+    },
+    "environments": {
+      "description": "The CDK application's development environments.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": ["Dev", "Stage", "Prod"]
+    },
     "skipFormat": {
       "description": "Skips the formatting after the CDK application has been created.",
       "type": "boolean",

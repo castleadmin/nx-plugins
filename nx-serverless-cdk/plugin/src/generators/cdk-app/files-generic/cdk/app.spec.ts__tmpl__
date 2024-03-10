@@ -9,13 +9,10 @@ describe('App', () => {
     beforeEach(() => {
       process.env['CDK_DEFAULT_ACCOUNT'] = '012345678901';
       process.env['CDK_DEFAULT_REGION'] = 'us-east-1';
-
-      delete process.env['CDK_DEV_ACCOUNT'];
-      delete process.env['CDK_DEV_REGION'];
-      delete process.env['CDK_STAGE_ACCOUNT'];
-      delete process.env['CDK_STAGE_REGION'];
-      delete process.env['CDK_PROD_ACCOUNT'];
-      delete process.env['CDK_PROD_REGION'];
+    <% environments.forEach((environment) => { %>
+      delete process.env['CDK_<%= environment.toUpperCase() %>_ACCOUNT'];
+      delete process.env['CDK_<%= environment.toUpperCase() %>_REGION'];
+    <% }); %>
     });
 
     test('an app should be created with all environments.', () => {
@@ -24,9 +21,9 @@ describe('App', () => {
       const children = app.node.children;
 
       expect(children.map((construct) => construct.node.id)).toEqual([
-        Environment.Dev,
-        Environment.Stage,
-        Environment.Prod,
+      <% environments.forEach((environment) => { %>
+        Environment.<%= environment %>,
+      <% }); %>
       ]);
     });
 
@@ -46,9 +43,9 @@ describe('App', () => {
           };
         }),
       ).toEqual([
-        { id: Environment.Dev, account: '012345678901', region: 'us-east-1' },
-        { id: Environment.Stage, account: '012345678901', region: 'us-east-1' },
-        { id: Environment.Prod, account: '012345678901', region: 'us-east-1' },
+      <% environments.forEach((environment, index) => { %>
+        { id: Environment.<%= environment %>, account: '012345678901', region: 'us-east-1' },
+      <% }); %>
       ]);
     });
   });
@@ -57,12 +54,10 @@ describe('App', () => {
     let app: App;
 
     beforeEach(() => {
-      process.env['CDK_DEV_ACCOUNT'] = '123456789012';
-      process.env['CDK_DEV_REGION'] = 'eu-west-1';
-      process.env['CDK_STAGE_ACCOUNT'] = '212345678901';
-      process.env['CDK_STAGE_REGION'] = 'eu-west-2';
-      process.env['CDK_PROD_ACCOUNT'] = '312345678901';
-      process.env['CDK_PROD_REGION'] = 'eu-west-3';
+    <% environments.forEach((environment, index) => { %>
+      process.env['CDK_<%= environment.toUpperCase() %>_ACCOUNT'] = '12345678901<%= index %>';
+      process.env['CDK_<%= environment.toUpperCase() %>_REGION'] = 'eu-west-<%= index + 1 %>';
+    <% }); %>
 
       delete process.env['CDK_DEFAULT_ACCOUNT'];
       delete process.env['CDK_DEFAULT_REGION'];
@@ -74,9 +69,9 @@ describe('App', () => {
       const children = app.node.children;
 
       expect(children.map((construct) => construct.node.id)).toEqual([
-        Environment.Dev,
-        Environment.Stage,
-        Environment.Prod,
+      <% environments.forEach((environment) => { %>
+        Environment.<%= environment %>,
+      <% }); %>
       ]);
     });
 
@@ -96,40 +91,21 @@ describe('App', () => {
           };
         }),
       ).toEqual([
-        { id: Environment.Dev, account: '123456789012', region: 'eu-west-1' },
-        { id: Environment.Stage, account: '212345678901', region: 'eu-west-2' },
-        { id: Environment.Prod, account: '312345678901', region: 'eu-west-3' },
+      <% environments.forEach((environment, index) => { %>
+        { id: Environment.<%= environment %>, account: '12345678901<%= index %>', region: 'eu-west-<%= index + 1 %>' },
+      <% }); %>
       ]);
     });
-
-    test('should throw an error if the CDK_DEV_ACCOUNT variable is missing during the creation.', () => {
-      delete process.env['CDK_DEV_ACCOUNT'];
+  <% environments.forEach((environment) => { %>
+    test('should throw an error if the CDK_<%= environment.toUpperCase() %>_ACCOUNT variable is missing during the creation.', () => {
+      delete process.env['CDK_<%= environment.toUpperCase() %>_ACCOUNT'];
       expect(() => createApp()).toThrow(Error);
     });
 
-    test('should throw an error if the CDK_DEV_REGION variable is missing during the creation.', () => {
-      delete process.env['CDK_DEV_REGION'];
+    test('should throw an error if the CDK_<%= environment.toUpperCase() %>_REGION variable is missing during the creation.', () => {
+      delete process.env['CDK_<%= environment.toUpperCase() %>_REGION'];
       expect(() => createApp()).toThrow(Error);
     });
-
-    test('should throw an error if the CDK_STAGE_ACCOUNT variable is missing during the creation.', () => {
-      delete process.env['CDK_STAGE_ACCOUNT'];
-      expect(() => createApp()).toThrow(Error);
-    });
-
-    test('should throw an error if the CDK_STAGE_REGION variable is missing during the creation.', () => {
-      delete process.env['CDK_STAGE_REGION'];
-      expect(() => createApp()).toThrow(Error);
-    });
-
-    test('should throw an error if the CDK_PROD_ACCOUNT variable is missing during the creation.', () => {
-      delete process.env['CDK_PROD_ACCOUNT'];
-      expect(() => createApp()).toThrow(Error);
-    });
-
-    test('should throw an error if the CDK_PROD_REGION variable is missing during the creation.', () => {
-      delete process.env['CDK_PROD_REGION'];
-      expect(() => createApp()).toThrow(Error);
-    });
+  <% }); %>
   });
 });
