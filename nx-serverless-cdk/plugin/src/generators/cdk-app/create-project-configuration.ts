@@ -1,151 +1,159 @@
-import { joinPathFragments, ProjectConfiguration } from '@nx/devkit';
+import {
+  joinPathFragments,
+  ProjectConfiguration,
+  TargetConfiguration,
+} from '@nx/devkit';
 import { ProjectType } from '@nx/workspace';
 import { NormalizedProjectOptionsApplication } from '../../utils/normalize-project-options';
 import { AppType } from './app-type';
 import { CdkAppSchema } from './schema';
 
-export const createProjectConfiguration = (
-  options: CdkAppSchema,
-  projectOptions: NormalizedProjectOptionsApplication,
-): ProjectConfiguration => {
-  const { projectRoot } = projectOptions;
+const createPredefinedArguments = ({
+  command,
+  commandSuffix,
+  environments,
+}: {
+  command: string;
+  commandSuffix?: string[];
+  environments: string[];
+}): {
+  [environment: string]: {
+    predefinedArguments: string[];
+  };
+} => {
+  const commandSuffixNormalized = commandSuffix ?? [];
 
-  const projectConfiguration: ProjectConfiguration = {
-    root: projectRoot,
-    sourceRoot: joinPathFragments(projectRoot, 'cdk'),
-    projectType: ProjectType.Application,
-    implicitDependencies: [],
-    targets: {
-      cdk: {
-        executor: 'nx-serverless-cdk:cdk',
-        options: {},
-      },
-      deploy: {
-        executor: 'nx-serverless-cdk:cdk',
-        defaultConfiguration: 'dev',
-        options: {},
-        configurations: {
-          dev: {
-            predefinedArguments: ['deploy', 'Dev/*'],
-          },
-          stage: {
-            predefinedArguments: ['deploy', 'Stage/*'],
-          },
-          prod: {
-            predefinedArguments: ['deploy', 'Prod/*'],
-          },
-        },
-      },
-      'deploy-all': {
-        executor: 'nx-serverless-cdk:cdk',
-        defaultConfiguration: 'dev',
-        dependsOn: [
+  return {
+    ...environments.reduce(
+      (
+        acc: Record<
+          string,
           {
-            dependencies: true,
-            params: 'forward',
-            target: 'deploy-all',
-          },
-        ],
-        options: {},
-        configurations: {
-          dev: {
-            predefinedArguments: ['deploy', 'Dev/*'],
-          },
-          stage: {
-            predefinedArguments: ['deploy', 'Stage/*'],
-          },
-          prod: {
-            predefinedArguments: ['deploy', 'Prod/*'],
-          },
-        },
+            predefinedArguments: string[];
+          }
+        >,
+        environment,
+      ) => {
+        acc[environment] = {
+          predefinedArguments: [
+            command,
+            `${environment}/*`,
+            ...commandSuffixNormalized,
+          ],
+        };
+
+        return acc;
       },
-      destroy: {
-        executor: 'nx-serverless-cdk:cdk',
-        defaultConfiguration: 'dev',
-        options: {},
-        configurations: {
-          dev: {
-            predefinedArguments: ['destroy', 'Dev/*', '--force'],
-          },
-          stage: {
-            predefinedArguments: ['destroy', 'Stage/*', '--force'],
-          },
-          prod: {
-            predefinedArguments: ['destroy', 'Prod/*', '--force'],
-          },
-        },
-      },
-      diff: {
-        executor: 'nx-serverless-cdk:cdk',
-        defaultConfiguration: 'dev',
-        options: {},
-        configurations: {
-          dev: {
-            predefinedArguments: ['diff', 'Dev/*'],
-          },
-          stage: {
-            predefinedArguments: ['diff', 'Stage/*'],
-          },
-          prod: {
-            predefinedArguments: ['diff', 'Prod/*'],
-          },
-        },
-      },
-      ls: {
-        executor: 'nx-serverless-cdk:cdk',
-        defaultConfiguration: 'dev',
-        options: {},
-        configurations: {
-          dev: {
-            predefinedArguments: ['ls', 'Dev/*'],
-          },
-          stage: {
-            predefinedArguments: ['ls', 'Stage/*'],
-          },
-          prod: {
-            predefinedArguments: ['ls', 'Prod/*'],
-          },
-        },
-      },
-      synth: {
-        executor: 'nx-serverless-cdk:cdk',
-        defaultConfiguration: 'dev',
-        options: {},
-        configurations: {
-          dev: {
-            predefinedArguments: ['synth', 'Dev/*'],
-          },
-          stage: {
-            predefinedArguments: ['synth', 'Stage/*'],
-          },
-          prod: {
-            predefinedArguments: ['synth', 'Prod/*'],
-          },
-        },
-      },
-      watch: {
-        executor: 'nx-serverless-cdk:cdk',
-        defaultConfiguration: 'dev',
-        options: {},
-        configurations: {
-          dev: {
-            predefinedArguments: ['watch', 'Dev/*'],
-          },
-          stage: {
-            predefinedArguments: ['watch', 'Stage/*'],
-          },
-          prod: {
-            predefinedArguments: ['watch', 'Prod/*'],
-          },
-        },
-      },
+      {},
+    ),
+  };
+};
+
+// TODO support custom target names
+export const createTargets = ({
+  defaultEnvironment,
+  environments,
+  type,
+}: {
+  defaultEnvironment: string;
+  environments: string[];
+  type: AppType;
+}): Record<string, TargetConfiguration> => {
+  let targets: Record<string, TargetConfiguration> = {
+    cdk: {
+      executor: 'nx-serverless-cdk:cdk',
+      options: {},
     },
-    tags: ['cdk-app'],
+    deploy: {
+      executor: 'nx-serverless-cdk:cdk',
+      defaultConfiguration: defaultEnvironment,
+      options: {
+        predefinedArguments: ['deploy'],
+      },
+      configurations: createPredefinedArguments({
+        command: 'deploy',
+        environments,
+      }),
+    },
+    'deploy-all': {
+      executor: 'nx-serverless-cdk:cdk',
+      dependsOn: [
+        {
+          dependencies: true,
+          params: 'forward',
+          target: 'deploy-all',
+        },
+      ],
+      defaultConfiguration: defaultEnvironment,
+      options: {
+        predefinedArguments: ['deploy'],
+      },
+      configurations: createPredefinedArguments({
+        command: 'deploy',
+        environments,
+      }),
+    },
+    destroy: {
+      executor: 'nx-serverless-cdk:cdk',
+      defaultConfiguration: defaultEnvironment,
+      options: {
+        predefinedArguments: ['destroy', '--force'],
+      },
+      configurations: createPredefinedArguments({
+        command: 'destroy',
+        environments,
+        commandSuffix: ['--force'],
+      }),
+    },
+    diff: {
+      executor: 'nx-serverless-cdk:cdk',
+      defaultConfiguration: defaultEnvironment,
+      options: {
+        predefinedArguments: ['diff'],
+      },
+      configurations: createPredefinedArguments({
+        command: 'diff',
+        environments,
+      }),
+    },
+    ls: {
+      executor: 'nx-serverless-cdk:cdk',
+      defaultConfiguration: defaultEnvironment,
+      options: {
+        predefinedArguments: ['ls'],
+      },
+      configurations: createPredefinedArguments({
+        command: 'ls',
+        environments,
+      }),
+    },
+    synth: {
+      executor: 'nx-serverless-cdk:cdk',
+      defaultConfiguration: defaultEnvironment,
+      options: {
+        predefinedArguments: ['synth'],
+      },
+      configurations: createPredefinedArguments({
+        command: 'synth',
+        environments,
+      }),
+    },
+    watch: {
+      executor: 'nx-serverless-cdk:cdk',
+      defaultConfiguration: defaultEnvironment,
+      options: {
+        predefinedArguments: ['watch'],
+      },
+      configurations: createPredefinedArguments({
+        command: 'watch',
+        environments,
+      }),
+    },
   };
 
-  if (options.type === AppType.lambda) {
-    projectConfiguration.targets = {
-      ...projectConfiguration.targets,
+  if (type === AppType.lambda) {
+    targets = {
+      ...targets,
       'generate-event': {
         executor: 'nx-serverless-cdk:generate-event',
         options: {},
@@ -165,5 +173,27 @@ export const createProjectConfiguration = (
     };
   }
 
-  return projectConfiguration;
+  return targets;
+};
+
+export const createProjectConfiguration = (
+  options: CdkAppSchema,
+  projectOptions: NormalizedProjectOptionsApplication,
+  defaultEnvironment: string,
+  environments: string[],
+): ProjectConfiguration => {
+  const { projectRoot } = projectOptions;
+
+  return {
+    root: projectRoot,
+    sourceRoot: joinPathFragments(projectRoot, 'cdk'),
+    projectType: ProjectType.Application,
+    implicitDependencies: [],
+    targets: createTargets({
+      defaultEnvironment,
+      environments,
+      type: options.type,
+    }),
+    tags: ['cdk-app'],
+  };
 };

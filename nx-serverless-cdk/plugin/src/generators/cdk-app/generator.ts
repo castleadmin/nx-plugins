@@ -50,11 +50,20 @@ const addConfiguration = (
   projectOptions: NormalizedProjectOptionsApplication,
 ): void => {
   const { projectName } = projectOptions;
+  const defaultEnvironment = 'Dev';
+  const environments = ['Dev', 'Stage', 'Prod'];
+
+  // TODO create minimal project configuration
 
   addProjectConfiguration(
     tree,
     projectName,
-    createProjectConfiguration(options, projectOptions),
+    createProjectConfiguration(
+      options,
+      projectOptions,
+      defaultEnvironment,
+      environments,
+    ),
   );
 };
 
