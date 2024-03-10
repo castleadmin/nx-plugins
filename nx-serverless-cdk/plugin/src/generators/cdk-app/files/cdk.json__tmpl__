@@ -20,7 +20,7 @@
   "context": {
     "nx-serverless-cdk/defaultEnvironment": "Dev",
     "nx-serverless-cdk/environments": ["Dev", "Stage", "Prod"],
-    "nx-serverless-cdk/type": "lambda",
+    "nx-serverless-cdk/type": "<%= type %>",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
     "@aws-cdk/core:target-partitions": [

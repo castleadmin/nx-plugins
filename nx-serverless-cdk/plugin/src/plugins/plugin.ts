@@ -10,25 +10,12 @@ import {
 import { existsSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { AppType } from '../generators/cdk-app/app-type';
-import { createTargets } from '../generators/cdk-app/create-project-configuration';
+import {
+  createTargets,
+  CustomTargetNames,
+} from '../generators/cdk-app/create-project-configuration';
 
-export interface NxServerlessCdkPluginOptions {
-  cdkTargetName?: string;
-  deployTargetName?: string;
-  deployAllTargetName?: string;
-  destroyTargetName?: string;
-  diffTargetName?: string;
-  lsTargetName?: string;
-  synthTargetName?: string;
-  watchTargetName?: string;
-  generateEventTargetName?: string;
-  invokeTargetName?: string;
-  startApiTargetName?: string;
-  startLambdaTargetName?: string;
-}
-type NxServerlessCdkPluginNormalizedOptions = {
-  [targetName in keyof NxServerlessCdkPluginOptions]: string;
-};
+export type NxServerlessCdkPluginOptions = CustomTargetNames;
 
 const cachePath = join(cacheDir, 'nx-serverless-cdk.hash');
 
@@ -72,23 +59,33 @@ export const calculateHashForCreateNodes = ({
   defaultEnvironment: string;
   environments: string[];
   type: AppType;
-  options: NxServerlessCdkPluginNormalizedOptions;
+  options: NxServerlessCdkPluginOptions;
 }): string => {
   return hashArray([
     defaultEnvironment,
     hashArray(environments),
     type,
-    hashObject(options),
+    hashObject(options as Record<string, unknown>),
   ]);
 };
 
-const buildNxServerlessCdkTargets = async (input: {
+const buildNxServerlessCdkTargets = async ({
+  defaultEnvironment,
+  environments,
+  type,
+  options,
+}: {
   defaultEnvironment: string;
   environments: string[];
   type: AppType;
-  options: NxServerlessCdkPluginNormalizedOptions;
+  options: NxServerlessCdkPluginOptions;
 }): Promise<Record<string, TargetConfiguration>> => {
-  return createTargets(input);
+  return createTargets({
+    defaultEnvironment,
+    environments,
+    type,
+    customTargetNames: options,
+  });
 };
 
 export const createDependencies: CreateDependencies = () => {
@@ -99,6 +96,7 @@ export const createDependencies: CreateDependencies = () => {
 export const createNodes: CreateNodes<NxServerlessCdkPluginOptions> = [
   '**/cdk.json',
   async (configFilePath, options, context) => {
+    const normalizedOptions = options ?? {};
     const projectRoot = dirname(configFilePath);
     const projectRootResolved = resolve(context.workspaceRoot, projectRoot);
     const cdkJsonResolved = resolve(context.workspaceRoot, configFilePath);
@@ -120,22 +118,6 @@ export const createNodes: CreateNodes<NxServerlessCdkPluginOptions> = [
     const type: AppType =
       cdkJson.context['nx-serverless-cdk/type'] ?? AppType.generic;
 
-    const normalizedOptions: NxServerlessCdkPluginNormalizedOptions = {
-      cdkTargetName: 'cdk',
-      deployTargetName: 'deploy',
-      deployAllTargetName: 'deploy-all',
-      destroyTargetName: 'destroy',
-      diffTargetName: 'diff',
-      lsTargetName: 'ls',
-      synthTargetName: 'synth',
-      watchTargetName: 'watch',
-      generateEventTargetName: 'generate-event',
-      invokeTargetName: 'invoke',
-      startApiTargetName: 'start-api',
-      startLambdaTargetName: 'start-lambda',
-      ...options,
-    };
-
     const hash = calculateHashForCreateNodes({
       defaultEnvironment,
       environments,
@@ -156,7 +138,6 @@ export const createNodes: CreateNodes<NxServerlessCdkPluginOptions> = [
     return {
       projects: {
         [projectRoot]: {
-          // TODO set further props?
           root: projectRoot,
           targets,
         },

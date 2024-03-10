@@ -8,6 +8,21 @@ import { NormalizedProjectOptionsApplication } from '../../utils/normalize-proje
 import { AppType } from './app-type';
 import { CdkAppSchema } from './schema';
 
+export interface CustomTargetNames {
+  cdkTargetName?: string;
+  deployTargetName?: string;
+  deployAllTargetName?: string;
+  destroyTargetName?: string;
+  diffTargetName?: string;
+  lsTargetName?: string;
+  synthTargetName?: string;
+  watchTargetName?: string;
+  generateEventTargetName?: string;
+  invokeTargetName?: string;
+  startApiTargetName?: string;
+  startLambdaTargetName?: string;
+}
+
 const createPredefinedArguments = ({
   command,
   commandSuffix,
@@ -49,22 +64,39 @@ const createPredefinedArguments = ({
   };
 };
 
-// TODO support custom target names
 export const createTargets = ({
   defaultEnvironment,
   environments,
   type,
+  customTargetNames,
 }: {
   defaultEnvironment: string;
   environments: string[];
   type: AppType;
+  customTargetNames: CustomTargetNames;
 }): Record<string, TargetConfiguration> => {
+  const names = {
+    cdkTargetName: 'cdk',
+    deployTargetName: 'deploy',
+    deployAllTargetName: 'deploy-all',
+    destroyTargetName: 'destroy',
+    diffTargetName: 'diff',
+    lsTargetName: 'ls',
+    synthTargetName: 'synth',
+    watchTargetName: 'watch',
+    generateEventTargetName: 'generate-event',
+    invokeTargetName: 'invoke',
+    startApiTargetName: 'start-api',
+    startLambdaTargetName: 'start-lambda',
+    ...customTargetNames,
+  };
+
   let targets: Record<string, TargetConfiguration> = {
-    cdk: {
+    [names.cdkTargetName]: {
       executor: 'nx-serverless-cdk:cdk',
       options: {},
     },
-    deploy: {
+    [names.deployTargetName]: {
       executor: 'nx-serverless-cdk:cdk',
       defaultConfiguration: defaultEnvironment,
       options: {
@@ -75,13 +107,13 @@ export const createTargets = ({
         environments,
       }),
     },
-    'deploy-all': {
+    [names.deployAllTargetName]: {
       executor: 'nx-serverless-cdk:cdk',
       dependsOn: [
         {
           dependencies: true,
           params: 'forward',
-          target: 'deploy-all',
+          target: names.deployAllTargetName,
         },
       ],
       defaultConfiguration: defaultEnvironment,
@@ -93,7 +125,7 @@ export const createTargets = ({
         environments,
       }),
     },
-    destroy: {
+    [names.destroyTargetName]: {
       executor: 'nx-serverless-cdk:cdk',
       defaultConfiguration: defaultEnvironment,
       options: {
@@ -105,7 +137,7 @@ export const createTargets = ({
         commandSuffix: ['--force'],
       }),
     },
-    diff: {
+    [names.diffTargetName]: {
       executor: 'nx-serverless-cdk:cdk',
       defaultConfiguration: defaultEnvironment,
       options: {
@@ -116,7 +148,7 @@ export const createTargets = ({
         environments,
       }),
     },
-    ls: {
+    [names.lsTargetName]: {
       executor: 'nx-serverless-cdk:cdk',
       defaultConfiguration: defaultEnvironment,
       options: {
@@ -127,7 +159,7 @@ export const createTargets = ({
         environments,
       }),
     },
-    synth: {
+    [names.synthTargetName]: {
       executor: 'nx-serverless-cdk:cdk',
       defaultConfiguration: defaultEnvironment,
       options: {
@@ -138,7 +170,7 @@ export const createTargets = ({
         environments,
       }),
     },
-    watch: {
+    [names.watchTargetName]: {
       executor: 'nx-serverless-cdk:cdk',
       defaultConfiguration: defaultEnvironment,
       options: {
@@ -154,19 +186,19 @@ export const createTargets = ({
   if (type === AppType.lambda) {
     targets = {
       ...targets,
-      'generate-event': {
+      [names.generateEventTargetName]: {
         executor: 'nx-serverless-cdk:generate-event',
         options: {},
       },
-      invoke: {
+      [names.invokeTargetName]: {
         executor: 'nx-serverless-cdk:invoke',
         options: {},
       },
-      'start-api': {
+      [names.startApiTargetName]: {
         executor: 'nx-serverless-cdk:start-api',
         options: {},
       },
-      'start-lambda': {
+      [names.startLambdaTargetName]: {
         executor: 'nx-serverless-cdk:start-lambda',
         options: {},
       },
@@ -176,12 +208,19 @@ export const createTargets = ({
   return targets;
 };
 
-export const createProjectConfiguration = (
-  options: CdkAppSchema,
-  projectOptions: NormalizedProjectOptionsApplication,
-  defaultEnvironment: string,
-  environments: string[],
-): ProjectConfiguration => {
+export const createProjectConfiguration = ({
+  options,
+  projectOptions,
+  defaultEnvironment,
+  environments,
+  useInferredTasks,
+}: {
+  options: CdkAppSchema;
+  projectOptions: NormalizedProjectOptionsApplication;
+  defaultEnvironment: string;
+  environments: string[];
+  useInferredTasks: boolean;
+}): ProjectConfiguration => {
   const { projectRoot } = projectOptions;
 
   return {
@@ -189,11 +228,14 @@ export const createProjectConfiguration = (
     sourceRoot: joinPathFragments(projectRoot, 'cdk'),
     projectType: ProjectType.Application,
     implicitDependencies: [],
-    targets: createTargets({
-      defaultEnvironment,
-      environments,
-      type: options.type,
-    }),
+    targets: useInferredTasks
+      ? {}
+      : createTargets({
+          defaultEnvironment,
+          environments,
+          type: options.type,
+          customTargetNames: {},
+        }),
     tags: ['cdk-app'],
   };
 };
