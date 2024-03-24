@@ -2,13 +2,51 @@ import {
   addDependenciesToPackageJson,
   formatFiles,
   GeneratorCallback,
+  NxJsonConfiguration,
+  readNxJson,
   runTasksInSerial,
   Tree,
+  updateNxJson,
 } from '@nx/devkit';
-import { jestInitGenerator } from '@nx/jest';
-import { initGenerator as jsInitGenerator } from '@nx/js';
+import { NxServerlessCdkPluginOptions } from '../../plugins/plugin';
+import { useInferredTasks } from '../../utils/use-inferred-tasks';
 import { getVersions, Versions } from '../../utils/versions';
 import { InitSchema } from './schema';
+
+const addPlugin = (tree: Tree): void => {
+  const nxJson = readNxJson(tree) as NxJsonConfiguration;
+  nxJson.plugins ??= [];
+
+  if (
+    !nxJson.plugins.some((p) =>
+      typeof p === 'string'
+        ? p === 'nx-serverless-cdk/plugin'
+        : p.plugin === 'nx-serverless-cdk/plugin',
+    )
+  ) {
+    const defaultOptions: NxServerlessCdkPluginOptions = {
+      cdkTargetName: 'cdk',
+      deployTargetName: 'deploy',
+      deployAllTargetName: 'deploy-all',
+      destroyTargetName: 'destroy',
+      diffTargetName: 'diff',
+      lsTargetName: 'ls',
+      synthTargetName: 'synth',
+      watchTargetName: 'watch',
+      generateEventTargetName: 'generate-event',
+      invokeTargetName: 'invoke',
+      startApiTargetName: 'start-api',
+      startLambdaTargetName: 'start-lambda',
+    };
+
+    nxJson.plugins.push({
+      plugin: 'nx-serverless-cdk/plugin',
+      options: defaultOptions,
+    });
+  }
+
+  updateNxJson(tree, nxJson);
+};
 
 const addInitDependencies = (tree: Tree, versions: Versions) => {
   return addDependenciesToPackageJson(
@@ -38,26 +76,11 @@ export const initGenerator = async (
 ): Promise<GeneratorCallback> => {
   const versions = getVersions();
 
+  if (useInferredTasks()) {
+    addPlugin(tree);
+  }
+
   const tasks: GeneratorCallback[] = [];
-
-  tasks.push(
-    await jsInitGenerator(tree, {
-      js: false,
-      skipFormat: true,
-      skipPackageJson: false,
-      tsConfigName: 'tsconfig.base.json',
-    }),
-  );
-
-  tasks.push(
-    await jestInitGenerator(tree, {
-      compiler: 'tsc',
-      js: false,
-      skipPackageJson: false,
-      testEnvironment: 'node',
-      rootProject: false,
-    }),
-  );
 
   tasks.push(addInitDependencies(tree, versions));
 

@@ -12,12 +12,16 @@ import {
 } from '@nx/devkit';
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
-import { getRelativePathToRootTsConfig } from '@nx/js';
+import {
+  getRelativePathToRootTsConfig,
+  initGenerator as jsInitGenerator,
+} from '@nx/js';
 import { ProjectType } from '@nx/workspace';
 import { resolve } from 'node:path';
 import normalizeProjectOptions, {
   NormalizedProjectOptionsApplication,
 } from '../../utils/normalize-project-options';
+import { useInferredTasks } from '../../utils/use-inferred-tasks';
 import { getVersions, Versions } from '../../utils/versions';
 import e2eProjectGenerator from '../e2e-project/generator';
 import initGenerator from '../init/generator';
@@ -50,7 +54,6 @@ const addConfiguration = (
   projectOptions: NormalizedProjectOptionsApplication,
 ): void => {
   const { projectName } = projectOptions;
-  const useInferredTasks = process.env['NX_ADD_PLUGINS'] !== 'false';
 
   addProjectConfiguration(
     tree,
@@ -58,7 +61,7 @@ const addConfiguration = (
     createProjectConfiguration({
       options,
       projectOptions,
-      useInferredTasks,
+      useInferredTasks: useInferredTasks(),
     }),
   );
 };
@@ -79,6 +82,7 @@ const addESLint = async (
     skipPackageJson: false,
     unitTestRunner: 'jest',
     rootProject: false,
+    addPlugin: useInferredTasks(),
   });
 };
 
@@ -123,6 +127,7 @@ const addJest = async (
     skipSerializers: true,
     testEnvironment: 'node',
     skipFormat: true,
+    addPlugin: useInferredTasks(),
     compiler: 'tsc',
     skipPackageJson: false,
     js: false,
@@ -202,6 +207,14 @@ export const cdkAppGenerator = async (
 
   const tasks: GeneratorCallback[] = [];
 
+  tasks.push(
+    await jsInitGenerator(tree, {
+      js: false,
+      skipFormat: true,
+      skipPackageJson: false,
+      tsConfigName: 'tsconfig.base.json',
+    }),
+  );
   tasks.push(
     await initGenerator(tree, {
       skipFormat: true,

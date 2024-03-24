@@ -23,7 +23,7 @@ jest.mock('aws-cdk-lib/aws-lambda', () => {
         },
       };
     },
-    bindToResource: () => {},
+    bindToResource: () => undefined,
   });
 
   return module;

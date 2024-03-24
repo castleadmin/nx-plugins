@@ -19,7 +19,7 @@ export type NxServerlessCdkPluginOptions = CustomTargetNames;
 
 const cachePath = join(cacheDir, 'nx-serverless-cdk.hash');
 
-const calculatedTargets: Record<
+export const calculatedTargets: Record<
   string,
   Record<string, TargetConfiguration>
 > = {};
@@ -31,7 +31,7 @@ const readTargetsCache = (): Record<
   return readJsonFile(cachePath);
 };
 
-const targetsCache = existsSync(cachePath) ? readTargetsCache() : {};
+export const targetsCache = existsSync(cachePath) ? readTargetsCache() : {};
 
 const writeTargetsToCache = (
   targets: Record<string, Record<string, TargetConfiguration>>,
@@ -39,7 +39,7 @@ const writeTargetsToCache = (
   writeJsonFile(cachePath, targets);
 };
 
-export const hashObject = (obj: Record<string, unknown>): string => {
+const hashObject = (obj: Record<string, unknown>): string => {
   const parts: string[] = [];
 
   for (const key of Object.keys(obj).sort()) {
@@ -50,7 +50,7 @@ export const hashObject = (obj: Record<string, unknown>): string => {
   return hashArray(parts);
 };
 
-export const calculateHashForCreateNodes = ({
+const calculateHashForCreateNodes = ({
   defaultEnvironment,
   environments,
   type,
@@ -124,6 +124,7 @@ export const createNodes: CreateNodes<NxServerlessCdkPluginOptions> = [
       type,
       options: normalizedOptions,
     });
+
     const targets = targetsCache[hash]
       ? (targetsCache[hash] as Record<string, TargetConfiguration>)
       : await buildNxServerlessCdkTargets({

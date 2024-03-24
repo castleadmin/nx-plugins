@@ -15,12 +15,16 @@ import {
 } from '@nx/devkit';
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
-import { getRelativePathToRootTsConfig } from '@nx/js';
+import {
+  getRelativePathToRootTsConfig,
+  initGenerator as jsInitGenerator,
+} from '@nx/js';
 import { ProjectType } from '@nx/workspace';
 import { resolve } from 'node:path';
 import normalizeProjectOptions, {
   NormalizedProjectOptionsApplication,
 } from '../../utils/normalize-project-options';
+import { useInferredTasks } from '../../utils/use-inferred-tasks';
 import { getVersions, Versions } from '../../utils/versions';
 import { AppType } from '../cdk-app/app-type';
 import initGenerator from '../init/generator';
@@ -126,6 +130,7 @@ const addEslint = async (
     skipPackageJson: false,
     unitTestRunner: 'jest',
     rootProject: false,
+    addPlugin: useInferredTasks(),
   });
 };
 
@@ -170,6 +175,7 @@ const addJest = async (
     compiler: 'tsc',
     skipPackageJson: false,
     js: false,
+    addPlugin: useInferredTasks(),
   });
 
   const jestConfig = tree.read(
@@ -230,6 +236,14 @@ export const e2eProjectGenerator = async (
 
   const tasks: GeneratorCallback[] = [];
 
+  tasks.push(
+    await jsInitGenerator(tree, {
+      js: false,
+      skipFormat: true,
+      skipPackageJson: false,
+      tsConfigName: 'tsconfig.base.json',
+    }),
+  );
   tasks.push(
     await initGenerator(tree, {
       skipFormat: true,
