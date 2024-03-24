@@ -7,7 +7,12 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/nx-serverless-cdk/plugin',
-  collectCoverageFrom: ['src/**/*.ts', '!src/index.ts', '!jest.config.ts'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/index.ts',
+    '!src/plugin.ts',
+    '!jest.config.ts',
+  ],
   coverageThreshold: {
     global: {
       branches: 90,

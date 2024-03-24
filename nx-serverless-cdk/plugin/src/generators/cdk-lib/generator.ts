@@ -18,6 +18,7 @@ import { resolve } from 'node:path';
 import normalizeProjectOptions, {
   NormalizedProjectOptionsLibrary,
 } from '../../utils/normalize-project-options';
+import { useInferredTasks } from '../../utils/use-inferred-tasks';
 import { getVersions, Versions } from '../../utils/versions';
 import initGenerator from '../init/generator';
 import { CdkLibSchema } from './schema';
@@ -52,6 +53,7 @@ const addJsLibrary = async (
     minimal: false,
     rootProject: false,
     simpleName: false,
+    addPlugin: useInferredTasks(),
   };
 
   if (options.publishable) {

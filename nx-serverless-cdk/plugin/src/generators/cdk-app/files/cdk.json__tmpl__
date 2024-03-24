@@ -19,7 +19,7 @@
   },
   "context": {
     "nx-serverless-cdk/defaultEnvironment": "<%= defaultEnvironment %>",
-    "nx-serverless-cdk/environments": <%= JSON.stringify(environments) %>,
+    "nx-serverless-cdk/environments": <%- JSON.stringify(environments) %>,
     "nx-serverless-cdk/type": "<%= type %>",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,

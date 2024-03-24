@@ -91,6 +91,13 @@ describe('cdk-app', () => {
       expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
     });
 
+    test('should generate the workspace jest preset file.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.exists(`jest.preset.js`)).toBe(true);
+      expect(tree.isFile(`jest.preset.js`)).toBe(true);
+    });
+
     test('should generate the jest configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
@@ -230,6 +237,13 @@ export default {
 
       expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
       expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+    });
+
+    test('should generate the workspace jest preset file.', async () => {
+      await cdkAppGenerator(tree, options);
+
+      expect(tree.exists(`jest.preset.js`)).toBe(true);
+      expect(tree.isFile(`jest.preset.js`)).toBe(true);
     });
 
     test('should generate the jest configuration file.', async () => {

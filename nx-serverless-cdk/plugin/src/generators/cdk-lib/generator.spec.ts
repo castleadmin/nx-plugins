@@ -50,6 +50,13 @@ describe('cdk-lib', () => {
       expect(tree.isFile(`libs/${projectName}/.eslintrc.json`)).toBe(true);
     });
 
+    test('should generate the workspace jest preset file.', async () => {
+      await cdkLibGenerator(tree, options);
+
+      expect(tree.exists(`jest.preset.js`)).toBe(true);
+      expect(tree.isFile(`jest.preset.js`)).toBe(true);
+    });
+
     test('should generate the jest configuration file.', async () => {
       await cdkLibGenerator(tree, options);
 

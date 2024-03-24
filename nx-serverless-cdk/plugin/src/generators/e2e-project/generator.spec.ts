@@ -29,6 +29,13 @@ describe('e2e-project', () => {
       };
     });
 
+    test('should generate the workspace tsconfig file.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      expect(tree.exists(`tsconfig.base.json`)).toBe(true);
+      expect(tree.isFile(`tsconfig.base.json`)).toBe(true);
+    });
+
     test('should add common dependencies.', async () => {
       await e2eProjectGenerator(tree, options);
 
@@ -108,6 +115,13 @@ describe('e2e-project', () => {
 
       expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
       expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+    });
+
+    test('should generate the workspace jest preset file.', async () => {
+      await e2eProjectGenerator(tree, options);
+
+      expect(tree.exists(`jest.preset.js`)).toBe(true);
+      expect(tree.isFile(`jest.preset.js`)).toBe(true);
     });
 
     test('should generate the jest configuration file.', async () => {

@@ -1,7 +1,7 @@
 import { App, Tags } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import 'source-map-support/register';
-import { Environment } from './environment';
+import { Environment } from '../shared/environment';
 import { ExampleStack, ExampleStackProps } from './example-stack';
 import { toValidTag } from './to-valid-tag';
 
