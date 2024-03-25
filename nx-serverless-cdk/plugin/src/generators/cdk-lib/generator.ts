@@ -53,7 +53,7 @@ const addJsLibrary = async (
     minimal: false,
     rootProject: false,
     simpleName: false,
-    addPlugin: useInferredTasks(),
+    addPlugin: useInferredTasks(tree),
   };
 
   if (options.publishable) {

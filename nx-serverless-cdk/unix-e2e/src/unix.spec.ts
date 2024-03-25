@@ -111,7 +111,7 @@ describe('Unix', () => {
       await mkdir(rootTemporaryResolved, { recursive: true });
 
       await executeCommand(
-        `npx create-nx-workspace@${nxVersion} --name 'workspace-e2e' --preset 'apps' --workspaceType 'integrated' --no-nxCloud`,
+        `npx create-nx-workspace@${nxVersion} --name 'workspace-e2e' --preset 'apps' --workspaceType 'integrated' --nxCloud 'skip'`,
         [],
         { cwd: rootTemporaryResolved },
       );

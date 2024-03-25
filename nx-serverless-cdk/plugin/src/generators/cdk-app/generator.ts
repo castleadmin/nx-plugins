@@ -52,6 +52,7 @@ const addConfiguration = (
   tree: Tree,
   options: CdkAppSchema,
   projectOptions: NormalizedProjectOptionsApplication,
+  useInferredTasks: boolean,
 ): void => {
   const { projectName } = projectOptions;
 
@@ -61,7 +62,7 @@ const addConfiguration = (
     createProjectConfiguration({
       options,
       projectOptions,
-      useInferredTasks: useInferredTasks(),
+      useInferredTasks,
     }),
   );
 };
@@ -69,6 +70,7 @@ const addConfiguration = (
 const addESLint = async (
   tree: Tree,
   projectOptions: NormalizedProjectOptionsApplication,
+  useInferredTasks: boolean,
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
@@ -82,7 +84,7 @@ const addESLint = async (
     skipPackageJson: false,
     unitTestRunner: 'jest',
     rootProject: false,
-    addPlugin: useInferredTasks(),
+    addPlugin: useInferredTasks,
   });
 };
 
@@ -111,6 +113,7 @@ const jestConfigSnippet = `,
 const addJest = async (
   tree: Tree,
   projectOptions: NormalizedProjectOptionsApplication,
+  useInferredTasks: boolean,
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
@@ -127,7 +130,7 @@ const addJest = async (
     skipSerializers: true,
     testEnvironment: 'node',
     skipFormat: true,
-    addPlugin: useInferredTasks(),
+    addPlugin: useInferredTasks,
     compiler: 'tsc',
     skipPackageJson: false,
     js: false,
@@ -204,6 +207,7 @@ export const cdkAppGenerator = async (
     directory: options.directory,
     projectType: ProjectType.Application,
   });
+  const inferredTasks = useInferredTasks(tree);
 
   const tasks: GeneratorCallback[] = [];
 
@@ -225,10 +229,10 @@ export const cdkAppGenerator = async (
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
-  addConfiguration(tree, options, projectOptions);
+  addConfiguration(tree, options, projectOptions, inferredTasks);
 
-  tasks.push(await addESLint(tree, projectOptions));
-  tasks.push(await addJest(tree, projectOptions));
+  tasks.push(await addESLint(tree, projectOptions, inferredTasks));
+  tasks.push(await addJest(tree, projectOptions, inferredTasks));
   tasks.push(await addE2ETestsProject(tree, options, projectOptions));
 
   addFiles(tree, options, projectOptions);

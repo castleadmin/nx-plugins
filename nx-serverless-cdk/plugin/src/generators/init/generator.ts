@@ -76,7 +76,7 @@ export const initGenerator = async (
 ): Promise<GeneratorCallback> => {
   const versions = getVersions();
 
-  if (useInferredTasks()) {
+  if (useInferredTasks(tree)) {
     addPlugin(tree);
   }
 
