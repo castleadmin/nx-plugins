@@ -1,6 +1,6 @@
 import { readNxJson, Tree } from '@nx/devkit';
 
-export const useInferredTasks = (tree: Tree): boolean => {
+export const useInferencePlugins = (tree: Tree): boolean => {
   const nxJson = readNxJson(tree);
 
   return (

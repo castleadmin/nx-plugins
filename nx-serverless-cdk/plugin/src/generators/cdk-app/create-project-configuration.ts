@@ -211,11 +211,11 @@ export const createTargets = ({
 export const createProjectConfiguration = ({
   options,
   projectOptions,
-  useInferredTasks,
+  useInferencePlugins,
 }: {
   options: CdkAppSchema;
   projectOptions: NormalizedProjectOptionsApplication;
-  useInferredTasks: boolean;
+  useInferencePlugins: boolean;
 }): ProjectConfiguration => {
   const { projectRoot } = projectOptions;
 
@@ -224,7 +224,7 @@ export const createProjectConfiguration = ({
     sourceRoot: joinPathFragments(projectRoot, 'cdk'),
     projectType: ProjectType.Application,
     implicitDependencies: [],
-    targets: useInferredTasks
+    targets: useInferencePlugins
       ? {}
       : createTargets({
           defaultEnvironment: options.defaultEnvironment,

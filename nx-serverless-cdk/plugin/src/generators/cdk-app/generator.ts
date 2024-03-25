@@ -21,7 +21,7 @@ import { resolve } from 'node:path';
 import normalizeProjectOptions, {
   NormalizedProjectOptionsApplication,
 } from '../../utils/normalize-project-options';
-import { useInferredTasks } from '../../utils/use-inferred-tasks';
+import { useInferencePlugins } from '../../utils/use-inference-plugins';
 import { getVersions, Versions } from '../../utils/versions';
 import e2eProjectGenerator from '../e2e-project/generator';
 import initGenerator from '../init/generator';
@@ -52,7 +52,7 @@ const addConfiguration = (
   tree: Tree,
   options: CdkAppSchema,
   projectOptions: NormalizedProjectOptionsApplication,
-  useInferredTasks: boolean,
+  useInferencePlugins: boolean,
 ): void => {
   const { projectName } = projectOptions;
 
@@ -62,7 +62,7 @@ const addConfiguration = (
     createProjectConfiguration({
       options,
       projectOptions,
-      useInferredTasks,
+      useInferencePlugins,
     }),
   );
 };
@@ -70,7 +70,7 @@ const addConfiguration = (
 const addESLint = async (
   tree: Tree,
   projectOptions: NormalizedProjectOptionsApplication,
-  useInferredTasks: boolean,
+  useInferencePlugins: boolean,
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
@@ -84,7 +84,7 @@ const addESLint = async (
     skipPackageJson: false,
     unitTestRunner: 'jest',
     rootProject: false,
-    addPlugin: useInferredTasks,
+    addPlugin: useInferencePlugins,
   });
 };
 
@@ -113,7 +113,7 @@ const jestConfigSnippet = `,
 const addJest = async (
   tree: Tree,
   projectOptions: NormalizedProjectOptionsApplication,
-  useInferredTasks: boolean,
+  useInferencePlugins: boolean,
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
@@ -130,7 +130,7 @@ const addJest = async (
     skipSerializers: true,
     testEnvironment: 'node',
     skipFormat: true,
-    addPlugin: useInferredTasks,
+    addPlugin: useInferencePlugins,
     compiler: 'tsc',
     skipPackageJson: false,
     js: false,
@@ -207,7 +207,7 @@ export const cdkAppGenerator = async (
     directory: options.directory,
     projectType: ProjectType.Application,
   });
-  const inferredTasks = useInferredTasks(tree);
+  const inferencePlugins = useInferencePlugins(tree);
 
   const tasks: GeneratorCallback[] = [];
 
@@ -229,10 +229,10 @@ export const cdkAppGenerator = async (
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
-  addConfiguration(tree, options, projectOptions, inferredTasks);
+  addConfiguration(tree, options, projectOptions, inferencePlugins);
 
-  tasks.push(await addESLint(tree, projectOptions, inferredTasks));
-  tasks.push(await addJest(tree, projectOptions, inferredTasks));
+  tasks.push(await addESLint(tree, projectOptions, inferencePlugins));
+  tasks.push(await addJest(tree, projectOptions, inferencePlugins));
   tasks.push(await addE2ETestsProject(tree, options, projectOptions));
 
   addFiles(tree, options, projectOptions);

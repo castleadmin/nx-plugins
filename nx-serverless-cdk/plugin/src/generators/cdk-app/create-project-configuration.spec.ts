@@ -205,12 +205,14 @@ describe('create-project-configuration', () => {
   });
 
   describe('createProjectConfiguration', () => {
-    describe('Given a cdk-app of type generic that uses inferred tasks,', () => {
+    describe('Given a cdk-app of type generic that uses inference plugins,', () => {
       let projectRoot: string;
       let options: CdkAppSchema;
       let projectOptions: NormalizedProjectOptionsApplication;
+      let useInferencePlugins: boolean;
 
       beforeEach(() => {
+        useInferencePlugins = true;
         const projectName = faker.word.sample().toUpperCase();
         projectRoot = `apps/${projectName}`;
         options = {
@@ -232,7 +234,7 @@ describe('create-project-configuration', () => {
         const configuration = createProjectConfiguration({
           options,
           projectOptions,
-          useInferredTasks: true,
+          useInferencePlugins,
         });
 
         expect(configuration).toMatchObject({
@@ -246,12 +248,14 @@ describe('create-project-configuration', () => {
       });
     });
 
-    describe("Given a cdk-app of type generic that doesn't use inferred tasks,", () => {
+    describe("Given a cdk-app of type generic that doesn't use inference plugins,", () => {
       let projectRoot: string;
       let options: CdkAppSchema;
       let projectOptions: NormalizedProjectOptionsApplication;
+      let useInferencePlugins: boolean;
 
       beforeEach(() => {
+        useInferencePlugins = false;
         const projectName = faker.word.sample().toUpperCase();
         projectRoot = `apps/${projectName}`;
         options = {
@@ -273,7 +277,7 @@ describe('create-project-configuration', () => {
         const configuration = createProjectConfiguration({
           options,
           projectOptions,
-          useInferredTasks: false,
+          useInferencePlugins,
         });
 
         expect(configuration).toMatchObject({
@@ -425,12 +429,14 @@ describe('create-project-configuration', () => {
       });
     });
 
-    describe('Given a cdk-app of type lambda that uses inferred tasks,', () => {
+    describe('Given a cdk-app of type lambda that uses inference plugins,', () => {
       let projectRoot: string;
       let options: CdkAppSchema;
       let projectOptions: NormalizedProjectOptionsApplication;
+      let useInferencePlugins: boolean;
 
       beforeEach(() => {
+        useInferencePlugins = true;
         const projectName = faker.word.sample().toUpperCase();
         projectRoot = `apps/${projectName}`;
         options = {
@@ -452,7 +458,7 @@ describe('create-project-configuration', () => {
         const configuration = createProjectConfiguration({
           options,
           projectOptions,
-          useInferredTasks: true,
+          useInferencePlugins,
         });
 
         expect(configuration).toMatchObject({
@@ -466,12 +472,14 @@ describe('create-project-configuration', () => {
       });
     });
 
-    describe("Given a cdk-app of type lambda that doesn't use inferred tasks,", () => {
+    describe("Given a cdk-app of type lambda that doesn't use inference plugins,", () => {
       let projectRoot: string;
       let options: CdkAppSchema;
       let projectOptions: NormalizedProjectOptionsApplication;
+      let useInferencePlugins: boolean;
 
       beforeEach(() => {
+        useInferencePlugins = false;
         const projectName = faker.word.sample().toUpperCase();
         projectRoot = `apps/${projectName}`;
         options = {
@@ -493,7 +501,7 @@ describe('create-project-configuration', () => {
         const configuration = createProjectConfiguration({
           options,
           projectOptions,
-          useInferredTasks: false,
+          useInferencePlugins,
         });
 
         expect(configuration).toMatchObject({
