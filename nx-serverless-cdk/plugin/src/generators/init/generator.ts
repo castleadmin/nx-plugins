@@ -9,7 +9,7 @@ import {
   updateNxJson,
 } from '@nx/devkit';
 import { NxServerlessCdkPluginOptions } from '../../plugins/plugin';
-import { useInferredTasks } from '../../utils/use-inferred-tasks';
+import { useInferencePlugins } from '../../utils/use-inference-plugins';
 import { getVersions, Versions } from '../../utils/versions';
 import { InitSchema } from './schema';
 
@@ -76,7 +76,7 @@ export const initGenerator = async (
 ): Promise<GeneratorCallback> => {
   const versions = getVersions();
 
-  if (useInferredTasks(tree)) {
+  if (useInferencePlugins(tree)) {
     addPlugin(tree);
   }
 
