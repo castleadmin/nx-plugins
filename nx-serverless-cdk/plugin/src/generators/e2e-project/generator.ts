@@ -117,6 +117,7 @@ const addConfiguration = (
 const addEslint = async (
   tree: Tree,
   projectOptions: NormalizedProjectOptionsApplication,
+  useInferredTasks: boolean,
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
@@ -130,7 +131,7 @@ const addEslint = async (
     skipPackageJson: false,
     unitTestRunner: 'jest',
     rootProject: false,
-    addPlugin: useInferredTasks(),
+    addPlugin: useInferredTasks,
   });
 };
 
@@ -156,6 +157,7 @@ const jestConfigSnippet = `,
 const addJest = async (
   tree: Tree,
   projectOptions: NormalizedProjectOptionsApplication,
+  useInferredTasks: boolean,
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
@@ -175,7 +177,7 @@ const addJest = async (
     compiler: 'tsc',
     skipPackageJson: false,
     js: false,
-    addPlugin: useInferredTasks(),
+    addPlugin: useInferredTasks,
   });
 
   const jestConfig = tree.read(
@@ -233,6 +235,7 @@ export const e2eProjectGenerator = async (
     directory: options.directory,
     projectType: ProjectType.Application,
   });
+  const inferredTasks = useInferredTasks(tree);
 
   const tasks: GeneratorCallback[] = [];
 
@@ -259,8 +262,8 @@ export const e2eProjectGenerator = async (
 
   addConfiguration(tree, options, projectOptions);
 
-  tasks.push(await addEslint(tree, projectOptions));
-  tasks.push(await addJest(tree, projectOptions));
+  tasks.push(await addEslint(tree, projectOptions, inferredTasks));
+  tasks.push(await addJest(tree, projectOptions, inferredTasks));
 
   addFiles(tree, options, projectOptions);
 

@@ -246,7 +246,7 @@ export default {
       await cdkLibGenerator(tree, options);
 
       const config = readProjectConfiguration(tree, projectName);
-      expect(config.targets?.['publish']).toBeTruthy();
+      expect(config.targets?.['nx-release-publish']).toBeTruthy();
     });
 
     test('should use the import path as package.json name.', async () => {

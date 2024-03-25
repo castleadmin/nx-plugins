@@ -1,3 +1,10 @@
-export const useInferredTasks = (): boolean => {
-  return process.env['NX_ADD_PLUGINS'] !== 'false';
+import { readNxJson, Tree } from '@nx/devkit';
+
+export const useInferredTasks = (tree: Tree): boolean => {
+  const nxJson = readNxJson(tree);
+
+  return (
+    process.env['NX_ADD_PLUGINS'] !== 'false' &&
+    nxJson?.useInferencePlugins !== false
+  );
 };
