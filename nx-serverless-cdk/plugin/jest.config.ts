@@ -9,8 +9,8 @@ export default {
   coverageDirectory: '../../coverage/nx-serverless-cdk/plugin',
   collectCoverageFrom: [
     'src/**/*.ts',
-    '!src/index.ts',
-    '!src/plugin.ts',
+    '!index.ts',
+    '!plugin.ts',
     '!jest.config.ts',
   ],
   coverageThreshold: {
