@@ -2,4 +2,4 @@ export {
   NxServerlessCdkPluginOptions,
   createDependencies,
   createNodes,
-} from './plugins/plugin';
+} from './src/plugins/plugin';
