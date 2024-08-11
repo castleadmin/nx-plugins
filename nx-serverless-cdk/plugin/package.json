@@ -37,11 +37,11 @@
     "directory": "nx-serverless-cdk/plugin"
   },
   "dependencies": {
-    "@nx/devkit": "^19.0.4",
-    "@nx/eslint": "^19.0.4",
-    "@nx/jest": "^19.0.4",
-    "@nx/js": "^19.0.4",
-    "@nx/workspace": "^19.0.4",
-    "tslib": "^2.6.2"
+    "@nx/devkit": "^19.5.7",
+    "@nx/eslint": "^19.5.7",
+    "@nx/jest": "^19.5.7",
+    "@nx/js": "^19.5.7",
+    "@nx/workspace": "^19.5.7",
+    "tslib": "^2.6.3"
   }
 }
