@@ -1,0 +1,16 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+	"name": "nx-plugins",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+  "remoteUser": "node",
+  "customizations" : {
+    "jetbrains" : {
+      "settings": {
+        "com.intellij:app:HttpConfigurable.use_proxy_pac": true
+      },
+      "backend" : "WebStorm"
+    }
+  }
+}
