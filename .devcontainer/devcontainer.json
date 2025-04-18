@@ -6,6 +6,13 @@
   },
   "remoteUser": "node",
   "runArgs": ["--name", "nx-plugins"],
+  "mounts": [
+    {
+      "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
+      "target": "/home/node/.aws",
+      "type": "bind"
+    }
+  ],
   "customizations": {
     "jetbrains": {
       "settings": {
