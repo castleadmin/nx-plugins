@@ -28,7 +28,7 @@
   "author": "Tobias Willig",
   "type": "commonjs",
   "main": "./index.js",
-  "typings": "./index.d.ts",
+  "types": "./index.d.ts",
   "generators": "./generators.json",
   "executors": "./executors.json",
   "repository": {

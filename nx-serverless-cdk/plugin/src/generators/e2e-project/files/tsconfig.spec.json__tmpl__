@@ -9,14 +9,10 @@
     "sourceMap": true,
     "inlineSourceMap": false,
     "inlineSources": true,
-    "esModuleInterop": true,
-    "importHelpers": true
+    "esModuleInterop": true
   },
   "include": [
     "jest.config.ts",
-    "src/**/*.d.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ],
-  "exclude": []
+    "src/**/*.ts"
+  ]
 }

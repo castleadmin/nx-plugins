@@ -560,7 +560,9 @@ describe('Unix', () => {
           expect(response?.StatusCode).toBe(200);
           expect(response?.FunctionError).toBeFalsy();
           expect(
-            JSON.parse(Buffer.from(response?.Payload ?? '').toString()),
+            response?.Payload
+              ? JSON.parse(Buffer.from(response.Payload).toString())
+              : {},
           ).toEqual({
             sum: 7,
           });

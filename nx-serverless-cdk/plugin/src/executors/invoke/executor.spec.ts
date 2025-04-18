@@ -51,6 +51,11 @@ describe('invoke', () => {
             },
           },
         },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
+        },
         isVerbose: false,
       };
     });
@@ -197,6 +202,11 @@ describe('invoke', () => {
               root: 'apps/test',
             },
           },
+        },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
         },
         isVerbose: false,
       };

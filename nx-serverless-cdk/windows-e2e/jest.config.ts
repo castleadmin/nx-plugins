@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'nx-serverless-cdk-windows-e2e',
   preset: '../../jest.preset.js',

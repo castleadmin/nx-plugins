@@ -51,6 +51,11 @@ describe('start-api', () => {
             },
           },
         },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
+        },
         isVerbose: false,
       };
     });
@@ -197,6 +202,11 @@ describe('start-api', () => {
               root: 'apps/test',
             },
           },
+        },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
         },
         isVerbose: false,
       };

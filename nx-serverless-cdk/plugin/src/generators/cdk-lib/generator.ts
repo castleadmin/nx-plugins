@@ -33,7 +33,6 @@ const addJsLibrary = async (
   const libOptions: Parameters<typeof libraryGenerator>[1] = {
     name: projectName,
     directory: projectRoot,
-    projectNameAndRootFormat: 'as-provided',
     skipFormat: true,
     tags: 'cdk-lib',
     skipTsConfig: false,

@@ -8,8 +8,7 @@
     "types": ["node"],
     "declaration": true,
     "emitDeclarationOnly": true,
-    "esModuleInterop": true,
-    "importHelpers": true
+    "esModuleInterop": true
   },
   "include": ["cdk/**/*.ts"],
   "exclude": [

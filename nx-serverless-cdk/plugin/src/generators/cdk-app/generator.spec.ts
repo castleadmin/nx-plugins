@@ -79,7 +79,7 @@ describe('cdk-app', () => {
           path: './tsconfig.spec.json',
         },
         {
-          path: './tsconfig.src.json',
+          path: './tsconfig.app.json',
         },
       ]);
     });
@@ -227,7 +227,7 @@ export default {
           path: './tsconfig.spec.json',
         },
         {
-          path: './tsconfig.src.json',
+          path: './tsconfig.app.json',
         },
       ]);
     });

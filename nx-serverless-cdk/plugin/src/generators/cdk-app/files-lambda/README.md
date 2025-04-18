@@ -91,7 +91,7 @@ These **environments** are **just examples**, the environment names as well as t
 - `tsconfig.cdk.json` TypeScript infrastructure code configuration
 - `tsconfig.json` common TypeScript CDK application configuration
 - `tsconfig.spec.json` TypeScript test code configuration
-- `tsconfig.src.json` TypeScript runtime code configuration
+- `tsconfig.app.json` TypeScript runtime code configuration
 
 ### Format the CDK Application
 

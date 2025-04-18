@@ -10,7 +10,7 @@
       "path": "./tsconfig.spec.json"
     },
     {
-      "path": "./tsconfig.src.json"
+      "path": "./tsconfig.app.json"
     },
   ],
   "compilerOptions": {

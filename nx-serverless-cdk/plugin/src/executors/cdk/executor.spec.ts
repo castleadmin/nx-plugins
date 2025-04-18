@@ -51,6 +51,11 @@ describe('cdk', () => {
             },
           },
         },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
+        },
         isVerbose: false,
       };
     });
@@ -165,6 +170,11 @@ describe('cdk', () => {
               root: 'apps/test',
             },
           },
+        },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
         },
         isVerbose: false,
       };

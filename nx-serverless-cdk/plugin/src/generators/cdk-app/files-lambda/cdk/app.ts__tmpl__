@@ -46,7 +46,7 @@ export const createApp = (): App => {
     <% if (environment === defaultEnvironment) { %>
       minify: false,
       sourceMapMode: SourceMapMode.INLINE,
-      tsconfig: resolve(__dirname, '../tsconfig.src.json'),
+      tsconfig: resolve(__dirname, '../tsconfig.app.json'),
     <% } else { %>
       minify: true,
       /*
@@ -58,7 +58,7 @@ export const createApp = (): App => {
         4. Run the 'cdk deploy --app cdk.out' command to skip the synthesize step during the deployment.
        */
       sourceMapMode: SourceMapMode.EXTERNAL,
-      tsconfig: resolve(__dirname, '../tsconfig.src.json'),
+      tsconfig: resolve(__dirname, '../tsconfig.app.json'),
     <% } %>
     },
   });

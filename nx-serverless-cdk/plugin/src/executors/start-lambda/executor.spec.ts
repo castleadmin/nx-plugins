@@ -51,6 +51,11 @@ describe('start-lambda', () => {
             },
           },
         },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
+        },
         isVerbose: false,
       };
     });
@@ -197,6 +202,11 @@ describe('start-lambda', () => {
               root: 'apps/test',
             },
           },
+        },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
         },
         isVerbose: false,
       };

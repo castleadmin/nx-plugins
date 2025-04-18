@@ -34,7 +34,7 @@ describe('getProjectRoot', () => {
     });
 
     test('should throw an error, if there is no project configurations array.', () => {
-      delete context.projectsConfigurations;
+      delete (context as Partial<ExecutorContext>).projectsConfigurations;
       expect(() => getProjectRoot(context)).toThrow(Error);
     });
 

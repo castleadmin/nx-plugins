@@ -51,6 +51,11 @@ describe('generate-event', () => {
             },
           },
         },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
+        },
         isVerbose: false,
       };
     });
@@ -167,6 +172,11 @@ describe('generate-event', () => {
               root: 'apps/test',
             },
           },
+        },
+        nxJsonConfiguration: {},
+        projectGraph: {
+          nodes: {},
+          dependencies: {},
         },
         isVerbose: false,
       };

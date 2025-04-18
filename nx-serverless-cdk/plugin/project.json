@@ -3,6 +3,16 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "nx-serverless-cdk/plugin/src",
   "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag",
+        "fallbackCurrentVersionResolver": "disk"
+      }
+    }
+  },
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -37,13 +47,10 @@
         ]
       }
     },
-    "publish": {
-      "command": "node tools/scripts/publish.mjs nx-serverless-cdk {args.ver} {args.tag}",
-      "dependsOn": ["build"]
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
@@ -52,6 +59,5 @@
         "jestConfig": "nx-serverless-cdk/plugin/jest.config.ts"
       }
     }
-  },
-  "tags": []
+  }
 }
