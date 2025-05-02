@@ -87,8 +87,8 @@ describe('cdk-app', () => {
     test('should generate the eslint configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/eslint.config.mjs`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/eslint.config.mjs`)).toBe(true);
     });
 
     test('should generate the workspace jest preset file.', async () => {
@@ -110,8 +110,7 @@ describe('cdk-app', () => {
       await cdkAppGenerator(tree, options);
 
       expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
-        `/* eslint-disable */
-export default {
+        `export default {
   displayName: '${projectName}',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
@@ -235,8 +234,8 @@ export default {
     test('should generate the eslint configuration file.', async () => {
       await cdkAppGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/eslint.config.mjs`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/eslint.config.mjs`)).toBe(true);
     });
 
     test('should generate the workspace jest preset file.', async () => {
@@ -258,8 +257,7 @@ export default {
       await cdkAppGenerator(tree, options);
 
       expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
-        `/* eslint-disable */
-export default {
+        `export default {
   displayName: '${projectName}',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',

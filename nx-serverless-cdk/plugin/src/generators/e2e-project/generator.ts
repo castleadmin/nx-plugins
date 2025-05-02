@@ -11,7 +11,6 @@ import {
   runTasksInSerial,
   Tree,
   updateProjectConfiguration,
-  writeJson,
 } from '@nx/devkit';
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
@@ -161,12 +160,6 @@ const addJest = async (
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
-  writeJson(
-    tree,
-    joinPathFragments(projectOptions.projectRoot, 'tsconfig.json'),
-    {},
-  );
-
   const callback = await configurationGenerator(tree, {
     project: projectName,
     supportTsx: false,
@@ -178,6 +171,7 @@ const addJest = async (
     skipPackageJson: false,
     js: false,
     addPlugin: useInferencePlugins,
+    runtimeTsconfigFileName: 'tsconfig.spec.json',
   });
 
   const jestConfig = tree.read(
@@ -204,9 +198,8 @@ const addFiles = (
 ): void => {
   const { projectRoot } = projectOptions;
 
+  addTsconfigFiles(tree, projectOptions);
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    offset: offsetFromRoot(projectRoot),
-    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
   });
 
@@ -223,6 +216,19 @@ const addFiles = (
       tmpl: '',
     });
   }
+};
+
+const addTsconfigFiles = (
+  tree: Tree,
+  projectOptions: NormalizedProjectOptionsApplication,
+): void => {
+  const { projectRoot } = projectOptions;
+
+  generateFiles(tree, resolve(__dirname, 'files-tsconfig'), projectRoot, {
+    offset: offsetFromRoot(projectRoot),
+    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: '',
+  });
 };
 
 export const e2eProjectGenerator = async (
@@ -260,12 +266,14 @@ export const e2eProjectGenerator = async (
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
+  addFiles(tree, options, projectOptions);
   addConfiguration(tree, options, projectOptions);
 
   tasks.push(await addEslint(tree, projectOptions, inferencePlugins));
   tasks.push(await addJest(tree, projectOptions, inferencePlugins));
 
-  addFiles(tree, options, projectOptions);
+  // overwrite external changes in tsconfig files
+  addTsconfigFiles(tree, projectOptions);
 
   if (!options.skipFormat) {
     await formatFiles(tree);

@@ -67,7 +67,7 @@ These **environments** are **just examples**, the environment names as well as t
   - Used to define the AWS accounts and regions for the deployment
   - The environment variables can be overridden if needed
 - `.env.test` used to activate the debug mode for the Jest testing framework
-- `.eslintrc.json` ESLint configuration
+- `eslint.config.mjs` ESLint configuration
 - `.gitignore` defines the files that are excluded from version control
 - `cdk.json` AWS CDK configuration
 - `jest.config.ts` Jest testing framework configuration

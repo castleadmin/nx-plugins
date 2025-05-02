@@ -113,8 +113,8 @@ describe('e2e-project', () => {
     test('should generate the eslint configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/eslint.config.mjs`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/eslint.config.mjs`)).toBe(true);
     });
 
     test('should generate the workspace jest preset file.', async () => {
@@ -136,8 +136,7 @@ describe('e2e-project', () => {
       await e2eProjectGenerator(tree, options);
 
       expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
-        `/* eslint-disable */
-export default {
+        `export default {
   displayName: '${options.project}-e2e',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
@@ -269,8 +268,8 @@ export default {
     test('should generate the eslint configuration file.', async () => {
       await e2eProjectGenerator(tree, options);
 
-      expect(tree.exists(`apps/${projectName}/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`apps/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`apps/${projectName}/eslint.config.mjs`)).toBe(true);
+      expect(tree.isFile(`apps/${projectName}/eslint.config.mjs`)).toBe(true);
     });
 
     test('should generate the jest configuration file.', async () => {
@@ -285,8 +284,7 @@ export default {
       await e2eProjectGenerator(tree, options);
 
       expect(tree.read(`apps/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
-        `/* eslint-disable */
-export default {
+        `export default {
   displayName: '${options.project}-e2e',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',

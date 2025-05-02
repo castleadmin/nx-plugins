@@ -46,8 +46,8 @@ describe('cdk-lib', () => {
     test('should generate the eslint configuration file.', async () => {
       await cdkLibGenerator(tree, options);
 
-      expect(tree.exists(`libs/${projectName}/.eslintrc.json`)).toBe(true);
-      expect(tree.isFile(`libs/${projectName}/.eslintrc.json`)).toBe(true);
+      expect(tree.exists(`libs/${projectName}/eslint.config.mjs`)).toBe(true);
+      expect(tree.isFile(`libs/${projectName}/eslint.config.mjs`)).toBe(true);
     });
 
     test('should generate the workspace jest preset file.', async () => {
@@ -69,8 +69,7 @@ describe('cdk-lib', () => {
       await cdkLibGenerator(tree, options);
 
       expect(tree.read(`libs/${projectName}/jest.config.ts`, 'utf-8')).toEqual(
-        `/* eslint-disable */
-export default {
+        `export default {
   displayName: '${projectName}',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',

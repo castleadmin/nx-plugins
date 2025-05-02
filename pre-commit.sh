@@ -2,7 +2,7 @@
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
 
 nx format && \
-npx nx affected --target=lint && \
+npx nx affected --target=eslint:lint && \
 npx nx affected --target=test --code-coverage && \
 npx nx affected --target=build --exclude="apps/*"
 

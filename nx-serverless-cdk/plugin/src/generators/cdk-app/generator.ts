@@ -8,7 +8,6 @@ import {
   offsetFromRoot,
   runTasksInSerial,
   Tree,
-  writeJson,
 } from '@nx/devkit';
 import { Linter, lintProjectGenerator } from '@nx/eslint';
 import { configurationGenerator } from '@nx/jest';
@@ -117,12 +116,6 @@ const addJest = async (
 ): Promise<GeneratorCallback> => {
   const { projectName, projectRoot } = projectOptions;
 
-  writeJson(
-    tree,
-    joinPathFragments(projectOptions.projectRoot, 'tsconfig.json'),
-    {},
-  );
-
   const callback = await configurationGenerator(tree, {
     project: projectName,
     supportTsx: false,
@@ -172,9 +165,8 @@ const addFiles = (
 ): void => {
   const { projectName, projectRoot } = projectOptions;
 
+  addTsconfigFiles(tree, projectOptions);
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
-    offset: offsetFromRoot(projectRoot),
-    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     defaultEnvironment: options.defaultEnvironment,
     environments: options.environments,
     type: options.type,
@@ -195,6 +187,19 @@ const addFiles = (
       tmpl: '',
     });
   }
+};
+
+const addTsconfigFiles = (
+  tree: Tree,
+  projectOptions: NormalizedProjectOptionsApplication,
+): void => {
+  const { projectRoot } = projectOptions;
+
+  generateFiles(tree, resolve(__dirname, 'files-tsconfig'), projectRoot, {
+    offset: offsetFromRoot(projectRoot),
+    rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
+    tmpl: '',
+  });
 };
 
 export const cdkAppGenerator = async (
@@ -229,13 +234,15 @@ export const cdkAppGenerator = async (
     tasks.push(addLambdaDependencies(tree, versions));
   }
 
+  addFiles(tree, options, projectOptions);
   addConfiguration(tree, options, projectOptions, inferencePlugins);
 
   tasks.push(await addESLint(tree, projectOptions, inferencePlugins));
   tasks.push(await addJest(tree, projectOptions, inferencePlugins));
   tasks.push(await addE2ETestsProject(tree, options, projectOptions));
 
-  addFiles(tree, options, projectOptions);
+  // overwrite external changes in tsconfig files
+  addTsconfigFiles(tree, projectOptions);
 
   if (!options.skipFormat) {
     await formatFiles(tree);

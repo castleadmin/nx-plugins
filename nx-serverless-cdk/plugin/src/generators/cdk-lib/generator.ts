@@ -186,10 +186,22 @@ const addFiles = (
 ): void => {
   const { projectName, projectRoot, importPath } = projectOptions;
 
+  addTsconfigFiles(tree, projectOptions);
   generateFiles(tree, resolve(__dirname, 'files'), projectRoot, {
     projectName,
     importPath,
     versions,
+    tmpl: '',
+  });
+};
+
+const addTsconfigFiles = (
+  tree: Tree,
+  projectOptions: NormalizedProjectOptionsLibrary,
+): void => {
+  const { projectRoot } = projectOptions;
+
+  generateFiles(tree, resolve(__dirname, 'files-tsconfig'), projectRoot, {
     offset: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
     tmpl: '',
@@ -218,12 +230,15 @@ export const cdkLibGenerator = async (
 
   tasks.push(await addJsLibrary(tree, options, projectOptions));
 
+  addFiles(tree, projectOptions, versions);
+
   changeProjectConfiguration(tree, projectOptions);
   changeSrcDirectory(tree, projectOptions);
   removeTsconfigLibJson(tree, projectOptions);
   changeJestConfig(tree, projectOptions);
 
-  addFiles(tree, projectOptions, versions);
+  // overwrite external changes in tsconfig files
+  addTsconfigFiles(tree, projectOptions);
 
   if (!options.skipFormat) {
     await formatFiles(tree);

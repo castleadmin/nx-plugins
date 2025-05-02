@@ -24,7 +24,7 @@
 - `cdk` contains the infrastructure code and tests
   - `index.ts` entry point of the construct library
 - `.env.test` used to activate the debug mode for the Jest testing framework
-- `.eslintrc.json` ESLint configuration
+- `eslint.config.mjs` ESLint configuration
 - `jest.config.ts` Jest testing framework configuration
 - `package.json` npm package configuration
   - Used to configure the construct library's npm package that is published to an npm repository
